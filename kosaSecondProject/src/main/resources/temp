@@ -1,0 +1,75 @@
+-- select_star.users definition
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(100) COLLATE utf8_bin NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `nickname` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `location1` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `location2` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `join_date` date DEFAULT NULL,
+  `profile_photo` mediumblob,
+  `about_me` text CHARACTER SET utf8,
+  `profile_content` text CHARACTER SET utf8,
+  `interest_language` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `interest_framework` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `interest_job` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+-- select_star.meeting definition
+
+CREATE TABLE `meeting` (
+  `meeting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `category` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `application_deadline` date DEFAULT NULL,
+  `views` int(11) NOT NULL DEFAULT '0',
+  `recruitment_count` int(11) NOT NULL,
+  `application_count` int(11) NOT NULL DEFAULT '0',
+  `location` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8 NOT NULL,
+  `creation_date` date DEFAULT NULL,
+  `interest_language` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `interest_framework` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `interest_job` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `deleted` tinyint(2) DEFAULT '0' COMMENT '삭제 됬는지 체크',
+  PRIMARY KEY (`meeting_id`),
+  KEY `meeting_FK` (`user_id`),
+  CONSTRAINT `meeting_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- select_star.comment definition
+
+CREATE TABLE `comment` (
+  `comment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `meeting_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `creation_date` date DEFAULT NULL,
+  `deleted` int(11) DEFAULT NULL,
+  PRIMARY KEY (`comment_id`),
+  KEY `comment_FK` (`user_id`),
+  KEY `comment_FK_1` (`meeting_id`),
+  CONSTRAINT `comment_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `comment_FK_1` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+-- select_star.apply definition
+
+CREATE TABLE `apply` (
+  `user_id` int(11) NOT NULL,
+  `meeting_id` int(11) NOT NULL,
+  `email_address` varchar(50) NOT NULL,
+  `sns_address` varchar(255) DEFAULT NULL,
+  `reason` varchar(100) NOT NULL,
+  `application_date` date DEFAULT NULL,
+  PRIMARY KEY (`user_id`,`meeting_id`),
+  KEY `apply_FK_1` (`meeting_id`),
+  CONSTRAINT `apply_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `apply_FK_1` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+Ise

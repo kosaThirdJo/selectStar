@@ -1,0 +1,168 @@
+li{
+    list-style-type: none;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+.frame-content{
+    /*min-width: 1000px;*/
+}
+.frame-content-title{ /* content title div (이력관리) */
+    width: 70%;
+    padding: 5px 10px;
+}
+.content-title{  /*title */
+    width: 100%;
+    height: 30px;
+    gap: 30px;
+    display: flex;
+    padding: 20px 25px;
+    overflow: hidden;
+    align-self: stretch;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(26, 77, 46, 1);
+}
+.content-title-text{ /*이력관리 span */
+  color: rgba(255, 255, 255, 1);
+  height: auto;
+  font-size: 30px;
+  text-align: left;
+  font-weight: 700;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.frame-content-body {
+    width: 70%;
+    padding: 10px 40px;
+    /*margin: auto;*/
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: center;
+}
+.form-content-body{
+    width: 100%;
+    gap: 10px;
+}
+.frame-oneline{
+  gap: 10px;
+  width: 90%;
+  height: 150px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+.frame-oneline-titletext, .frame-profilecontent-titletext {
+  color: rgba(0, 0, 0, 1);
+  height: auto;
+  font-size: 20px;
+  align-self: stretch;
+  font-weight: 400;
+  text-decoration: none;
+}
+.input-oneline{
+    width: 80%;
+    height: 40px;
+    border-radius : 5px;
+    gap: 10px;
+    color: black;
+    display: flex;
+    padding: 0 10px;
+    overflow: hidden;
+    font-size: 18px;
+    align-self: stretch;
+    text-align: left;
+    align-items: center;
+    font-weight: 400;
+    border-color: rgba(145, 143, 143, 1);
+    border-style: solid;
+    border-width: 1px;
+}
+.msgAboutme{
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 500;
+    color: #FF7F50;
+}
+.frame-profilecontent{
+  gap: 10px;
+  width: 90%;
+  height: 500px;
+  margin-top: 20px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.input-profilecontent{
+    width: 80%;
+    border-radius : 5px;
+    height: 400px;
+    gap: 10px;
+    color: black;
+    display: flex;
+    padding: 5px 10px;
+    overflow: hidden;
+    font-size: 18px;
+    align-self: stretch;
+    align-items: center;
+    font-weight: 400;
+    border-color: rgba(145, 143, 143, 1);
+    border-style: solid;
+    border-width: 1px;
+    resize: none;
+    outline: none;
+}
+.frame-profile-textcnt{ /*글자수세기 div*/
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 18px;
+    font-weight: 500;
+}
+.frame-profile-textcnt-cnt{ /*글자수세기 div*/
+    font-weight: 900;
+    color: #FF7F50;
+}
+.frame-bottom{
+    width: 40%;
+    height: 70px;
+    display: flex;
+}
+.button-submit{
+  gap: 10px;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  align-self: stretch;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: rgba(255, 159, 41, 1);
+  color: rgba(250, 243, 227, 1);
+  font-size: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-stretch: normal;
+  text-decoration: none;
+  cursor: pointer;
+}
+main{
+    min-height: 800px;
+}

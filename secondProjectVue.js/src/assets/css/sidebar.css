@@ -1,0 +1,120 @@
+
+/*sidebar-프로필사진*/
+.frame-aside{
+    width: 100%;
+    /*width: 270px;*/
+    position:sticky;
+    left: 80px;
+    top: 170px;
+    display: flex;
+    flex-direction: column;
+}
+.frame-profileinfo{
+    width: 80%;
+    display: flex;
+    padding: 10px 10px;
+    align-self: stretch;
+    flex-shrink: 0;
+    flex-direction: column;
+}
+.frame-profile{
+   display: flex;
+   gap: 5px;
+   padding: 0 20px 25px;
+   align-self: stretch;
+   align-items: center;
+   flex-direction: column;
+/*   background-color: rgba(255, 255, 255, 1);*/
+}
+.profile-img{ /*프로필 이미지 */
+    width: 12rem;
+    height: 12rem;
+    border-radius:9999px;
+}
+.frame-img-button{ /*프로필 등록 수정 버튼 레이아웃*/
+    gap: 3px;
+    display: flex;
+    flex-direction: column;
+}
+/*이미지 업로드 버튼*/
+.input-file-button{
+    display: inline-block;
+    padding: 3px 10px;
+    background-color:#1A4D2E;
+    border-radius: 4px;
+    color: white;
+    font-size: 15px;
+    font-weight: 300;
+    cursor: pointer;
+}
+/* 이미지 수정 버튼 */
+.input-submit{
+    height: 30px;
+    display: none;
+    padding: 3px 10px;
+    background-color:#FF9F29;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 15px;
+    font-weight: 300;
+    cursor: pointer;
+}
+.text-nickname{
+    color: rgba(0, 0, 0, 1);
+    width: 100%;
+    height: auto;
+    font-size: 25px;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+}
+.text-email{
+    color: rgba(0, 0, 0, 1);
+    width: 100%;
+    height: auto;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 300;
+    text-decoration: none;
+}
+/* sidebar-메뉴 */
+.frame-sidemenu{
+    width: 80%;
+    gap: 7px;
+    display: flex;
+    padding: 10px 10px;
+    align-self: stretch;
+    align-items: center;
+    flex-shrink: 0;
+    flex-direction: column;
+}
+.frame-sidemenu-title{
+  color: rgba(26, 77, 46, 1);
+  height: auto;
+  font-size: 25px;
+  align-self: stretch;
+  text-align: left;
+  font-weight: 700;
+  text-decoration: none;
+}
+.side-menu-li {
+    list-style-type: none;
+    margin: 10px;
+}
+.sidemenu-a {
+    text-decoration: none;
+    color: black;
+    height: auto;
+    font-size: 20px;
+    align-self: stretch;
+    text-align: left;
+    font-weight: 400;
+    line-height: normal;
+    font-stretch: normal;
+    text-decoration: none;
+}
+.sidemenu-a:hover {
+    color: #FF9F29;
+    font-weight: 500;
+}

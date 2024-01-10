@@ -1,0 +1,264 @@
+section{
+    float: right;
+}
+li{
+    list-style-type: none;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    text-decoration: none;
+    color: black;
+}
+.frame-mymeeting-title{ /* title div frame */
+    width: 80%;
+    padding: 5px 10px;
+}
+.mymeeting-title{ /* title div */
+    width: 100%;
+    height: 30px;
+    gap: 30px;
+    display: flex;
+    padding: 20px 25px;
+    overflow: hidden;
+    align-self: stretch;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(26, 77, 46, 1);
+}
+.mymeeting-title-text{ /* title text */
+  color: rgba(255, 255, 255, 1);
+  height: auto;
+  font-size: 30px;
+  text-align: left;
+  font-weight: 700;
+  text-decoration: none;
+}
+.frame-mymeeting-body{ /* body frame*/
+    width: 80%;
+    padding: 5px 10px;
+    min-height: 1000px;
+}
+.search-filter{ /* 카테고리 선택 div*/
+    width: 100%;
+    margin: 20px 0px;
+    padding: 10px 0px;
+    border: solid 1px #888888;
+    border-radius: 5px;
+}
+.search-categry{ /* 카테고리 선택 ul*/
+  display: flex;
+  padding-left: 0px;
+}
+.e-category{ /* 카테고리 li */
+    width: 10%;
+    display: inline;
+}
+.e-category button{/* 카테고리 메뉴(전체/프로젝트/스터디/기타) 버튼 */
+    width: 100px;
+    height: 40px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 700;
+}
+.e-category button:hover{
+  cursor: pointer;
+}
+.mymeeting-list-container{ /* 목록 frame*/
+    width: 100%;
+    margin: 20px 0px;
+    border: solid 1px #888888;
+    border-radius: 5px;
+}
+.list-container-header{ /* 모집여부 frame */
+    width: 100%;
+}
+.search-filter-select{ /* 모집여부 선택 ul*/
+  display: flex;
+  padding-left: 0px;
+}
+.e-status{ /* 모집상태 li */
+    width: 10%;
+    display: inline;
+    list-style-type: none;
+}
+.e-status button{ /* 모집상태 button */
+    width: 100px;
+    height: 40px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 500;
+}
+.e-status button:hover{
+  cursor: pointer;
+}
+.mymeeting-list{ /*목록 ul*/
+    list-style:none;
+    padding-left: 0;
+}
+.mymeeting-container { /*목록 li*/
+    list-style-type: none;
+    /*padding: 10px 0px;
+    border-top: solid 1px #888888;*/
+}
+.click-meetingpost{  /*li의 a태그*/
+    padding: 10px 0px;
+    display:flex;
+    flex-direction: column;
+    border-top: solid 1px #888888;
+}
+.meetinginfo{ /*li 내부 frame div*/
+    height: 140px;
+    padding: 0px 15px;
+    display: flex;
+    gap: 3px;
+    flex-direction: column;
+}
+.meeting-title{ /*meeting title frame*/
+    width: 100%;
+    height: 50px;
+/*    gap: 5px;*/
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+}
+.meeting-status{ /*meeting 모집여부 칸*/
+    display: flex;
+    justify-content: center;
+    width: 85px;
+    margin-right: 5px;
+    line-height: 30px;
+}
+.meeting-status-text{ /* 모집완료 */
+   width: 80px;
+   height: 30px;
+   border-radius: 10px;
+   background-color: rgba(136, 136, 136, 1);
+   color: white;
+   font-size: 14px;
+   text-align: center;
+   font-weight: 500;
+}
+.meeting-status-text-ing{ /* 모집중 */
+    width: 80px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #1A4D2E;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+}
+.meeting-category{ /*meeting 카테고리 칸*/
+    display: flex;
+    justify-content: center;
+    width: 85px;
+/*    margin-right: 5px;*/
+}
+.meeting-category-text{ /*meeting 카테고리 text */
+   height: 30px;
+   color: rgba(26, 77, 46, 1);
+   font-size: 14px;
+   text-align: center;
+   font-weight: 700;
+   line-height: 27px;
+}
+.meeting-title-div{ /*meeting 제목 칸*/
+    display:flex;
+    width: 70%;
+}
+.meeting-title-text{ /*meeting 제목 text */
+   height: 30px;
+   color: black;
+   font-size: 20px;
+   text-align: center;
+   font-weight: 600;
+}
+.meeting-body{ /*meeting 내용 칸*/
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.meeting-body-content{ /*meeting 내용 text*/
+    width: 100%;
+    padding-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 300;
+}
+.meeting-footer{/*meeting title frame*/
+    height: 50px;
+    gap: 40px;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+}
+.meeting-footer-text{
+   color: #41644A;
+   font-size: 14px;
+   text-align: center;
+   font-weight: 700;
+}
+.meeting-footer-content-text{
+   color: black;
+   font-size: 14px;
+   text-align: center;
+   font-weight: 500;
+}
+.meeting-footer div{
+    display: inline-block;
+}
+.result-msg{
+   font-size: 20px;
+   text-align: center;
+   font-weight: 700;
+}
+.activeCate{
+    color: #FF9F29;
+}
+.frame-errormsg{
+    margin: 30px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 30px;
+}
+/* 검색 더보기 */
+.frame-search-morebtn{
+    display: flex;
+    justify-content: center;
+}
+.search-morebtn {
+    gap: 10px;
+    display: flex;
+    padding: 6px 0;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 1);
+    border: none;
+}
+.search-morebtn-icon {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    flex-shrink: 1;
+    color: rgba(84, 82, 82, 1);
+}
+.search-morebtn-text {
+    color: rgba(84, 82, 82, 1);
+    height: auto;
+    font-size: 25px;
+    text-align: left;
+    font-weight: 700;
+    text-decoration: none;
+}

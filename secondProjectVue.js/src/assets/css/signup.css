@@ -1,0 +1,277 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    *{
+        font-family: Pretendard,'Noto Sans KR', sans-serif;
+    }
+/* container */
+.signup-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 1);
+  height: auto;
+  margin: 120px 0px 80px;
+  padding: auto;
+}
+.signup-content {
+  max-width: 28rem;
+  width: 100%;;
+}
+/* 01 top */
+.signup-top {
+gap: 20px;
+display: flex;
+padding: 26px 37px;
+overflow: hidden;
+align-self: stretch;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+}
+.signup-top-logo {
+gap: 2px;
+display: flex;
+padding: 20px 0;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+}
+.signup-top-logo:hover{
+  text-decoration: none;
+}
+.signup-top-logo-text {
+color: rgba(0, 0, 0, 1);
+height: auto;
+font-size: 60px;
+font-weight: 700;
+}
+.signup-top-logo-text-star {
+color: #FF9F29;
+}
+.signup-top-intro1 {
+font-size: 20px;
+font-weight: 500;
+}
+.signup-top-intro2 {
+color: rgba(113, 112, 112, 1);
+font-size: 15px;
+}
+/* 02 입력 폼 */
+.signup-form {
+display: flex;
+flex-direction: column;
+}
+.signup-form-title {
+font-size: 13px;
+color: rgba(113, 112, 112, 1);
+margin: 40px auto;
+}
+
+/* 02-02 회원가입 폼 */
+.signup-form-input {
+gap: 30px;
+width: 100%;
+display: flex;
+overflow: hidden;
+align-items: flex-start;
+flex-direction: column;
+margin: 30px auto;
+}
+.signup-form-input-box {
+gap: 10px;
+display: flex;
+overflow: hidden;
+align-self: stretch;
+align-items: flex-start;
+flex-direction: column;
+justify-content: center;
+}
+.signup-form-input-box-title {
+color: #1A4D2E;
+font-size: 17px;
+font-weight: 500;
+}
+.signup-form-input-withbtn {
+gap: 15px;
+display: flex;
+align-self: stretch;
+align-items: center;
+justify-content: space-between;
+}
+.signup-form-input-box-content-withbtn {
+width: -webkit-fill-available;
+}
+.sign-up-form-input-check-alert{
+margin-left: 20px;
+color: rgb(248, 60, 60);
+font-size: 15px;
+}
+.signup-form-input-box-content, .signup-form-input-box-content-withbtn {
+padding: 0 20px;
+font-size: 16px;
+border-color: rgba(145, 143, 143, 1);
+border-style: solid;
+border-width: 1px;
+border-radius: 10px;
+align-self: stretch;
+min-height: 45px;
+}
+
+/* 02-02-05 지역 */
+.signup-form-input-location-btn, .signup-form-input-check-btn {
+padding: 11px 15px;
+border-radius: 10px;
+background-color: #1A4D2E;
+color: rgba(255, 255, 255, 1);
+font-weight: 600;
+border: none;
+width: 110px;
+cursor: pointer;
+}
+.signup-form-input-location-btn:hover{
+background-color: #1A4D2EB3;
+}
+.signup-form-input-check-btn {
+background-color: #FF9F29;
+color: rgba(255, 255, 255, 1);
+}
+.signup-form-input-check-btn:hover{
+background-color: #FF9F29B3;
+}
+/* 02-02-06 관심분야 */
+.signup-form-select-interest {
+gap: 10px;
+display: flex;
+padding: 20px 0;
+overflow: hidden;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+}
+.signup-form-select-interest-title {
+  font-size: 13px;
+  align-self: stretch;
+  font-weight: 500;
+  background-color: #ff9f29d4;
+  color: white;
+  padding: 3px 10px;
+  text-align: center;
+  border-radius: 5px;
+}
+.signup-form-select-interest-button {
+gap: 15px 10px;
+display: flex;
+flex-wrap: wrap;
+align-self: stretch;
+align-items: center;
+flex-shrink: 0;
+}
+
+/* 관심분야 select 버튼 */
+.signup-interest-lang-btn, .signup-interest-lang-btn.selected,
+.signup-interest-fw-btn, .signup-interest-fw-btn.selected,
+.signup-interest-job-btn, .signup-interest-job-btn.selected {
+  border: 0;
+  border-radius: 5px;
+  color: #000000;
+  font-weight: 500;
+  font-size: 12px;
+  background-color: #DEDFE4;
+  box-shadow: 0 6px #55565B;
+  padding: 5px 10px;
+}
+.signup-interest-lang-btn:hover,
+.signup-interest-fw-btn:hover,
+.signup-interest-job-btn:hover {
+  background-color: #919297;
+  color: white;
+  cursor: pointer;
+}
+.signup-interest-lang-btn:focus,
+.signup-interest-fw-btn:focus,
+.signup-interest-job-btn:focus {
+  outline: none;
+}
+.signup-interest-lang-btn:active,
+.signup-interest-fw-btn:active,
+.signup-interest-job-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 3px #55565B;
+}
+
+.signup-interest-lang-btn.selected,
+.signup-interest-fw-btn.selected,
+.signup-interest-job-btn.selected {
+  background-color: #919297;
+  color: white;
+  cursor: pointer;
+  transform: translateY(4px);
+  box-shadow: 0 3px #55565B;
+}
+
+/* 회원가입 버튼 */
+.signup-signupbtn {
+  display: inline-flex;
+  width: 100%;
+  height: 55px;
+  margin: 25px calc(33% - 14px);
+}
+.signup-signupbtn a{
+  font-size: 19px;
+  letter-spacing: 1px;
+  transform-style: preserve-3d;
+  transform: translateZ(-25px);
+  transition: transform .25s;
+  font-family: 'Montserrat', sans-serif;
+
+}
+.signup-signupbtn a:before,
+.signup-signupbtn a:after{
+  position: absolute;
+  content: "환영합니다!";
+  font-weight: bold;
+  height: 55px;
+  width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #1A4D2E;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.signup-signupbtn a:before{
+  content: "회원 가입";
+  font-weight: bold;
+  color: #fff;
+  background: #1A4D2E;
+  transform: rotateY(0deg) translateZ(25px);
+}
+.signup-signupbtn a:after{
+  color: #1A4D2E;
+  transform: rotateX(90deg) translateZ(25px);
+}
+.signup-signupbtn a:hover{
+  transform: translateZ(-25px) rotateX(-90deg);
+}
+
+
+/* 로그인 페이지 이동 */
+.signup-movetoLogin {
+gap: 20px;
+display: flex;
+padding: 10px 0;
+justify-content: center;
+margin: 40px;
+color: rgba(0, 0, 0, 1);
+font-size: 18px;
+text-decoration: none;
+}
+.signup-movetoLogin-loginPg {
+color: rgba(26, 77, 46, 1);
+font-size: 18px;
+text-decoration: underline;
+}
+

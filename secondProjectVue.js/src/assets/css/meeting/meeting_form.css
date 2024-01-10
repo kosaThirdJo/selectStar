@@ -1,0 +1,25 @@
+article {
+    margin: 60px 20%;
+}
+
+#content_type, #content {
+    border: #1A4D2E solid 5px;
+}
+
+textarea {
+    width: calc(100% - 10px);
+    height: 600px;
+    padding: 10px;
+    margin: 10px 10px 10px 0;
+}
+table{
+    width: 100%;
+}
+th{
+    padding: 15px;
+    width: 15%;
+    vertical-align: top;
+}
+.signup-form-select-interest-title{
+    width: 90px;
+}

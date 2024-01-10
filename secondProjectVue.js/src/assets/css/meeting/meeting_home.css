@@ -1,0 +1,115 @@
+.content_list_title{
+    font-size: 36px;
+    padding: 60px 10% 15px;
+}
+.content_list_title_display{
+    display: flex;
+    justify-content: space-between;
+
+}
+.content_select{
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    font-size: 25px;
+    padding: 5px 10px;
+    margin: 10px;
+}
+.container {
+  display:flex;
+  flex-flow: row wrap;
+  gap: 5px;
+}
+.container-content{
+    margin: 20px 5px;
+}
+.container-content a{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* 모임 만들기 버튼*/
+.content_list_btn {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+.make-meeting {
+    width: 210px;
+    display: flex;
+    align-items: center;
+}
+.make-meeting .circle {
+    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+    position: relative;
+    display: block;
+    margin: 0;
+    width: 50px;
+    height: 60px;
+    background: rgba(26, 77, 46, 1);
+    border-radius: 1.625rem;
+}
+.make-meeting .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+.make-meeting .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+.make-meeting .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.25rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+.make-meeting .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: #1A4D2E;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 25px;
+}
+.content_list_btn:hover .circle {
+  width: 100%;
+}
+.content_list_btn:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+}
+.content_list_btn:hover .button-text {
+  color: #fff;
+}
+
+person-img {
+    width: 16px;
+    height: 16px;
+}

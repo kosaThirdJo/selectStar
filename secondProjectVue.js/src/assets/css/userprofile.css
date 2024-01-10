@@ -1,0 +1,82 @@
+.frame-container{ /* 전체 프레임 컨테이너*/
+    width: 100%;
+    padding: 0 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 1300px;
+}
+.frame-profile{ /*프로필 프레임*/
+    width: 30%;
+    height: 560px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border-radius: 10px;
+    background-color: #FAF3E3;
+}
+.profile-img{
+    width: 15rem;
+    height: 15rem;
+    background-color: #888888;
+    border: 1px solid #888888;
+    border-radius:9999px;
+}
+.profile-title{
+  padding: 10px;
+  color: black;
+  height: auto;
+  font-size: 30px;
+  text-align: center;
+  font-weight: 500;
+}
+.user-nicname-text{
+    color: #FF9F29;
+    font-size: 30px;
+    font-weight: 800;
+}
+.frame-profile-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.profile-info-text{
+  font-size: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+.frame-profile-oneline{
+   width: 100%;
+}
+.profile-oneline-title{
+    color: #1A4D2E;
+    font-size: 20px;
+    font-weight: 700;
+}
+.profile-oneline-text{
+    color: black;
+    font-size: 20px;
+    font-weight: 400;
+}
+.frame-profile-content{
+    width: 70%;
+    height: 560px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+.profile-info-textarea{
+    width: 90%;
+    height: 500px;
+    padding: 10px;
+    resize: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 400;
+}

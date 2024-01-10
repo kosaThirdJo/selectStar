@@ -1,0 +1,358 @@
+/*.myinfo-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}*/
+.myinfoframe-content-title{
+    width: 70%;
+    padding: 5px 10px;
+}
+.myinfocontent-title{
+    width: 100%;
+    height: 30px;
+    gap: 30px;
+    display: flex;
+    padding: 20px 25px;
+    overflow: hidden;
+    align-self: stretch;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(26, 77, 46, 1);
+}
+.myinfocontent-title-text{
+  color: rgba(255, 255, 255, 1);
+  height: auto;
+  font-size: 30px;
+  text-align: left;
+  font-weight: 700;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.myinfo-content {
+  gap: 65px;
+  width: 90%;
+  height: auto;
+  display: flex;
+  padding: 10px 40px;
+/*  padding: 10px 5%;*/
+/*  margin: auto;*/
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+  align-items: flex-start; /*1120*/
+}
+/*개인정보수정 입력폼*/
+#updateInfoForm {
+  min-width : 250px;
+}
+.myinfo-input {
+  gap: 30px;
+  width: 100%;
+  display: flex;
+  padding: 30px 0;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.myinfo-password { /* 비밀번호 입력  div */
+  gap: 10px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.myinfo-text017 { /* 비밀번호, 이메일 등 소제목 */
+  color: rgba(0, 0, 0, 1);
+  height: auto;
+  font-size: 20px;
+  align-self: stretch;
+  font-weight: 400;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.myinfo-input2 { /* 비밀번호 입력 form*/
+  gap: 10px;
+  height: 40px;
+  color: black;
+  display: flex;
+  padding: 0 20px;
+  overflow: hidden;
+  font-size: 20px;
+  align-self: stretch;
+  text-align: left;
+  align-items: center;
+  font-weight: 400;
+  border-color: rgba(145, 143, 143, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+.myinfo-email {/* 이메일 입력 div*/
+  gap: 10px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.myinfo-input3 { /* 이메일, 닉네임 입력 form*/
+  gap: 10px;
+  height: 40px;
+  color: black;
+  display: flex;
+  padding: 0 20px;
+  overflow: hidden;
+  font-size: 20px;
+  align-self: stretch;
+  text-align: left;
+  align-items: center;
+  font-weight: 400;
+  border-color: rgba(145, 143, 143, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+.myinfo-nickname { /* nickname 입력 div*/
+  gap: 10px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.myinfo-nickname-content{
+    width: 100%;
+}
+.myinfo-input4 { /*nickname 입력 form */
+  gap: 10px;
+  color: black;
+  width: 70%;
+  height: 40px;
+  display: inline-block;
+  padding: 0 20px;
+  overflow: hidden;
+  flex-grow: 1;
+  font-size: 20px;
+  text-align: left;
+  align-items: center;
+  font-weight: 400;
+  border-color: rgba(145, 143, 143, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+.myinfo-form-input-check-alert{
+  margin-left: 20px;
+  color: rgb(248, 60, 60);
+  font-size: 15px;
+}
+.nickname-checkbtn{ /* 별명 중복 확인 버튼*/
+  gap: 10px;
+  display: inline-block;
+  padding: 10px 15px;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: rgba(26, 77, 46, 1);
+}
+.myinfo-location { /* 지역  div*/
+  gap: 10px;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.myinfo-location-content{
+    width: 100%;
+}
+.myinfo-input5 { /*지역 input */
+  gap: 10px;
+  color: black;
+  width: 70%;
+  height: 40px;
+  display: inline-block;
+  padding: 0 20px;
+  overflow: hidden;
+/*  flex-grow: 1;*/
+  font-size: 20px;
+  text-align: left;
+  align-items: center;
+  font-weight: 400;
+  border-color: rgba(145, 143, 143, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+.myinfo-location1btnbutton { /*지역1 버튼*/
+  display: inline-block;
+  padding: 10px 15px;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: rgba(26, 77, 46, 1);
+  margin-left: 10px;
+  border: none;
+}
+.myinfo-location2btnbutton { /*지역2 버튼*/
+  display: inline-block;
+  padding: 10px 15px;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: rgba(26, 77, 46, 1);
+  margin-left: 10px;
+  border: none;
+}
+.myinfo-text025 { /*지역, 중복확인 span*/
+  color: rgba(255, 255, 255, 1);
+  height: auto;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+/*  01-06 관심 분야 */
+.myinfo-form-input-box-title span {
+color: #1A4D2E;
+font-size: 20px;
+font-weight: 500;
+}
+.myinfo-form-select-interest {
+gap: 10px;
+display: flex;
+padding: 20px 0;
+overflow: hidden;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+}
+.myinfo-form-select-interest-title {
+font-size: 13px;
+align-self: stretch;
+font-weight: 500;
+background-color: #1A4D2E;
+color: white;
+padding: 3px 10px;
+width: 90px;
+text-align: center;
+}
+.myinfo-form-select-interest-button {
+gap: 15px 10px;
+display: flex;
+flex-wrap: wrap;
+align-self: stretch;
+align-items: center;
+flex-shrink: 0;
+}
+
+/* 관심분야 select 버튼 */
+.myinfo-interest-lang-btn,
+.myinfo-interest-fw-btn,
+.myinfo-interest-job-btn {
+  border: 0;
+  border-radius: 5px;
+  color: #000000;
+  font-weight: 500;
+  font-size: 12px;
+  background-color: #DEDFE4;
+  box-shadow: 0 6px #55565B;
+  padding: 5px 10px;
+}
+.myinfo-interest-lang-btn:hover,
+.myinfo-interest-fw-btn:hover,
+.myinfo-interest-job-btn:hover {
+  background-color: #919297;
+  color: white;
+  cursor: pointer;
+}
+.myinfo-interest-lang-btn:focus,
+.myinfo-interest-fw-btn:focus,
+.myinfo-interest-job-btn:focus {
+  outline: none;
+}
+.myinfo-interest-lang-btn:active,
+.myinfo-interest-fw-btn:active,
+.myinfo-interest-job-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 3px #55565B;
+}
+.myinfo-interest-lang-btn.selected{
+   border: 0;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 5px 10px;
+  background-color: #919297;
+  color: white;
+  cursor: pointer;
+  transform: translateY(4px);
+  box-shadow: 0 3px #55565B;
+}
+.myinfo-interest-fw-btn.selected,
+.myinfo-interest-job-btn.selected {
+  border: 0;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 5px 10px;
+  background-color: #919297;
+  color: white;
+  cursor: pointer;
+  transform: translateY(4px);
+  box-shadow: 0 3px #55565B;
+}
+.frame-bottom{
+    width: 90%;
+    height: 70px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    align-items: flex-start;
+    flex-shrink: 0;
+    justify-content:center;
+}
+
+.myinfo-updatebtn {
+  gap: 10px;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  align-self: stretch;
+  align-items: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: rgba(255, 159, 41, 1);
+  color: rgba(250, 243, 227, 1);
+  font-size: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-stretch: normal;
+  text-decoration: none;
+  cursor: pointer;
+}
