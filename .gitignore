@@ -1,5 +1,5 @@
 HELP.md
-/src/main/resources/application.properties
+/src/main/resources/application.yml
 /src/test/resources/application.properties
 .gradle
 build/
@@ -37,7 +37,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-
-**/application.yml
-**/application.yaml
