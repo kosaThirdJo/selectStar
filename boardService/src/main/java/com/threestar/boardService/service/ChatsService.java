@@ -1,5 +1,6 @@
 package com.threestar.boardService.service;
 
+import com.threestar.boardService.dto.ChatsDTO;
 import com.threestar.boardService.repository.ChatsRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,7 @@ public class ChatsService {
         this.chatsRepository = chatsRepository;
     }
 
-    public boolean addChats() {
-
-
-        return true;
+    public void addChats(ChatsDTO.RequestDTO chatsDTO, Long chatsId, Long usersId) {
+        chatsRepository.save(chatsDTO.toEntity());
     }
 }

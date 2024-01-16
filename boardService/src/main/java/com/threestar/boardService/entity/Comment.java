@@ -2,40 +2,41 @@ package com.threestar.boardService.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Chats {
+public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer chatsId;
+    private Long commentId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="userId", referencedColumnName = "userId")
-//    private User user;
+    // private User user;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
+    // private Chats chats;
+    @Column(nullable = false, length = 255)
     private String content;
 
-    private java.sql.Date applicationDeadline;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
 
-    @ColumnDefault("0")
-    private int views;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
+    private int depth;
 
     @CreationTimestamp
     private java.sql.Date creationDate;
 
     @ColumnDefault("0")
     private int deleted; // 0:삭제X 1:삭제
+
 }
