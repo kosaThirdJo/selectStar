@@ -38,6 +38,7 @@ public class User {
     private String interestJob;
     private int deleted;
     private String role;
+    private int user_status;
 
     @Override
     public boolean equals(Object o) {
