@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "comment")
 @Builder
 public class Comment {
     @Id

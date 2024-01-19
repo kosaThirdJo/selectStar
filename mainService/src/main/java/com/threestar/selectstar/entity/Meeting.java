@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "meeting")
 @Builder
 public class Meeting {
 
