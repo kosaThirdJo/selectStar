@@ -3,10 +3,13 @@ package com.threestar.selectstar.config.auth;
 import com.threestar.selectstar.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 // UserDetails 인터페이스 구현
 // Spring Security에서 사용자의 기본 정보와 권한 정보를 제공하기 위한 것
@@ -23,8 +26,8 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoleList().forEach(r-> {
-            authorities.add(()-> {return r;});
+        this.getRoleList().forEach(role-> {
+            authorities.add(()-> {return role;});
         });
         return authorities;
     }
@@ -63,4 +66,10 @@ public class CustomUserDetails implements UserDetails {
         return user.getUserId();
     }
 
+    public List<String> getRoleList(){
+        if(!user.getRole().isEmpty()){
+            return Arrays.asList(user.getRole().split(","));
+        }
+        return new ArrayList<>();
+    }
 }

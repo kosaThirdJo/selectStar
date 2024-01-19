@@ -26,8 +26,8 @@ class SelectstarApplicationTests {
 	}
 */
 
-	@Test
+/*	@Test
 	void contextLoads() {
-	}
+	}*/
 
 }

@@ -35,6 +35,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	@Value("${SECRET_KEY}")
 	private String SECRET_KEY;
 
+	private GetUserRequest loginRequest;
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
@@ -43,17 +45,17 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		// 클라이언트로부터 전송된 JSON 데이터를 GetUserRequest 객체로 매핑
 		// request의 username, password를 파싱해서 입력해서 반환
 		ObjectMapper om = new ObjectMapper();
-		GetUserRequest getUserRequest = null;
+
 		try {
-			getUserRequest = om.readValue(request.getInputStream(), GetUserRequest.class);
+			loginRequest = om.readValue(request.getInputStream(), GetUserRequest.class);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		System.out.println("JwtAuthenticationFilter : "+getUserRequest);
+		System.out.println("JwtAuthenticationFilter : "+loginRequest);
 
 		// UsernamePasswordAuthenticationToken 생성
 		// 요청으로 준 유저정보와 DB에 담긴 유저정보가 같은지를 판별하기 위한 토큰 (사용자의 인증을 시도하는 토큰)
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(getUserRequest.getName(), getUserRequest.getPassword());
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getName(), loginRequest.getPassword());
 		System.out.println("JwtAuthenticationFilter : 토큰생성완료");
 
 		// authenticate() 함수가 호출 되면 AuthenticationProvider가 UserDetailsService 객체의

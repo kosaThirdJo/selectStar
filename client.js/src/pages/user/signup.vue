@@ -396,13 +396,15 @@ async function signup() {
     msg.value.location = "지역을 인증해주세요.";
   } else {
     if (check.name && check.password && check.email && check.nickname && check.location) {
-      const response = await api("users", "POST", signupInfo.value);
-      if (response) {
+      const response = await api("signup", "POST", signupInfo.value);
+      if (response==="success") {
         if (confirm("회원가입에 성공했습니다.\n로그인 페이지로 이동 하시겠습니까?")) {
           router.replace("/login");
         } else {
           router.replace("/");
         }
+      }else{
+        alert("회원가입에 실패했습니다.")
       }
     }
   }

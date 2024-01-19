@@ -80,7 +80,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        System.out.println("jwtAuthenticationFilter 등록");
         return new JwtAuthenticationFilter(authenticationManagerBean());
     }
 

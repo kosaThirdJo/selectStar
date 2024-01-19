@@ -1,6 +1,6 @@
--- select_star.users definition
+-- select_star.user definition
 
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 NOT NULL,
   `password` varchar(100) COLLATE utf8_bin NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `meeting` (
   `deleted` tinyint(2) DEFAULT '0' COMMENT '삭제 됬는지 체크',
   PRIMARY KEY (`meeting_id`),
   KEY `meeting_FK` (`user_id`),
-  CONSTRAINT `meeting_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `meeting_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- select_star.comment definition
 
@@ -54,7 +54,7 @@ CREATE TABLE `comment` (
   PRIMARY KEY (`comment_id`),
   KEY `comment_FK` (`user_id`),
   KEY `comment_FK_1` (`meeting_id`),
-  CONSTRAINT `comment_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `comment_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `comment_FK_1` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 -- select_star.apply definition
@@ -68,7 +68,7 @@ CREATE TABLE `apply` (
   `application_date` date DEFAULT NULL,
   PRIMARY KEY (`user_id`,`meeting_id`),
   KEY `apply_FK_1` (`meeting_id`),
-  CONSTRAINT `apply_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `apply_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `apply_FK_1` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
