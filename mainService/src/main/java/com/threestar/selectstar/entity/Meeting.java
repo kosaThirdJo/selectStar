@@ -16,7 +16,6 @@ import java.util.Objects;
 @Table(name = "meeting")
 @Builder
 public class Meeting {
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
