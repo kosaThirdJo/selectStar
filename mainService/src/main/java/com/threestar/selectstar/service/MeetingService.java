@@ -86,7 +86,7 @@ public class MeetingService {
 				applyRepository));
 	}
 	@Transactional
-	public FindMeetingOneResponse findMeetingOne(int meetingId){
+	public FindMeetingOneResponse findMeetingOne(Long meetingId){
 		// => 조회수 1 증가
 		Meeting entity = meetingRepository.findById(meetingId).orElseThrow(IllegalArgumentException::new);
 		entity.setViews(entity.getViews() + 1);
@@ -124,7 +124,7 @@ public class MeetingService {
 		}
 	}
 	@Transactional
-	public String removeMeeting(int id){
+	public String removeMeeting(Long id){
 		try {
 			meetingRepository.findById(id)
 				.orElseThrow(IllegalArgumentException::new)

@@ -16,7 +16,7 @@ import java.sql.Date;
 public class FindApplyByMeetingIdValidResponse {
     private String userName;
     private long userId;
-    private int meetingId;
+    private Long meetingId;
     private String emailAddress;
     private String snsAddress;
     private Date applicationDate;

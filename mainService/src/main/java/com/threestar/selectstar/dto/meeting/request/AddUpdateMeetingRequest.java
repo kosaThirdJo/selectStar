@@ -16,7 +16,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUpdateMeetingRequest {
-    private Integer meetingId;
+    private Long meetingId;
     private Integer userId;
     @NotBlank(message = "title must not be blank")
     private String title;

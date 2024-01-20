@@ -41,7 +41,7 @@ public class CommentController {
     // 글 등록
     // return new ResponseEntity<>(response, HttpStatus.CREATED) 로 수정 해야 함
     @PostMapping("/meeting/{meetingId}")
-    public Map<String, String> addComment(@PathVariable int meetingId,@RequestBody AddCommentRequest addCommentRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public Map<String, String> addComment(@PathVariable Long meetingId,@RequestBody AddCommentRequest addCommentRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
         addCommentRequest.setUserId(userDetails.getUserId());
         addCommentRequest.setMeetingId(meetingId);

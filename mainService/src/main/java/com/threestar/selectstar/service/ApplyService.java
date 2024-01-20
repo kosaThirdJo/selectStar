@@ -77,7 +77,7 @@ public class ApplyService {
         byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setRejectReason(rejectApplyRequest.getReason());
         return "success";
     }
-    public Integer countApplyByMeeting(int meetingId){
+    public Integer countApplyByMeeting(Long meetingId){
         return applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0);
     }
 

@@ -16,7 +16,7 @@ public class AddCommentRequest {
     @NotBlank
     private int userId;
     @NotBlank
-    private int meetingId;
+    private Long meetingId;
     @NotBlank
     private String content;
 

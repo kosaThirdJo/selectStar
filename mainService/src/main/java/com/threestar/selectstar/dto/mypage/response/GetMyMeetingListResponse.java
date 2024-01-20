@@ -12,7 +12,7 @@ import java.sql.Date;
 @ToString
 @Getter
 public class GetMyMeetingListResponse {
-    private int meetingId;
+    private Long meetingId;
     //private int userId;
     private String title;
     private int category;

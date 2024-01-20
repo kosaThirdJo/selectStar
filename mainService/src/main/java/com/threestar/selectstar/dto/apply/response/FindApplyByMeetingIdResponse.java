@@ -15,7 +15,7 @@ import java.sql.Date;
 @AllArgsConstructor
 public class FindApplyByMeetingIdResponse {
     private long userId;
-    private int meetingId;
+    private Long meetingId;
     private String emailAddress;
     private String snsAddress;
     private Date applicationDate;

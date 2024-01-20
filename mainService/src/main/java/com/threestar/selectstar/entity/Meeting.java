@@ -31,7 +31,7 @@ public class Meeting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer meetingId;
+    private Long meetingId;
     @ManyToOne
     @JoinColumn(name="userId", referencedColumnName = "userId")
     private User user;

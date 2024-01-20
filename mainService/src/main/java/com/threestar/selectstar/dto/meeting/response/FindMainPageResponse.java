@@ -12,7 +12,7 @@ import java.sql.Date;
 @ToString
 @AllArgsConstructor
 public class FindMainPageResponse {
-    private Integer meetingId;
+    private Long meetingId;
     private long userId;
     private String userNickname;
     private String title;
