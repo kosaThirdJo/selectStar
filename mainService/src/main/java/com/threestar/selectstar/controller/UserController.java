@@ -31,7 +31,7 @@ public class UserController {
 
 	// 회원가입
 	@PostMapping("/signup")
-	public ResponseEntity<?> signUp (@RequestBody AddUserRequest request) {
+	public ResponseEntity<?> processSignUp (@RequestBody AddUserRequest request) {
 		userService.createUser(request);
 		return new ResponseEntity<>("success", HttpStatus.CREATED);
 	}
@@ -57,16 +57,10 @@ public class UserController {
 		try {
 			userService.loginUser(request);
 			return ResponseEntity.ok("로그인 성공");
-		} catch (Exception e){
+		} catch (IllegalStateException e){
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
     }
-
-/*	@GetMapping("/logout")
-	public ResponseEntity<String> processLogout(@RequestHeader(value = "Authorization", required = false) String token, HttpServletResponse response){
-		response.addHeader(JwtProperties.HEADER_STRING,"delete");
-		return new ResponseEntity<>("로그아웃 성공", HttpStatus.OK);
-	}*/
 
 	//다른 유저 프로필 조회
 	@GetMapping("/profiles/info/{id}")

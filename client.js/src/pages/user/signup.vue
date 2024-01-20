@@ -286,7 +286,8 @@ const signupInfo = ref({
                       `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
                       {headers: {Authorization: `KakaoAK ${apiKey}`}}
                   );
-                  signupInfo.value.location1 = response.data.documents[0].region_1depth_name;
+                  const data = response.data.documents[0];
+                  signupInfo.value.location1 = data.region_1depth_name +' '+ data.region_2depth_name;
                   msg.value.location = "현재 지역이 인증되었습니다.";
                   check.location = true;
                 }
