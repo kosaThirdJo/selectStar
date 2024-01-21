@@ -21,7 +21,6 @@ public class Apply {
     @CreationTimestamp
     private java.sql.Date applicationDate;
     @ColumnDefault("0")
-    private int reject; // 바꿔야 됨
     private int applyStatus;
     private String rejectReason;
 }

@@ -32,8 +32,6 @@ public class QApply extends EntityPathBase<Apply> {
 
     public final StringPath reason = createString("reason");
 
-    public final NumberPath<Integer> reject = createNumber("reject", Integer.class);
-
     public final StringPath rejectReason = createString("rejectReason");
 
     public final StringPath snsAddress = createString("snsAddress");

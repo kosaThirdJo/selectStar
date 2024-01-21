@@ -94,7 +94,7 @@ public class MeetingService {
 			map(meeting -> FindMeetingOneResponse.fromEntity(meeting,
 							meeting.getUser().getNickname(),
 					meeting.getUser().getAboutMe(),
-					applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0),
+					applyRepository.countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,0),
 					null))
 			.orElse(null);
 	}

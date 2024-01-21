@@ -64,16 +64,16 @@ public class ApplyService {
     }
     // 거절 안 된 글에서 지원한 사람
     public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(Long meetingId) {
-        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0)
+        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,0)
                 .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
                 .collect(Collectors.toList());
     }
     // 거절 시키기
     @Transactional
     public String rejectApplyByUserIdAndMeetingId(RejectApplyRequest rejectApplyRequest){
-        Apply byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndRejectIs(rejectApplyRequest.getMeetingId()
+        Apply byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
                 , rejectApplyRequest.getUserId(), 0);
-        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setReject(1);
+        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setApplyStatus(1);
         byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setRejectReason(rejectApplyRequest.getReason());
         return "success";
     }
