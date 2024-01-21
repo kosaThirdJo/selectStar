@@ -22,6 +22,7 @@ function checkValidApply(){
       localStorage.getItem("jwtToken")
       ).then(
           response =>{
+            console.log(response)
             validObjApply.value = response;
             if (response) {
               emit("view1")
@@ -43,10 +44,10 @@ onMounted(() => {
           <slot name="header"></slot>
         </div>
         <div class="modal-body">
-          <slot name="body" v-if="validObjApply.reject===undefined">
+          <slot name="body" v-if="validObjApply.applyStatus===undefined">
             <h3>아직 신청 안 하신 것 아닌가요?</h3>
           </slot>
-          <slot name="body" v-else-if="validObjApply.reject===0">
+          <slot name="body" v-else-if="validObjApply.applyStatus===0">
             <h3>신청 대기중 입니다.</h3>
             <hr>
             <h4 v-text="'나의 신청 사유 : ' + validObjApply.reason"></h4>
