@@ -15,7 +15,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Builder
 public class FindCommentResponse {
-    private int commentId;
+    private Long commentId;
     private Long meetingId;
     private long userId;
     private String userNickName;

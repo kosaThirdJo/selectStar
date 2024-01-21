@@ -28,7 +28,7 @@ public class CommentController {
     }
     // => 삭제 상태 조회로 변경 할 것...
     @GetMapping("/meeting/{meetingId}")
-    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable int meetingId,@RequestParam(defaultValue = "0") int page){
+    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable Long meetingId,@RequestParam(defaultValue = "0") int page){
         return ResponseEntity.ok()
                         .body(commentService.findComment(meetingId, PageRequest.of(page,10)));
     }
@@ -50,7 +50,7 @@ public class CommentController {
     }
     // 글 삭제
     @DeleteMapping("/meeting/{commentId}")
-    public Map<String,String> removeComment(@PathVariable int commentId) {
+    public Map<String,String> removeComment(@PathVariable Long commentId) {
         Map<String, String> succesMap = new HashMap<>();
         succesMap.put("result",commentService.removeComment(commentId));
         return succesMap;

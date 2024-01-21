@@ -15,7 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer commentId;
+    private Long commentId;
     @ManyToOne
     @JoinColumn(name="userId")
     private User user;

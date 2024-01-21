@@ -44,7 +44,7 @@ public class ApplyService {
         }
     }
     // 지원 확인
-    public ApplyCheckResponse checkApply(int userId, int meetingId) {
+    public ApplyCheckResponse checkApply(int userId, Long meetingId) {
         return ApplyCheckResponse.fromEntity(applyRepository.findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(userId, meetingId)
                 .orElseThrow(IllegalArgumentException::new));
         }
@@ -57,13 +57,13 @@ public class ApplyService {
 
     }
     // 글에서 지원한 사람
-    public List<FindApplyByMeetingIdResponse> findApplyByMeetingId(int meetingId) {
+    public List<FindApplyByMeetingIdResponse> findApplyByMeetingId(Long meetingId) {
         return applyRepository.findByApplyID_Meeting_MeetingIdIs(meetingId)
                 .stream().map(FindApplyByMeetingIdResponse::fromEntity)
                 .collect(Collectors.toList());
     }
     // 거절 안 된 글에서 지원한 사람
-    public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(int meetingId) {
+    public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(Long meetingId) {
         return applyRepository.findByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0)
                 .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -77,9 +77,9 @@ public class ApplyService {
         byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setRejectReason(rejectApplyRequest.getReason());
         return "success";
     }
-    public Integer countApplyByMeeting(Long meetingId){
-        return applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0);
-    }
+//    public Integer countApplyByMeeting(Long meetingId){
+//        return applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0);
+//    }
 
 }
 
