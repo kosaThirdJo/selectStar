@@ -14,6 +14,17 @@ public class ChatsService {
     }
 
     public void addChats(ChatsDTO.RequestDTO chatsDTO, Long chatsId, Long usersId) {
+
         chatsRepository.save(chatsDTO.toEntity());
+    }
+
+    public void deleteChats(Long chatsId, Long userId, ChatsDTO.RequestDTO chatsDTO) {
+
+        chatsDTO.toEntity().deleteChats(chatsDTO.getDeleted());
+    }
+
+    public void updateChats(ChatsDTO.RequestDTO chatsDTO) {
+
+        chatsDTO.toEntity().updateChats(chatsDTO.getTitle(), chatsDTO.getContent());
     }
 }

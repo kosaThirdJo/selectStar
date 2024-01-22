@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatsRepository extends JpaRepository<Chats, Integer> {
 
+    void deleteByIdAndUserId(Long chatsId, Long usersId);
 }

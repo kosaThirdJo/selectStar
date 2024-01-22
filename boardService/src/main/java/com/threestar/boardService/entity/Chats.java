@@ -18,17 +18,15 @@ public class Chats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer chatsId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="userId", referencedColumnName = "userId")
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="userId", referencedColumnName = "userId")
+    private User user;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String content;
-
-    private java.sql.Date applicationDeadline;
 
     @ColumnDefault("0")
     private int views;
@@ -38,4 +36,13 @@ public class Chats {
 
     @ColumnDefault("0")
     private int deleted; // 0:삭제X 1:삭제
+
+    public void updateChats(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
+    public void deleteChats(int deleted) {
+        this.deleted = deleted;
+    }
 }
