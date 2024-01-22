@@ -17,7 +17,7 @@ public class ApplyRequest {
     @NotBlank
     private Integer userId;
     @NotBlank
-    private Integer meetingId;
+    private Long meetingId;
     @NotBlank
     private String emailAddress;
     private String snsAddress;

@@ -26,7 +26,7 @@ public class CommentService {
         this.applyRepository = applyRepository;
     }
     // 해당 게시글 모든 댓글 조회
-    public Page<FindCommentResponse> findComment(int meetingId, Pageable pageable) {
+    public Page<FindCommentResponse> findComment(Long meetingId, Pageable pageable) {
         return commentRepository.findByMeeting_MeetingIdIs(meetingId, pageable).map(FindCommentResponse::fromEntity);
     }
     // 댓글 등록
@@ -41,7 +41,7 @@ public class CommentService {
         }
     }
     // 댓글 삭제
-    public String removeComment(int commentId){
+    public String removeComment(Long commentId){
         try {
             commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setDeleted(0);
             return "success";

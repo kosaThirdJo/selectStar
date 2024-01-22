@@ -15,7 +15,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Repository
-public interface MeetingRepository extends JpaRepository<Meeting, Integer>, QuerydslPredicateExecutor<Meeting> {
+public interface MeetingRepository extends JpaRepository<Meeting, Long>, QuerydslPredicateExecutor<Meeting> {
 
 	// 삭제 안 된 전체 게시물 리스트 조회
 	Page<Meeting> findByDeletedIs(int isDelete, Pageable pageable);

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    Page<Comment> findByMeeting_MeetingIdIs(Integer meeting_meetingId, Pageable pageable);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    Page<Comment> findByMeeting_MeetingIdIs(Long meeting_meetingId, Pageable pageable);
 
-    int countByMeeting_MeetingIdIs(Integer meeting_meetingId);
+    int countByMeeting_MeetingIdIs(Long meeting_meetingId);
 }

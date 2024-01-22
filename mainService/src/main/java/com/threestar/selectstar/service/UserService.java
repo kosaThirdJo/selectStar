@@ -155,52 +155,52 @@ public class UserService {
         }
     }
 
-    //마이페이지 개인정보 수정 요청(UserService 이동 예정)
-    @jakarta.transaction.Transactional
-    public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO) {
-        Optional<User> userO = userRepository.findById(uId);
-        if (userO.isEmpty()) {
-            return "찾는 사용자가 없습니다.";
-        } else {
-            User oldUserEntity = userO.get();
-            //oldUserEntity.setPassword(reqDTO.getPassword());
-            oldUserEntity.setPassword(passwordEncoder.encode(reqDTO.getPassword()));
-            oldUserEntity.setEmail(reqDTO.getEmail());
-            oldUserEntity.setNickname(reqDTO.getNickname());
-            oldUserEntity.setLocation1(reqDTO.getLocation1());
-            oldUserEntity.setLocation2(reqDTO.getLocation2());
-            oldUserEntity.setInterestLanguage(reqDTO.getInterestLanguage());
-            oldUserEntity.setInterestFramework(reqDTO.getInterestFramework());
-            oldUserEntity.setInterestJob(reqDTO.getInterestJob());
-            try {
-                userRepository.save(oldUserEntity);
-                return "success";
-            } catch (Exception e) {
-                log.info("update myinfo exception", e.getMessage());
-                return e.getMessage();
-            }
-        }
-    }
+	//마이페이지 개인정보 수정 요청(UserService 이동 예정)
+	@jakarta.transaction.Transactional
+	public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
+		Optional<User> userO = userRepository.findById(uId);
+		if(userO.isEmpty()){
+			return "찾는 사용자가 없습니다.";
+		}else {
+			User oldUserEntity = userO.get();
+			//oldUserEntity.setPassword(reqDTO.getPassword());
+			oldUserEntity.setPassword(passwordEncoder.encode(reqDTO.getPassword()));
+			oldUserEntity.setEmail(reqDTO.getEmail());
+			oldUserEntity.setNickname(reqDTO.getNickname());
+			oldUserEntity.setLocation1(reqDTO.getLocation1());
+			oldUserEntity.setLocation2(reqDTO.getLocation2());
+			oldUserEntity.setInterestLanguage(reqDTO.getInterestLanguage());
+			oldUserEntity.setInterestFramework(reqDTO.getInterestFramework());
+			oldUserEntity.setInterestJob(reqDTO.getInterestJob());
+			try {
+				userRepository.save(oldUserEntity);
+				return "success";
+			} catch (Exception e) {
+				log.info("update myinfo exception", e.getMessage());
+				return e.getMessage();
+			}
+		}
+	}
 
-    //프로필 이미지 수정
-    @jakarta.transaction.Transactional
-    public String updateMyProfileImg(int uId, UserImgFileDTO fileDTO) {
-        Optional<User> userO = userRepository.findById(uId);
-        if (userO.isEmpty()) {
-            return "찾는 사용자가 없습니다.";
-        } else {
-            User oldUserE = userO.get();
-            byte[] byteImg = null;
-            try {
-                byteImg = fileDTO.getProfilePhoto().getBytes();
-                oldUserE.setProfilePhoto(byteImg);
-                return "success";
-            } catch (Exception e) {
-                log.info("update profile img error" + e.getMessage());
-                return e.getMessage();
-            }
-        }
-    }
+	//프로필 이미지 수정
+	@jakarta.transaction.Transactional
+	public String updateMyProfileImg(int uId, UserImgFileDTO fileDTO){
+		Optional<User> userO = userRepository.findById(uId);
+		if(userO.isEmpty()){
+			return "찾는 사용자가 없습니다.";
+		}else {
+			User oldUserE = userO.get();
+			byte[] byteImg = null;
+			try {
+				byteImg = fileDTO.getProfilePhoto().getBytes();
+				oldUserE.setProfilePhoto(byteImg);
+				return "success";
+			}catch (Exception e){
+				log.info("update profile img error"+e.getMessage());
+				return e.getMessage();
+			}
+		}
+	}
 
     //다른 유저 프로필 조회
     public GetUserProfileResponse getUserProfile(int id) {

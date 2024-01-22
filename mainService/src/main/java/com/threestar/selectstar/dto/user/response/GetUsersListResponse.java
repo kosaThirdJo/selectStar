@@ -16,7 +16,7 @@ import java.util.Base64;
 @AllArgsConstructor
 @Builder
 public class GetUsersListResponse {
-	private int userId;
+	private long userId;
 	private String nickname;
 	private String aboutMe;
 	private String profilePhoto;

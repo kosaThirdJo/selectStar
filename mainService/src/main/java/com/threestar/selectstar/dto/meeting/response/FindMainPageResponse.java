@@ -12,8 +12,8 @@ import java.sql.Date;
 @ToString
 @AllArgsConstructor
 public class FindMainPageResponse {
-    private Integer meetingId;
-    private Integer userId;
+    private Long meetingId;
+    private long userId;
     private String userNickname;
     private String title;
     private int category;
@@ -30,7 +30,7 @@ public class FindMainPageResponse {
     private String interestJob;
 
     public static FindMainPageResponse fromEntity(Meeting meeting,int commentCount, ApplyRepository applyRepository){
-        int applicationCount = applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meeting.getMeetingId(),0);
+        int applicationCount = applyRepository.countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meeting.getMeetingId(),2);
         return FindMainPageResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userId(meeting.getUser().getUserId())

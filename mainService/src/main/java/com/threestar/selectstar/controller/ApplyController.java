@@ -27,7 +27,7 @@ public class ApplyController {
         this.applyService = applyService;
     }
     @GetMapping("/check")
-    public ResponseEntity<ApplyCheckResponse> checkByUserIdAndMeetingId(@RequestParam int meetingId,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<ApplyCheckResponse> checkByUserIdAndMeetingId(@RequestParam Long meetingId,@AuthenticationPrincipal CustomUserDetails userDetails){
         try {
             return ResponseEntity.ok()
                     .body(applyService.checkApply(userDetails.getUserId(),meetingId)); // 신청 없으면 에러
@@ -43,12 +43,12 @@ public class ApplyController {
                 .body(applyService.findApplyByUserId(userId));
     }
     @GetMapping("/meeting")
-    public ResponseEntity<List<FindApplyByMeetingIdResponse>> applyListByMeetingId(@RequestParam(name = "meetingId") int meetingId){
+    public ResponseEntity<List<FindApplyByMeetingIdResponse>> applyListByMeetingId(@RequestParam(name = "meetingId") Long meetingId){
         return ResponseEntity.ok()
                 .body(applyService.findApplyByMeetingId(meetingId));
     }
     @GetMapping("/meeting/valid")
-    public ResponseEntity<List<FindApplyByMeetingIdValidResponse>> applyListByMeetingIdValid(@RequestParam int meetingId){
+    public ResponseEntity<List<FindApplyByMeetingIdValidResponse>> applyListByMeetingIdValid(@RequestParam Long meetingId){
         return ResponseEntity.ok()
                 .body(applyService.findApplyByMeetingIdValid(meetingId));
     }
@@ -62,7 +62,15 @@ public class ApplyController {
     @PatchMapping("/reject")
     public Map<String,String> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
-        succesMap.put("result",applyService.rejectApplyByUserIdAndMeetingId(rejectApplyRequest));
+        rejectApplyRequest.setUserId(userDetails.getUserId());
+        succesMap.put("result",applyService.rejectApply(rejectApplyRequest));
+        return succesMap;
+    }
+    @PatchMapping("/recognize")
+    public Map<String,String> recognizeApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
+        Map<String, String> succesMap = new HashMap<>();
+        rejectApplyRequest.setUserId(userDetails.getUserId());
+        succesMap.put("result",applyService.recognizeApply(rejectApplyRequest));
         return succesMap;
     }
 }

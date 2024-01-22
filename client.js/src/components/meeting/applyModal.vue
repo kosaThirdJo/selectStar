@@ -10,7 +10,7 @@ const props = defineProps({
   meetingId: Number
 })
 let applyObj = {
-  userId : props.userId,
+
   meetingId : props.meetingId,
   emailAddress : "",
   snsAddress : "",

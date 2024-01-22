@@ -13,9 +13,9 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "meeting")
 @Builder
 public class Meeting {
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -31,7 +31,7 @@ public class Meeting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer meetingId;
+    private Long meetingId;
     @ManyToOne
     @JoinColumn(name="userId", referencedColumnName = "userId")
     private User user;

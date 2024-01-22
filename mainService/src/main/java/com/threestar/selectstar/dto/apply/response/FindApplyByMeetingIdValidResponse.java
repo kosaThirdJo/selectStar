@@ -15,12 +15,13 @@ import java.sql.Date;
 @AllArgsConstructor
 public class FindApplyByMeetingIdValidResponse {
     private String userName;
-    private int userId;
-    private int meetingId;
+    private long userId;
+    private Long meetingId;
     private String emailAddress;
     private String snsAddress;
     private Date applicationDate;
     private String reason;
+    private int status;
     public static FindApplyByMeetingIdValidResponse fromEntity(Apply apply){
         return FindApplyByMeetingIdValidResponse.builder()
                 .userName(apply.getApplyID().getUser().getNickname())
@@ -30,6 +31,7 @@ public class FindApplyByMeetingIdValidResponse {
                 .snsAddress(apply.getSnsAddress())
                 .applicationDate(apply.getApplicationDate())
                 .reason(apply.getReason())
+                .status(apply.getApplyStatus())
                 .build();
     }
 }

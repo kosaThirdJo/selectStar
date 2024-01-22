@@ -42,7 +42,7 @@ public class QMeeting extends EntityPathBase<Meeting> {
 
     public final StringPath location = createString("location");
 
-    public final NumberPath<Integer> meetingId = createNumber("meetingId", Integer.class);
+    public final NumberPath<Long> meetingId = createNumber("meetingId", Long.class);
 
     public final NumberPath<Integer> recruitmentCount = createNumber("recruitmentCount", Integer.class);
 

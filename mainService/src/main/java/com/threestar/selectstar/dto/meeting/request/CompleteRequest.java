@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompleteRequest {
     private int userId;
-    private int meetingId;
+    private Long meetingId;
 }

@@ -13,7 +13,7 @@ import java.sql.Date;
 @ToString
 @AllArgsConstructor
 public class FindMeetingOneResponse {
-    private Integer meetingId;
+    private Long meetingId;
     private Integer userId;
     private String userNickname;
     private String userAboutMe;

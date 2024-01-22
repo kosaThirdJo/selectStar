@@ -234,7 +234,7 @@
   //지역1 위치 인증
   const getLocation = async () => {
     // apiKey 가져오기
-    const apiResponse = await axios.get(`http://43.201.149.206:8081/users/apiKey`);
+    const apiResponse = await axios.get(`http://localhost:8081/users/apiKey`);
     const apiKey = apiResponse.data;
     // geolocation
     if (navigator.geolocation) {
