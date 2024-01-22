@@ -68,15 +68,24 @@ public class ApplyService {
                 .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
                 .collect(Collectors.toList());
     }
-    // 거절 시키기
+    // 거절 시키기 0 대기 1 거절 2 수락
     @Transactional
-    public String rejectApplyByUserIdAndMeetingId(RejectApplyRequest rejectApplyRequest){
-        Apply byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
+    public String rejectApply(RejectApplyRequest rejectApplyRequest){
+        Apply apply = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
                 , rejectApplyRequest.getUserId(), 0);
-        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setApplyStatus(1);
-        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setRejectReason(rejectApplyRequest.getReason());
+        apply.setApplyStatus(1);
+        apply.setRejectReason(rejectApplyRequest.getReason());
         return "success";
     }
+    @Transactional
+    public String recognizeApply(RejectApplyRequest rejectApplyRequest){
+        Apply apply = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
+                , rejectApplyRequest.getUserId(), 0);
+        apply.setApplyStatus(2);
+        apply.setRejectReason("");
+        return "success";
+    }
+
 //    public Integer countApplyByMeeting(Long meetingId){
 //        return applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0);
 //    }
