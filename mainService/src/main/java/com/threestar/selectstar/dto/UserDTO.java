@@ -13,7 +13,7 @@ import java.sql.Date;
 @ToString
 @Builder
 public class UserDTO {
-    private int userId;
+    private Integer userId;
     private String name;
     private String password;
     private String email;

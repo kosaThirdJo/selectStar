@@ -15,8 +15,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();  // 자격 증명 허용하도록 설정
         config.setAllowCredentials(true);  // 요청에 인증 정보를 포함시킬 수 있음
 
-        config.addAllowedOrigin("*");
-//        config.addAllowedOrigin("http://localhost:5173");  // 특정 Origin만 허용
+//        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:5173");  // 특정 Origin만 허용
 //        config.addAllowedOrigin("http://localhost:63342");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

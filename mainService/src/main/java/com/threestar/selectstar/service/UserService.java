@@ -108,7 +108,7 @@ public class UserService {
 	}
 
 	//마이페이지 이력관리 수정 요청
-	@jakarta.transaction.Transactional
+	@Transactional
 	public String updateMyProfileInfo(int uId, UpdateMyInfoRequest reqDTO){
 		Optional<User> userO = userRepository.findById(uId);
 		if(userO.isEmpty()){
@@ -161,7 +161,7 @@ public class UserService {
 	}
 
 	//마이페이지 개인정보 수정 요청(UserService 이동 예정)
-	@jakarta.transaction.Transactional
+	@Transactional
 	public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
 		Optional<User> userO = userRepository.findById(uId);
 		if(userO.isEmpty()){
@@ -188,7 +188,7 @@ public class UserService {
 	}
 
 	//프로필 이미지 수정
-	@jakarta.transaction.Transactional
+	@Transactional
 	public String updateMyProfileImg(int uId, UserImgFileDTO fileDTO){
 		Optional<User> userO = userRepository.findById(uId);
 		if(userO.isEmpty()){

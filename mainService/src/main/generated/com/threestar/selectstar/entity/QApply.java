@@ -26,11 +26,11 @@ public class QApply extends EntityPathBase<Apply> {
 
     public final QApplyID applyID;
 
+    public final NumberPath<Integer> applyStatus = createNumber("applyStatus", Integer.class);
+
     public final StringPath emailAddress = createString("emailAddress");
 
     public final StringPath reason = createString("reason");
-
-    public final NumberPath<Integer> reject = createNumber("reject", Integer.class);
 
     public final StringPath rejectReason = createString("rejectReason");
 

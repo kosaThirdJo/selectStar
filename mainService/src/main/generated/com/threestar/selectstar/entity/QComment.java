@@ -22,7 +22,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public static final QComment comment = new QComment("comment");
 
-    public final NumberPath<Integer> commentId = createNumber("commentId", Integer.class);
+    public final NumberPath<Long> commentId = createNumber("commentId", Long.class);
 
     public final StringPath content = createString("content");
 

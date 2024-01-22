@@ -17,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users") //h2는 user가 예약어
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +38,7 @@ public class User {
     private String interestJob;
     private int deleted;
     private String role;
+    private int user_status;
 
     @Override
     public boolean equals(Object o) {

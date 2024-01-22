@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RejectApplyRequest {
-    private int meetingId;
+    private Long meetingId;
     private int userId;
     private String reason;
 

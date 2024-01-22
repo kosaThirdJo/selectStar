@@ -28,7 +28,7 @@ class ApplyRepositoryTest {
     @Test
     @DisplayName("해당 글 신청 목록")
     void findByApplyID_Meeting_MeetingIdIs(){
-        List<Apply> byApplyIDMeetingMeetingIdIs = applyRepository.findByApplyID_Meeting_MeetingIdIs(8);
+        List<Apply> byApplyIDMeetingMeetingIdIs = applyRepository.findByApplyID_Meeting_MeetingIdIs(8L);
         System.out.println(byApplyIDMeetingMeetingIdIs);
     }
 
@@ -47,7 +47,7 @@ class ApplyRepositoryTest {
     @Test
     @DisplayName("저장 하기")
     void save(){
-        ApplyID applyID = new ApplyID(userRepository.findById(1).get(), meetingRepository.findById(9).get());
+        ApplyID applyID = new ApplyID(userRepository.findById(1).get(), meetingRepository.findById(9L).get());
         Apply build = Apply.builder()
                 .applyID(applyID)
                 .reason("이유")

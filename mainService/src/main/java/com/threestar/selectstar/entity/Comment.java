@@ -10,11 +10,12 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "comment")
 @Builder
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer commentId;
+    private Long commentId;
     @ManyToOne
     @JoinColumn(name="userId")
     private User user;

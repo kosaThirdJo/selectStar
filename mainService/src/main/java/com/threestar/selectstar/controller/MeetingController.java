@@ -1,6 +1,7 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
+import com.threestar.selectstar.config.jwt.JwtService;
 import com.threestar.selectstar.service.MeetingService;
 import com.threestar.selectstar.service.UserService;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
@@ -28,8 +29,7 @@ public class MeetingController {
     final UserService userService;
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-
-    public MeetingController(MeetingService meetingService, UserService userService) {
+    public MeetingController(MeetingService meetingService, UserService userService, JwtService jwtService) {
         this.meetingService = meetingService;
         this.userService = userService;
     }
@@ -43,7 +43,7 @@ public class MeetingController {
     }
     // 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") int id,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
 
         meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
@@ -55,7 +55,9 @@ public class MeetingController {
     }
     // 등록
     @PostMapping
-    public Map<String,String> meetingAdd(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public Map<String,String> meetingAdd(
+            @RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
         int error = 0;
         addUpdateMeetingRequest.setUserId(userDetails.getUserId());
@@ -93,7 +95,9 @@ public class MeetingController {
     }
     
     @DeleteMapping("/{id}")
-    public Map<String,String> meetingRemove(@PathVariable("id") int id){
+    public Map<String,String> meetingRemove
+            (@AuthenticationPrincipal CustomUserDetails userDetails,
+                    @PathVariable("id") Long id){
         Map<String, String> succesMap = new HashMap<>();
         succesMap.put("result",meetingService.removeMeeting(id));
         return succesMap;

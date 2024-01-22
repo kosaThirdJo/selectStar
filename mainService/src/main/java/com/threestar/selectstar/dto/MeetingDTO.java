@@ -12,7 +12,7 @@ import java.sql.Date;
 @Builder
 @AllArgsConstructor
 public class MeetingDTO {
-    private Integer meetingId;
+    private Long meetingId;
     private UserDTO user;
     private String title;
     private int category;

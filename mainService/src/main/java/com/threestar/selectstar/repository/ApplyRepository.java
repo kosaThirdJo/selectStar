@@ -10,10 +10,10 @@ import java.util.Optional;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<Apply, ApplyID> {
-    List<Apply> findByApplyID_Meeting_MeetingIdIs(Integer meeting_meetingId);
+    List<Apply> findByApplyID_Meeting_MeetingIdIs(Long meeting_meetingId);
     List<Apply> findByApplyID_User_UserIdIs(Integer user_userId);
-    List<Apply> findByApplyID_Meeting_MeetingIdIsAndRejectIs(Integer applyID_meeting_meetingId, int reject);
-    Optional<Apply> findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Integer applyID_meeting_meetingId);
-    Apply findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndRejectIs(Integer applyID_meeting_meetingId, Integer applyID_user_userId, int reject);
-    Integer countByApplyID_Meeting_MeetingIdIsAndRejectIs(Integer applyID_meeting_meetingId, int reject);
+    List<Apply> findByApplyID_Meeting_MeetingIdIsAndApplyStatusIsNot(Long applyID_meeting_meetingId,  int applyStatus);
+    Optional<Apply> findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Long applyID_meeting_meetingId);
+    Apply findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(Long applyID_meeting_meetingId, Integer applyID_user_userId,  int applyStatus);
+    Integer countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(Long applyID_meeting_meetingId, int applyStatus);
 }

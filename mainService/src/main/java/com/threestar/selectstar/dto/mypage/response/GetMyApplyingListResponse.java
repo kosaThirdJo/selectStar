@@ -12,7 +12,7 @@ import java.sql.Date;
 @ToString
 @Getter
 public class GetMyApplyingListResponse {
-    private int meetingId;
+    private Long meetingId;
     //private int userId;
     private String title;
     private int category;
@@ -29,7 +29,7 @@ public class GetMyApplyingListResponse {
     //private String interestJob;
 
     public static GetMyApplyingListResponse fromEntity(Meeting meeting, ApplyRepository applyRepository){
-        int applicationCount = applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meeting.getMeetingId(),0);
+        int applicationCount = applyRepository.countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meeting.getMeetingId(),0);
         return GetMyApplyingListResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 //.userId(meeting.getUser().getUserId())
