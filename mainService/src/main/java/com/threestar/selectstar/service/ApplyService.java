@@ -64,7 +64,7 @@ public class ApplyService {
     }
     // 거절 안 된 글에서 지원한 사람
     public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(Long meetingId) {
-        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,0)
+        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyStatusIsNot(meetingId,1)
                 .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
                 .collect(Collectors.toList());
     }

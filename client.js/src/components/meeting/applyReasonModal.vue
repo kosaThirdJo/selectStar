@@ -87,7 +87,11 @@ GetValidApply()
             <div v-text="'이메일 주소 :' + applyEle.emailAddress"></div>
             <div v-text="'블로그 및 깃허브 :' + applyEle.snsAddress"></div>
             <div v-text="'신청 사유 :' +applyEle.reason"></div>
-            <input v-model="rejectObj[idx]" placeholder="거절 사유를 입력 해 주세요"><button @click="recognizeApply(idx)">수락</button> <button @click="rejectApply(idx)">거절</button>
+            <div v-if="applyEle.status===2"
+                 v-text="'수락완료'"
+            >
+            </div>
+            <input v-if="applyEle.status===0" v-model="rejectObj[idx]" placeholder="거절 사유를 입력 해 주세요"><button v-if="applyEle.status===0" @click="recognizeApply(idx)">수락</button> <button v-if="applyEle.status===0" @click="rejectApply(idx)">거절</button>
 <!--            click 할 경우 ajax-->
             <hr>
           </slot>
