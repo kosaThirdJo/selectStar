@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,7 @@ public class HomeController {
 		List<GetUsersListResponse> users = userService.searchUser(searchWord);
 		searchResult.add(users);
 
-		return ResponseEntity.ok(searchResult);
+		return new ResponseEntity<>(searchResult, HttpStatus.OK);
 	}
 
 	// 검색 (모임글 필터링)
@@ -54,9 +55,9 @@ public class HomeController {
 		List<FindMainPageResponse> searchResult = meetingService.searchMeetingWithFilter(searchWord, category, languages, frameworks, jobs);
 
 		if (searchResult.isEmpty()) {
-			return ResponseEntity.noContent().build();
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return ResponseEntity.ok(searchResult);
+		return new ResponseEntity<>(searchResult, HttpStatus.OK);
 	}
 
 	// 인기글 조회

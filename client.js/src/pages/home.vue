@@ -84,7 +84,7 @@ api(
             <div class="main-content-right-rank-listbox">
               <div v-for="(resOne, i) in rankResult" :key="i" :resOne="resOne" class="main-content-right-rank-list">
                 <span class="main-content-right-rank-num" v-text="i + 1"></span>
-                <router-link :to="/meeting/+resOne.meetingId" class="main-content-right-rank-text" v-text="resOne.title"></router-link>
+                <router-link :to="/meet/+resOne.meetingId" class="main-content-right-rank-text" v-text="resOne.title"></router-link>
               </div>
             </div>
           </div>

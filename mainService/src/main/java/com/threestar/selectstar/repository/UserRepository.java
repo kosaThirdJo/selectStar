@@ -12,7 +12,7 @@ public interface UserRepository  extends JpaRepository<User, Integer> {
 
 	Optional<Object> findByName(String name);
 	// 로그인 (닉네임, 탈퇴하지 않은 회원)
-	User findByNameAndDeleted(String name, int deleted);
+	User findByNameAndUserStatus(String name, int userStatus);
     Optional<Object> findByNickname(String nickname);
 	// 로그인 확인 (아이디(name)와 비밀번호로 일치하는지 확인)
 	Optional<User> findByNameAndPassword(String name, String password);

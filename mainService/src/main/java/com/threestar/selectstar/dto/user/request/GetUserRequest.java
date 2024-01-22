@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @Data
 @AllArgsConstructor
@@ -14,5 +13,4 @@ import lombok.*;
 public class GetUserRequest {
 	private String name;
 	private String password;
-
 }

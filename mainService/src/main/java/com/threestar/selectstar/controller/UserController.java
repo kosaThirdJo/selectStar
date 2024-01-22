@@ -30,27 +30,23 @@ public class UserController {
 	}
 
 	// 회원가입
-	@PostMapping("/users")
-	public ResponseEntity<String> processSignup (@RequestBody AddUserRequest request) {
-		try{
-			Integer userId = userService.addUser(request);
-			return ResponseEntity.ok("회원가입 성공 id: "+userId);
-		} catch (IllegalStateException e){
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	@PostMapping("/signup")
+	public ResponseEntity<?> processSignUp (@RequestBody AddUserRequest request) {
+		userService.createUser(request);
+		return new ResponseEntity<>("success", HttpStatus.CREATED);
 	}
 
 	// 중복확인
 	@GetMapping("/users/checkDuplicate")
-	public ResponseEntity<String> checkDuplicate(@RequestParam String type, @RequestParam String value){
+	public ResponseEntity<?> checkDuplicate(@RequestParam String type, @RequestParam String value){
 		try {
 			userService.checkDuplicate(type, value);
 			if(type.equals("name")){
-				return ResponseEntity.ok("사용 가능한 아이디입니다.");
+				return new ResponseEntity<>("사용 가능한 아이디입니다.", HttpStatus.OK);
 			}else{
-				return ResponseEntity.ok("사용 가능한 닉네임입니다.");
+				return new ResponseEntity<>("사용 가능한 닉네임입니다.", HttpStatus.OK);
 			}
-		} catch (IllegalStateException e){
+		}catch (IllegalStateException e){
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
@@ -61,16 +57,10 @@ public class UserController {
 		try {
 			userService.loginUser(request);
 			return ResponseEntity.ok("로그인 성공");
-		} catch (Exception e){
+		} catch (IllegalStateException e){
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
     }
-
-/*	@GetMapping("/logout")
-	public ResponseEntity<String> processLogout(@RequestHeader(value = "Authorization", required = false) String token, HttpServletResponse response){
-		response.addHeader(JwtProperties.HEADER_STRING,"delete");
-		return new ResponseEntity<>("로그아웃 성공", HttpStatus.OK);
-	}*/
 
 	//다른 유저 프로필 조회
 	@GetMapping("/profiles/info/{id}")
