@@ -13,7 +13,7 @@ public class ChatsService {
         this.chatsRepository = chatsRepository;
     }
 
-    public void addChats(ChatsDTO.RequestDTO chatsDTO, Long chatsId, Long usersId) {
+    public void addChats(ChatsDTO.RequestDTO chatsDTO, Long usersId) {
 
         chatsRepository.save(chatsDTO.toEntity());
     }

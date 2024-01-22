@@ -18,11 +18,10 @@ public class ChatsBoardController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<?> createChats(@PathVariable(name = "chatsId") Long chatsId,
-                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<?> createChats(@AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestBody ChatsDTO.RequestDTO chatsRequestDto) {
 
-        chatsService.addChats(chatsRequestDto, chatsId, userDetails.getUserId());
+        chatsService.addChats(chatsRequestDto, userDetails.getUserId());
 
         return ResponseEntity.ok().build();
     }
@@ -36,7 +35,6 @@ public class ChatsBoardController {
 
         return ResponseEntity.ok().build();
     }
-
 
     @PatchMapping("/update/{chatsId}")
     public ResponseEntity<?> modifyChats(@PathVariable(name = "chatsId") Long chatsId,
