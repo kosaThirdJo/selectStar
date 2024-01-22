@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "axios": "^1.6.1",
     "bootstrap-vue": "^2.23.1",
     "pinia": "^2.1.7",
@@ -16,7 +17,9 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "vite": "^4.4.5"
+    "@vitejs/plugin-vue": "^5.0.3",
+    "vite": "^5.0.12",
+    "vite-plugin-vuetify": "^2.0.1",
+    "vuetify": "^3.5.1"
   }
 }
