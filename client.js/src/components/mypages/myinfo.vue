@@ -154,7 +154,7 @@
   import axios from "axios";
   import {onMounted, reactive, ref, watch} from "vue";
   import {useRoute} from "vue-router";
-  import {api, apiToken} from "@/common.js";
+  import {api, apiToken, apiToken2} from "@/common.js";
   const token = localStorage.getItem("jwtToken");
   const route = useRoute();//CompositionAPI 매칭된 라우트 (OptionAPI : this.$route)
   const getDataErr = reactive({});
@@ -357,8 +357,9 @@
   }
 
   onMounted(()=>{
-    apiToken("users/setting", "GET", null, token)
+    apiToken2("users/setting", "GET", null, token)
         .then( async (response) => {
+            console.log(response);
           if(response instanceof Error){
             console.log(response);
           }else {
