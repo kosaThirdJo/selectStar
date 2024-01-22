@@ -91,7 +91,7 @@ function updateData(){
 }
 async function getData(){
   try {
-    const response1 = (await axios.get("http://43.201.149.206:8081/users/profile", {
+    const response1 = (await axios.get("http://"  + window.location.hostname +":8081/users/profile", {
       headers : {
         Authorization: token
       }
