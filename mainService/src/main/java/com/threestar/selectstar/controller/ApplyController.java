@@ -62,12 +62,14 @@ public class ApplyController {
     @PatchMapping("/reject")
     public Map<String,String> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
+        rejectApplyRequest.setUserId(userDetails.getUserId());
         succesMap.put("result",applyService.rejectApply(rejectApplyRequest));
         return succesMap;
     }
     @PatchMapping("/recognize")
     public Map<String,String> recognizeApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
+        rejectApplyRequest.setUserId(userDetails.getUserId());
         succesMap.put("result",applyService.recognizeApply(rejectApplyRequest));
         return succesMap;
     }

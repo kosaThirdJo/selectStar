@@ -52,9 +52,13 @@ onMounted(() => {
             <hr>
             <h4 v-text="'나의 신청 사유 : ' + validObjApply.reason"></h4>
           </slot>
-          <slot name="body" v-else>
+          <slot name="body" v-else-if="validObjApply.applyStatus==1">
             <h3 v-text="'거절 사유 :' + validObjApply.rejectReason"></h3>
           </slot>
+          <slot name="body" v-else>
+            <h3 v-text="'승인되었습니다.'"></h3>
+          </slot>
+
 
 
         </div>

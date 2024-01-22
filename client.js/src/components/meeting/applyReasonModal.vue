@@ -24,7 +24,6 @@ function rejectApply(idx){
       "PATCH",
       {
         meetingId:props.meetingId,
-        userId:validObj.value[idx].userId,
         reason:rejectObj.value[idx]
       },
       localStorage.getItem("jwtToken")
@@ -46,7 +45,6 @@ function recognizeApply(idx){
       "PATCH",
       {
         meetingId:props.meetingId,
-        userId:validObj.value[idx].userId,
         reason:""
       },
       localStorage.getItem("jwtToken")
@@ -67,8 +65,7 @@ function GetValidApply(){
           response =>{
             validObj.value = response;
 
-          }
-          )
+          })
 }
 GetValidApply()
 

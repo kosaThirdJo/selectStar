@@ -50,7 +50,9 @@ public class CommentController {
     }
     // 글 삭제
     @DeleteMapping("/meeting/{commentId}")
-    public Map<String,String> removeComment(@PathVariable Long commentId) {
+    public Map<String,String> removeComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long commentId) {
         Map<String, String> succesMap = new HashMap<>();
         succesMap.put("result",commentService.removeComment(commentId));
         return succesMap;
