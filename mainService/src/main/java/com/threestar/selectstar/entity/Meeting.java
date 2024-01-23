@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -38,15 +42,17 @@ public class Meeting {
     private String title;
     private int category;
     private int status;
-    private java.sql.Date applicationDeadline;
+    private Date applicationDeadline;
     @ColumnDefault("0")
     private int views;
     private int recruitmentCount;
     private int applicationCount;
     private String location;
     private String description;
+    @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
+    private LocalDate updateDate  = LocalDate.now();
     @CreationTimestamp
-    private java.sql.Date creationDate;
+    private Date creationDate;
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;

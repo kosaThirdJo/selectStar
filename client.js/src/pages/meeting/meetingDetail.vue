@@ -25,6 +25,7 @@
       <div v-if="!isLoading" id="content" class="border border-dark">
 
         <section id="content_box">
+          <span class="btn" :class="{'btn-silver': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
           <div class="title-box">
             <span class="btn" :class="{'btn-silver': result.status}" v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
             <h2 v-text="result.title" id="content_title" style="display: inline"> </h2>
@@ -252,7 +253,20 @@ function writeComment(){
   )
   router.go(0)
 }
-
+function addBookmark(){
+  if (!localStorage.getItem("jwtToken")){
+    alert("로그인을 해 주세요")
+    router.replace("/login")
+    return ;
+  }
+  apiToken("meeting/bookmaking/" + route.params.post_id,
+      "PATCH",
+      {
+      },
+      localStorage.getItem("jwtToken")
+  )
+  result.value.bookmark = result.value.bookmark ?false: true;
+}
 
 </script>
 

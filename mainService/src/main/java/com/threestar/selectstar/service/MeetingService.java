@@ -10,10 +10,8 @@ import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.mypage.response.GetMyApplyingListResponse;
 import com.threestar.selectstar.dto.mypage.response.GetMyMeetingListResponse;
-import com.threestar.selectstar.repository.ApplyRepository;
-import com.threestar.selectstar.repository.CommentRepository;
-import com.threestar.selectstar.repository.MeetingRepository;
-import com.threestar.selectstar.repository.UserRepository;
+import com.threestar.selectstar.entity.MeetingMark;
+import com.threestar.selectstar.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +25,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.threestar.selectstar.entity.QMeeting.meeting;
@@ -40,15 +39,16 @@ public class MeetingService {
 	final CommentRepository commentRepository;
 	final ApplyRepository applyRepository;
 	final JPAQueryFactory jpaQueryFactory;
-
+	final MeetingMarkRepository meetingMarkRepository;
 	public MeetingService(MeetingRepository meetingRepository, UserRepository userRepository,
-						  CommentRepository commentRepository, ApplyRepository applyRepository, JPAQueryFactory jpaQueryFactory) {
+                          CommentRepository commentRepository, ApplyRepository applyRepository, JPAQueryFactory jpaQueryFactory, MeetingMarkRepository meetingMarkRepository) {
 		this.meetingRepository = meetingRepository;
 		this.userRepository = userRepository;
 		this.commentRepository = commentRepository;
 		this.applyRepository = applyRepository;
 		this.jpaQueryFactory = jpaQueryFactory;
-	}
+        this.meetingMarkRepository = meetingMarkRepository;
+    }
 
 	// 미팅 페이지를 조회한다.
 	public Page<FindMainPageResponse> findMainPage(FindMainPageRequest findMainPageRequest) {
@@ -86,7 +86,7 @@ public class MeetingService {
 				applyRepository));
 	}
 	@Transactional
-	public FindMeetingOneResponse findMeetingOne(Long meetingId){
+	public FindMeetingOneResponse findMeetingOne(Long meetingId,Integer userId){
 		// => 조회수 1 증가
 		Meeting entity = meetingRepository.findById(meetingId).orElseThrow(IllegalArgumentException::new);
 		entity.setViews(entity.getViews() + 1);
@@ -95,7 +95,8 @@ public class MeetingService {
 							meeting.getUser().getNickname(),
 					meeting.getUser().getAboutMe(),
 					applyRepository.countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,2),
-					null))
+					null,
+					userId == null ? false :meetingMarkRepository.findMeetingMarkByMeeting_MeetingIdIsAndUsers_UserIdIs(meetingId,userId).isPresent()? true: false))
 			.orElse(null);
 	}
 
@@ -386,6 +387,23 @@ public class MeetingService {
             return dtoList;
         }
     }
+	@Transactional
+	public String bookMarkingMeeting(Long meetingId ,Integer userId){
+		// 북마크 상태면 삭제, 북마크 상태가 아니면 추가
+		Optional<MeetingMark> meetingMarkOptional = meetingMarkRepository.findMeetingMarkByMeeting_MeetingIdIsAndUsers_UserIdIs(meetingId, userId);
+		if (meetingMarkOptional.isPresent()){
+			meetingMarkRepository.delete(meetingMarkOptional.get());
+		} else {
+			MeetingMark meetingMark = MeetingMark.builder()
+							.users(userRepository.findByUserId(userId))
+							.meeting(meetingRepository.findById(meetingId).get())
+							.build();
+			meetingMarkRepository.save(meetingMark);
+		}
+		return "success";
+	}
+
+
 	@Scheduled(cron = "0 0 0 * * *")
 	@Transactional
 	public void meetingScheduling(){
