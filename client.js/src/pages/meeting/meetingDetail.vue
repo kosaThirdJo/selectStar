@@ -25,7 +25,7 @@
       <div v-if="!isLoading" id="content" class="border border-dark">
 
         <section id="content_box">
-          <span class="btn" :class="{'btn-silver': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
+          <span class="btn" :class="{'btn-green': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
           <div class="title-box">
             <span class="btn" :class="{'btn-silver': result.status}" v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
             <h2 v-text="result.title" id="content_title" style="display: inline"> </h2>
@@ -457,8 +457,11 @@ function addBookmark(){
     color: white
 
   }
+  .btn-green{
+    background-color: green;
+    color: white;
 
-
+  }
 </style>
 <!--
 <style src="../css/meeting/meeting_home.css" scoped>
