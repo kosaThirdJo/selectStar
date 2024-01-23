@@ -106,9 +106,8 @@ public class MeetingController {
     public Map<String, String> meetingBookmark(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable("id") Long meetingId) {
-            meetingService.bookMarkingMeeting(meetingId, userDetails.getUserId());
         Map<String, String> succesMap = new HashMap<>();
-        succesMap.put("result",meetingService.removeMeeting(meetingId));
+        succesMap.put("result",meetingService.bookMarkingMeeting(meetingId, userDetails.getUserId()));
             return succesMap;
     }
 
