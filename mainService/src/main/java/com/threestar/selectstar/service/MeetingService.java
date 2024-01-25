@@ -115,10 +115,10 @@ public class MeetingService {
 	@Transactional
 	public String updateMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
 		try {
-			AddUpdateMeetingRequest.meetingRequestUpdate(
-				addUpdateMeetingRequest,
-					meetingRepository.findById(addUpdateMeetingRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new));
 
+			meetingRepository.findById(addUpdateMeetingRequest.getMeetingId())
+					.orElseThrow(IllegalArgumentException::new)
+					.updateMeeting(addUpdateMeetingRequest);
 			return "success";
 		} catch (Exception e){
 			return e.getMessage();

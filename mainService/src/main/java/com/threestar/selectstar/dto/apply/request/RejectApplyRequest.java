@@ -4,13 +4,13 @@ import lombok.*;
 
 
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RejectApplyRequest {
     private Long meetingId;
+    @Setter
     private int userId;
     private String reason;
 

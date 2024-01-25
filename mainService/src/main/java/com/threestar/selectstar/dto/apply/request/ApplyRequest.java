@@ -8,13 +8,13 @@ import lombok.*;
 import java.sql.Date;
 
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyRequest {
     @NotBlank
+    @Setter
     private Integer userId;
     @NotBlank
     private Long meetingId;
