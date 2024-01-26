@@ -49,6 +49,14 @@ public class CommentService {
             return e.getMessage();
         }
     }
-    
+    public String updateComment(Long commentId,String content){
+        try {
+            commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setContent(content);
+            return "success";
+        } catch (Exception e){
+            return e.getMessage();
+        }
+    }
+
     // 내가 등록한 모든 댓글
 }
