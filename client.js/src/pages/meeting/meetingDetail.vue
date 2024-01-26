@@ -1,5 +1,5 @@
 <template>
-  <div class="meeting-detail-container">
+  <div v-if="!isLoading" class="meeting-detail-container">
     <div class="flex-form">
       <div class="frame-writer">
         <div id="profile" class="frame-writer-profile">
@@ -18,11 +18,11 @@
             </div>
           </a>
         </div>
-        <div id="apply" class="frame-showapplicant">
+        <div  id="apply" class="frame-showapplicant">
           <span>현재 이 프로젝트에서 <span style="color: #FF9F29; font-weight: 800;" v-text="result.countApplyUsers"></span></span><span>명이 참여중입니다.</span>
         </div>
       </div>
-      <div v-if="!isLoading" id="content" class="border border-dark">
+      <div id="content" class="border border-dark">
 
         <section id="content_box">
           <span class="btn" :class="{'btn-green': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
@@ -90,18 +90,22 @@
           </div>
           <div class="main-content-container">
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
-              <div id="comment_title" v-text="commentEle.userNickName"></div>
-              <div v-text="commentEle.content"></div>
+              <div style="display: flex">
+              <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
+              <div style="width: 10%"><span class="btn-green">수정</span></div>
+              <div style="width: 10%"><span class="btn-green">삭제</span></div>
+              </div>
+                <div v-text="commentEle.content"></div>
               <div v-text="commentEle.creationDate"></div>
             </div>
           </div>
         </section>
       </div>
-      <div v-else>
-        <div>
-          로딩 중...
-        </div>
-      </div>
+    </div>
+  </div>
+  <div v-else>
+    <div>
+      로딩 중...
     </div>
   </div>
 </template>
