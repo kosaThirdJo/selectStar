@@ -173,13 +173,16 @@ apiToken(
   console.log(response)
 
 });
-api(
-    "comment/meeting/" +
-    route.params.post_id,
-    "GET", ""
-).then(response => {
-  commentResult.value = response.content
-});
+function getComment(){
+  api(
+      "comment/meeting/" +
+      route.params.post_id,
+      "GET", ""
+  ).then(response => {
+    commentResult.value = response.content
+  });
+}
+getComment();
 const commentInput = ref("")
 
 
@@ -191,8 +194,6 @@ function completeMeeting(){
     alert("모집 완료 취소되었습니다.");
     return;
   }
-
-
   apiToken(
       "meeting",
       "PATCH", {
@@ -215,7 +216,6 @@ function removeMeeting() {
     alert("삭제 취소되었습니다.");
     return;
   }
-
   apiToken(
       "meeting/" + route.params.post_id,
       "DELETE",
@@ -230,8 +230,9 @@ function removeMeeting() {
         router.go(-1)
       }
   )
-
 }
+
+let flagWrite = true // 엔터키 2번 입력되는 버그 수정
 function writeComment(){
   if (!localStorage.getItem("jwtToken")){
     alert("로그인을 해 주세요")
@@ -243,15 +244,22 @@ function writeComment(){
     router.go(0)
     return;
   }
-  apiToken("comment/meeting/" + route.params.post_id,
-      "POST",
-      {
-        meetingId:route.params.post_id,
-        content: commentInput.value,
-      },
-      localStorage.getItem("jwtToken")
-  )
-  router.go(0)
+  if (flagWrite) {
+    flagWrite = false;
+    apiToken("comment/meeting/" + route.params.post_id,
+        "POST",
+        {
+          meetingId: route.params.post_id,
+          content: commentInput.value,
+        },
+        localStorage.getItem("jwtToken")
+    ).then(
+        () => {
+          getComment()
+          flagWrite = true
+        }
+    )
+  }
 }
 function addBookmark(){
   if (!localStorage.getItem("jwtToken")){
