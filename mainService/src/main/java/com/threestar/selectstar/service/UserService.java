@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import com.threestar.selectstar.entity.RefreshToken;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +30,7 @@ import com.threestar.selectstar.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     // 회원 가입
@@ -229,4 +233,16 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void deleteRefreshToken(CustomUserDetails userDetails) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userDetails.getUserId());
+        if (refreshToken != null) {
+            refreshTokenRepository.delete(refreshToken);
+        }
+    }
+
+    public String getRefreshToken(CustomUserDetails userDetails) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userDetails.getUserId());
+        return refreshToken.getRefreshToken();
+    }
 }

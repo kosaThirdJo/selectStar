@@ -1,11 +1,4 @@
-import {
-    reactive,
-    computed,
-    toRefs
-} from 'vue';
-
 import axios from 'axios';
-
 
 
 // urn 이거 참조 https://www.elancer.co.kr/blog/view?seq=74
@@ -75,6 +68,46 @@ const loginApi = async (urn, method, data) => {
         return{data: e};
     }))
 }
+const apiWithToken = async (urn, method, data, token) => {
+    const url = "http://"+  window.location.hostname + ":8081/" +  urn
+
+    // AccessToken 유효성 확인
+    axios
+        .post('/users/validate-token', { token }, {
+            headers: {
+                Authorization: token
+            }
+        })
+        .then(response => {
+            console.log(response);
+            if (response.data.valid) {
+                console.log('토큰이 유효합니다.');
+            } else {
+                console.log('토큰이 만료되었거나 유효하지 않습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('토큰 유효성 확인에 실패했습니다.', error);
+        });
+
+    return await sendRequestWithToken(url, method, data, token);
+}
+
+const sendRequestWithToken = async (url, method, data, token) => {
+    try {
+        return await axios({
+            url,
+            method,
+            data,
+            headers: {
+                Authorization: token,
+            },
+        });
+    } catch (error) {
+        console.error('호출 오류', error);
+        throw error;
+    }
+};
 export {
-    api, apiToken, loginApi, api2, apiToken2
+    api, apiToken, loginApi, api2, apiToken2, apiWithToken
 };
