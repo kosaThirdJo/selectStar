@@ -77,7 +77,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 			String newAccessToken = jwtProvider.createAccessTokenFromRefreshToken(token);
 			response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
 
-			jwtProvider.deleteExpiredRefreshTokens(); // 삭제된 refresh token은 다시 DB에서 삭제
 		}
 	}
 

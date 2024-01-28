@@ -68,29 +68,31 @@ const loginApi = async (urn, method, data) => {
         return{data: e};
     }))
 }
-const apiWithToken = async (urn, method, data, token) => {
+const apiRequest = async (urn, method, data, token) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
-
+    const accessToken = localStorage.getItem("jwtToken");
     // AccessToken 유효성 확인
     axios
-        .post('/users/validate-token', { token }, {
+        .post('/users/validate-token', accessToken, {
             headers: {
                 Authorization: token
             }
         })
-        .then(response => {
+        .then(async response => {
             console.log(response);
-            if (response.data.valid) {
-                console.log('토큰이 유효합니다.');
-            } else {
-                console.log('토큰이 만료되었거나 유효하지 않습니다.');
-            }
+            // if (response.data.valid) {
+            //     console.log('토큰이 유효합니다.');
+            //     return await sendRequestWithToken(url, method, data, token);
+            // } else {
+            //     console.log('토큰이 만료되었거나 유효하지 않습니다.');
+            // }
         })
-        .catch(error => {
-            console.error('토큰 유효성 확인에 실패했습니다.', error);
-        });
+        // .catch(error => {
+        //     console.log(error);
+        //     console.error('토큰 유효성 확인에 실패했습니다.', error);
+        // });
 
-    return await sendRequestWithToken(url, method, data, token);
+
 }
 
 const sendRequestWithToken = async (url, method, data, token) => {
@@ -109,5 +111,5 @@ const sendRequestWithToken = async (url, method, data, token) => {
     }
 };
 export {
-    api, apiToken, loginApi, api2, apiToken2, apiWithToken
+    api, apiToken, loginApi, api2, apiToken2, apiRequest
 };

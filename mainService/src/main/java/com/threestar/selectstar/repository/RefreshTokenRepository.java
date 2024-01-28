@@ -10,6 +10,5 @@ import java.util.List;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
     RefreshToken findByRefreshToken(String refreshToken);
-    List<RefreshToken> findByExpireAtBefore(LocalDateTime currentDateTime);
     RefreshToken findByUser_UserId(Integer user_userId);
 }

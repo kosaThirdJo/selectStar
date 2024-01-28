@@ -1,6 +1,7 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
+import com.threestar.selectstar.config.jwt.JwtProperties;
 import com.threestar.selectstar.config.jwt.JwtProvider;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -90,40 +91,49 @@ public class UserController {
 	}
 
 	@PostMapping("/users/validate-token")
-	public ResponseEntity<Map<String, Object>> validateToken(@RequestBody Map<String, String> requestBody, @AuthenticationPrincipal CustomUserDetails userDetails) {
-		log.info("===============validate");
-		String accessToken = requestBody.get("token");
-		log.info("====================================="+accessToken);
+	public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        log.info("============="+ token);
+		String accessToken = token.replace(JwtProperties.TOKEN_PREFIX, "");
+
 		// Access Token 유효성 검사
-		if (jwtProvider.isAccessToken(accessToken)) {
-			// Access Token이 유효한 경우
+		if (jwtProvider.isAccessToken(accessToken)){
 			log.info("===============access token 유효");
 			Map<String, Object> response = new HashMap<>();
 			response.put("valid", true);
-			return ResponseEntity.ok(response);
-		} else {
-			log.info("===============access token 만료");
-			// Access Token이 만료된 경우
-			String refreshToken = getRefreshToken(userDetails);
-			if (refreshToken != null && jwtProvider.isRefreshToken(refreshToken)) {
-				// Refresh Token이 유효한 경우
-				log.info("===============refresh token 유효");
-				String newAccessToken = jwtProvider.createAccessTokenFromRefreshToken(refreshToken);
-
-				if (newAccessToken != null) {
-					// 새로운 Access Token을 생성하여 반환
-					Map<String, Object> response = new HashMap<>();
-					response.put("valid", true);
-					response.put("newAccessToken", newAccessToken);
-					return ResponseEntity.ok(response);
-				}
-			}
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		// Access Token 및 Refresh Token이 유효하지 않은 경우
-		Map<String, Object> response = new HashMap<>();
-		response.put("valid", false);
-		return ResponseEntity.ok(response);
+//		// Access Token 유효성 검사
+//		if (jwtProvider.isAccessToken(token)) {
+//			// Access Token이 유효한 경우
+//			log.info("===============access token 유효");
+//			Map<String, Object> response = new HashMap<>();
+//			response.put("valid", true);
+//			return ResponseEntity.ok(response);
+//		} else {
+//			log.info("===============access token 만료");
+//			// Access Token이 만료된 경우
+//			String refreshToken = getRefreshToken(userDetails);
+//			if (refreshToken != null && jwtProvider.isRefreshToken(refreshToken)) {
+//				// Refresh Token이 유효한 경우
+//				log.info("===============refresh token 유효");
+//				String newAccessToken = jwtProvider.createAccessTokenFromRefreshToken(refreshToken);
+//
+//				if (newAccessToken != null) {
+//					// 새로운 Access Token을 생성하여 반환
+//					Map<String, Object> response = new HashMap<>();
+//					response.put("valid", true);
+//					response.put("newAccessToken", newAccessToken);
+//					return ResponseEntity.ok(response);
+//				}
+//			}
+//		}
+//
+//		// Access Token 및 Refresh Token이 유효하지 않은 경우
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("valid", false);
+//		return ResponseEntity.ok(response);
+		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 
 	private String getRefreshToken(CustomUserDetails userDetails) {

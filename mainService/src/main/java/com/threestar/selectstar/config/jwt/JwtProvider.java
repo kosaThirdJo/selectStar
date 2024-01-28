@@ -9,14 +9,9 @@ import com.threestar.selectstar.entity.User;
 import com.threestar.selectstar.repository.RefreshTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -58,30 +53,44 @@ public class JwtProvider {
         }
 
         // 새로운 Refresh Token 저장
-        LocalDateTime expireAt = LocalDateTime.now().plus(Duration.ofMillis(JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME));
-
         RefreshToken newRefreshToken = RefreshToken.builder()
                 .user(user)
                 .refreshToken(refreshToken)
-                .expireAt(expireAt)
                 .build();
 
         refreshTokenRepository.save(newRefreshToken);
     }
 
     public boolean isAccessToken(String token) {
-        return isValidToken(token) && Objects.equals(extractClaimType(token), "access");
+        return isValidToken(token) && Objects.equals(extractClaimType(token), "access") && isTokenExpired(token);
     }
 
+
     public boolean isRefreshToken(String token) {
-        return isValidToken(token) && Objects.equals(extractClaimType(token), "refresh");
+        return isValidToken(token) && Objects.equals(extractClaimType(token), "refresh") && isTokenExpired(token);
     }
+
 
     public boolean isValidToken(String token) {
         try {
             JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
             return true;
         } catch (Exception e) {
+            log.error("=============Exception in isValidTokenMethod", e);
+            return false;
+        }
+    }
+
+
+    public boolean isTokenExpired(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
+            Date expiration = decodedJWT.getExpiresAt();
+            log.info("=============expiration: " + expiration);
+            return expiration != null && expiration.after(new Date()); // 만료 시간이 존재하고 현재 시간보다 미래인 경우 true 반환
+
+        } catch (Exception e) { // 토큰 디코드 실패 또는 만료 시간이 없는 경우
+            log.error("=============Exception in isTokenExpiredMethod", e);
             return false;
         }
     }
@@ -106,14 +115,6 @@ public class JwtProvider {
             }
         }
         return null;
-    }
-
-    @Scheduled(fixedRate = 86400000) // 1일마다 실행
-    public void deleteExpiredRefreshTokens() {
-        // 현재 시간 기준으로 만료된 refresh token을 DB에서 삭제
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        List<RefreshToken> expiredRefreshTokens = refreshTokenRepository.findByExpireAtBefore(currentDateTime);
-        refreshTokenRepository.deleteAll(expiredRefreshTokens);
     }
 
 }

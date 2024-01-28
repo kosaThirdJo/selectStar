@@ -29,6 +29,4 @@ public class RefreshToken {
     @NotNull
     private String refreshToken;
 
-    @Column(name = "expire_at")
-    private LocalDateTime expireAt;
 }
