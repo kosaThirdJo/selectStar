@@ -9,6 +9,7 @@ import com.threestar.selectstar.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -27,7 +28,8 @@ public class CommentService {
     }
     // 해당 게시글 모든 댓글 조회
     public Page<FindCommentResponse> findComment(Long meetingId, Pageable pageable) {
-        return commentRepository.findByMeeting_MeetingIdIs(meetingId, pageable).map(FindCommentResponse::fromEntity);
+        return commentRepository.findByMeeting_MeetingIdIsAndDeletedIs(meetingId, pageable,0)
+                .map(FindCommentResponse::fromEntity);
     }
     // 댓글 등록
     public String addComment(AddCommentRequest addCommentRequest){
@@ -41,14 +43,16 @@ public class CommentService {
         }
     }
     // 댓글 삭제
+    @Transactional
     public String removeComment(Long commentId){
         try {
-            commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setDeleted(0);
+            commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setDeleted(1);
             return "success";
         } catch (Exception e) {
             return e.getMessage();
         }
     }
+    @Transactional
     public String updateComment(Long commentId,String content){
         try {
             commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setContent(content);
