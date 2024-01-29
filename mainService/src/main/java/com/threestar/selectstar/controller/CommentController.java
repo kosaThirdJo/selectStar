@@ -29,7 +29,11 @@ public class CommentController {
     }
     // => 삭제 상태 조회로 변경 할 것...
     @GetMapping("/meeting/{meetingId}")
-    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable Long meetingId,@RequestParam(defaultValue = "0") int page){
+    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(
+            @PathVariable Long meetingId,
+            @RequestParam(defaultValue = "0") int page,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
         return ResponseEntity.ok()
                         .body(commentService.findComment(meetingId, PageRequest.of(page,10)));
     }
