@@ -34,6 +34,9 @@ public class Chats {
     @CreationTimestamp
     private java.sql.Date creationDate;
 
+    @CreationTimestamp
+    private java.sql.Date modificationDate;
+
     @ColumnDefault("0")
     private int deleted; // 0:삭제X 1:삭제
 
