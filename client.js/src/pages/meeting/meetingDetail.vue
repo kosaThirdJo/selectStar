@@ -90,10 +90,11 @@
           </div>
           <div class="main-content-container">
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
+              <div v-text="commentEle"></div>
               <div style="display: flex">
               <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
               <div style="width: 10%"><span class="btn-green">수정</span></div>
-              <div style="width: 10%"><span class="btn-green">삭제</span></div>
+              <div style="width: 10%"><span class="btn-green"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
                 <div v-text="commentEle.content"></div>
               <div v-text="commentEle.creationDate"></div>
@@ -178,7 +179,7 @@ apiToken(
 
 });
 function getComment(){
-  api(
+  apiToken(
       "comment/meeting/" +
       route.params.post_id,
       "GET", ""
@@ -278,6 +279,20 @@ function addBookmark(){
       localStorage.getItem("jwtToken")
   )
   result.value.bookmark = result.value.bookmark ?false: true;
+}
+function removeComment(commentid){
+  const result = confirm("삭제 하실껀가요?");
+    if(result) {
+    apiToken("comment/meeting/" + commentid,
+        "DELETE",
+        {
+        },
+        localStorage.getItem("jwtToken")
+    ).then(
+        () => {
+          getComment()
+    })
+  }
 }
 
 </script>
