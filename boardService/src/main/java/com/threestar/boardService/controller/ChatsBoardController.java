@@ -3,9 +3,11 @@ package com.threestar.boardService.controller;
 import com.threestar.boardService.config.auth.CustomUserDetails;
 import com.threestar.boardService.dto.ChatsDTO;
 import com.threestar.boardService.service.ChatsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/api")
 @RestController
@@ -18,12 +20,19 @@ public class ChatsBoardController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<?> createChats(@PathVariable(name = "chatsId") Long chatsId,
-                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<?> createChats(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @RequestParam(value="chatsImg") MultipartFile imgFile,
                                          @RequestBody ChatsDTO.RequestDTO chatsRequestDto) {
 
-        chatsService.addChats(chatsRequestDto, chatsId, userDetails.getUserId());
+        try {
+            chatsService.addChats(chatsRequestDto, userDetails.getUserId(), imgFile);
 
+//            return ResponseEntity.ok(userDTO);
+
+        } catch (Exception e) {
+//            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이미지 등록에 실패했습니다.");
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -37,13 +46,12 @@ public class ChatsBoardController {
         return ResponseEntity.ok().build();
     }
 
-
     @PatchMapping("/update/{chatsId}")
     public ResponseEntity<?> modifyChats(@PathVariable(name = "chatsId") Long chatsId,
                                          @AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestBody ChatsDTO.RequestDTO chatsRequestDto) {
 
-        chatsService.updateChats(chatsRequestDto);
+        chatsService.updateChats(chatsId, chatsRequestDto, userDetails.getUserId());
 
         return ResponseEntity.ok().build();
     }
