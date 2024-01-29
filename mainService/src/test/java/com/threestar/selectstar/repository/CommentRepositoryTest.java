@@ -130,7 +130,7 @@ class CommentRepositoryTest {
     @Test
     void find(){
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Comment> byMeetingMeetingIdIs = commentRepository.findByMeeting_MeetingIdIs(25L, pageable);
+        Page<Comment> byMeetingMeetingIdIs = commentRepository.findByMeeting_MeetingIdIsAndDeletedIs(25L, pageable,0);
         for (Object ele:
              byMeetingMeetingIdIs) {
             System.out.println(ele);
