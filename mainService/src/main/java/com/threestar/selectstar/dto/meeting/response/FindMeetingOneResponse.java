@@ -35,7 +35,13 @@ public class FindMeetingOneResponse {
     private int countApplyUsers;
     @Setter
     private String img;
-    public static FindMeetingOneResponse fromEntity(Meeting meeting, String nickname,String userAboutMe, int countApplyUsers, String img){
+    private Boolean bookmark;
+    public static FindMeetingOneResponse fromEntity(Meeting meeting,
+                                                    String nickname,
+                                                    String userAboutMe,
+                                                    int countApplyUsers,
+                                                    String img,
+                                                    Boolean bookmark){
         return FindMeetingOneResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userId(meeting.getUser().getUserId())
@@ -56,6 +62,7 @@ public class FindMeetingOneResponse {
                 .interestJob(meeting.getInterestJob())
                 .countApplyUsers(countApplyUsers)
                 .img(img)
+                .bookmark(bookmark)
                 .build();
     }
 }
