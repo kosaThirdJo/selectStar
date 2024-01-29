@@ -95,7 +95,7 @@ import Mymeeting from "./mymeeting.vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import {api, apiToken} from "../../common.js";
+import {apiToken2} from "../../common.js";
 
 const route = useRoute();
 const resultList = ref([]);
@@ -135,25 +135,39 @@ function chkCateSts(){
     }
     ischkS.value[dataValue] = true;
   }
-  apiToken(
-      "users/mymeetingfilter?category="+selectedFilters.value.category+
-      "&status="+selectedFilters.value.status, "GET", null, token)
-      .then(response => {
-        if(response instanceof Error){
-          let errorRes = response;
-          //에러처리
-          errorMsg.value = errorRes.response.data;
-          resultList.value = [];
-        }else {
-          showCount.value = 5;
-          resultList.value = response;
-        }
-      });
+    apiToken2(
+        "users/mymeetingfilter?category="+selectedFilters.value.category+
+        "&status="+selectedFilters.value.status, "GET", null, token)
+        .then(response => {
+            if(response.data instanceof Error){
+                let errorRes = response.data;
+                //에러처리
+                errorMsg.value = errorRes.response.data;
+                resultList.value = [];
+            }else {
+                showCount.value = 5;
+                resultList.value = response.data;
+            }
+        });
 }
 
 //데이터 조회
 async function getData(){
-  try{
+    apiToken2("users/mymeeting", "GET", null, token)
+        .then(async  response =>{
+            if(response.data instanceof Error){
+                if(response.data.response.status === 404){
+                    errorMsg.value = response.data.response.data;
+                }
+            }else{
+                resultList.value = response.data;
+            }
+            //resultList.value = response.response.data;
+            showCount.value = 5;
+            selectedFilters.value.category = 'all';
+            selectedFilters.value.status = 'all';
+        });
+/*  try{
     const res = await axios.get("http://43.201.149.206:8081/users/mymeeting", {
       headers : {
         Authorization: token
@@ -165,7 +179,7 @@ async function getData(){
     selectedFilters.value.status = 'all';
   }catch (error){
     errorMsg.value = error.response.data;
-  }
+  }*/
 }
 onMounted(()=>{
   getData();
