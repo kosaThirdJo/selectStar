@@ -36,6 +36,14 @@ public class ChatsService {
     public void addChats(ChatsDTO.RequestDTO chatsDTO, Long usersId, MultipartFile multipartFile) throws IOException {
         User user = userRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         s3UploadService.saveFile(multipartFile);
+
+//        chatsRepository.save(chatsDTO.toEntity(user));
+    }
+
+    public void addChats(MultipartFile multipartFile) throws IOException {
+//        User user = userRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        s3UploadService.saveFile(multipartFile);
+
 //        chatsRepository.save(chatsDTO.toEntity(user));
     }
 
