@@ -85,12 +85,16 @@
           <div><span style="font-weight: bold">댓글 </span><span v-text="commentResult.length" style="color: #1A4D2E"></span>
           </div>
           <div id="comment_input_line">
-            <input id="comment_input" v-model="commentInput" @keyup.enter="writeComment()" class="mt-2 mb-2" type="text" name="commentContent" placeholder=" 댓글을 작성해 보세요">
+            <input id="comment_input" v-model="commentInput"
+                   style="background: white; border-radius: 5%"
+                   @keyup.enter="writeComment()" class="mt-2 mb-2"
+                   type="text" name="commentContent" placeholder=" 댓글을 작성해 보세요">
             <span id="comment_button" class="btn btn-primary mr-3" style="width: 55px;" @click="writeComment()">등록</span>
           </div>
           <div class="main-content-container">
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
-              <div v-text="commentEle"></div>
+              <div                   style="background: white; border-radius: 5%"
+              >
               <div style="display: flex">
               <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
               <div style="width: 10%"><span class="btn-green">수정</span></div>
@@ -98,6 +102,7 @@
               </div>
                 <div v-text="commentEle.content"></div>
               <div v-text="commentEle.creationDate"></div>
+              </div>
             </div>
           </div>
         </section>
