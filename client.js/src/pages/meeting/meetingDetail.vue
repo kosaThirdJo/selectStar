@@ -25,7 +25,7 @@
       <div id="content" class="border border-dark">
 
         <section id="content_box">
-          <span class="btn" :class="{'btn-green': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
+          <span class="btn" :class="{'btn-green': bookmark.bookmark== false }" v-text="'즐겨찾기'" @click="addBookmark()"></span>
           <div class="title-box">
             <span class="btn" :class="{'btn-silver': result.status}" v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
             <h2 v-text="result.title" id="content_title" style="display: inline"> </h2>
@@ -97,10 +97,11 @@
               >
               <div style="display: flex">
               <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
-              <div style="width: 10%"><span class="btn-green">수정</span></div>
-              <div style="width: 10%"><span class="btn-green"  @click="removeComment(commentEle.commentId)">삭제</span></div>
+              <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%">수정</span></div>
+              <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
                 <div v-text="commentEle.content"></div>
+                <input>
               <div v-text="commentEle.creationDate"></div>
               </div>
             </div>
@@ -119,12 +120,13 @@
 
 import { ref, watch } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {api, apiToken} from "@/common.js";
+import {apiToken2} from "@/common.js";
 import Modal from '../../components/meeting/applyModal.vue'
 import ApplyValidModal from "@/components/meeting/myApplyModal.vue";
 import ApplyReason from "@/components/meeting/applyReasonModal.vue";
+import {useAuthStore} from "@/stores/index.js";
 
-
+const auth = useAuthStore();
 const viewBtnApplyCompleting = ref(false)
 const viewBtnRemoveMeeting = ref(false)
 const viewBtnApplyList = ref(false)
@@ -139,24 +141,24 @@ const router = useRouter()
 const isLoading = ref(true);
 const result = ref([])
 const commentResult = ref([])
+const bookmark = ref([])
 
-
-apiToken(
+apiToken2(
     "meeting/" +
     route.params.post_id,
     "GET", null,
     localStorage.getItem("jwtToken")
 ).then(response => {
-  result.value = response
+  result.value = response.data
   console.log(result)
   isLoading.value = false;
   if (!localStorage.getItem("jwtToken")){
     return
   }
   // 로그인아이디와 작성자가 다를경우
-  if (response.loginId !== response.userId){
+  if (response.data.loginId !== response.data.userId){
     // 신청 테이블 조회
-    apiToken(
+    apiToken2(
         "apply/check?meetingId=" + route.params.post_id,
         "GET",
         "",
@@ -165,14 +167,12 @@ apiToken(
       console.log(e)
     }).then(response1 => {
           console.log(response1)
-      if (response1){
+      if (response1.data){
         viewBtnNowApplyInfo.value = true
       } else {
         viewBtnApply.value = true
       }
         })
-
-
     return;
   }
   // 자기가 작성자인 경우
@@ -180,16 +180,14 @@ apiToken(
   viewBtnApplyList.value = true
   viewBtnFix.value = true
   viewBtnApplyCompleting.value = true
-  console.log(response)
-
 });
 function getComment(){
-  apiToken(
+  apiToken2(
       "comment/meeting/" +
       route.params.post_id,
       "GET", ""
   ).then(response => {
-    commentResult.value = response.content
+    commentResult.value = response.data.content
   });
 }
 getComment();
@@ -204,7 +202,7 @@ function completeMeeting(){
     alert("모집 완료 취소되었습니다.");
     return;
   }
-  apiToken(
+  apiToken2(
       "meeting",
       "PATCH", {
         "meetingId":route.params.post_id},
@@ -226,7 +224,7 @@ function removeMeeting() {
     alert("삭제 취소되었습니다.");
     return;
   }
-  apiToken(
+  apiToken2(
       "meeting/" + route.params.post_id,
       "DELETE",
       "",
@@ -256,7 +254,7 @@ function writeComment(){
   }
   if (flagWrite) {
     flagWrite = false;
-    apiToken("comment/meeting/" + route.params.post_id,
+    apiToken2("comment/meeting/" + route.params.post_id,
         "POST",
         {
           meetingId: route.params.post_id,
@@ -271,24 +269,36 @@ function writeComment(){
     )
   }
 }
+function getBookmark(){
+  apiToken2("meeting/bookmarking/" + route.params.post_id,
+      "GET",
+      {
+      },
+      localStorage.getItem("jwtToken")
+  ).then(
+      (response) => {
+        bookmark.value.bookmark = response.data.result
+        console.log(bookmark)
+      })
+}
 function addBookmark(){
   if (!localStorage.getItem("jwtToken")){
     alert("로그인을 해 주세요")
     router.replace("/login")
     return ;
   }
-  apiToken("meeting/bookmaking/" + route.params.post_id,
+  apiToken2("meeting/bookmaking/" + route.params.post_id,
       "PATCH",
       {
       },
       localStorage.getItem("jwtToken")
   )
-  result.value.bookmark = result.value.bookmark ?false: true;
+  bookmark.value.bookmark = bookmark.value.bookmark ?false: true;
 }
 function removeComment(commentid){
   const result = confirm("삭제 하실껀가요?");
     if(result) {
-    apiToken("comment/meeting/" + commentid,
+      apiToken2("comment/meeting/" + commentid,
         "DELETE",
         {
         },
@@ -298,6 +308,9 @@ function removeComment(commentid){
           getComment()
     })
   }
+}
+if (localStorage.getItem("jwtToken")){
+  getBookmark()
 }
 
 </script>

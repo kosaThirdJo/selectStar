@@ -44,7 +44,7 @@ public class MeetingController {
     // 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
-        FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id, userDetails.getUserId());
+        FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
 
         meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
         if (userDetails != null){
@@ -102,6 +102,15 @@ public class MeetingController {
         succesMap.put("result",meetingService.removeMeeting(meetingId));
         return succesMap;
     }
+    @GetMapping("/bookmarking/{id}")
+    public Map<String,Boolean> getBookmark(
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+        @PathVariable("id") Long meetingId) {
+            Map<String, Boolean> succesMap = new HashMap<>();
+            succesMap.put("result",meetingService.isBookmark(meetingId,userDetails.getUserId()));
+            return succesMap;
+}
+
     @PatchMapping("/bookmaking/{id}")
     public Map<String, String> meetingBookmark(
             @AuthenticationPrincipal CustomUserDetails userDetails,
