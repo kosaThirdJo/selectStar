@@ -101,7 +101,7 @@
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
                 <div v-if="!fixCommentMode[commentEle.commentId]" v-text="commentEle.content"></div>
-                <input v-if="fixCommentMode[commentEle.commentId]" v-model="commentEle.content">
+                <input v-if="fixCommentMode[commentEle.commentId]" v-model="tempFixSubmitContent">
                 <span v-if="fixCommentMode[commentEle.commentId]" @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
                 <span v-if="fixCommentMode[commentEle.commentId]" class="btn">제출</span>
                 <div v-text="commentEle.creationDate"></div>
@@ -145,6 +145,7 @@ const result = ref([])
 const commentResult = ref([])
 const bookmark = ref([])
 const fixCommentMode = ref([])
+const tempFixSubmitContent = ref([])
 
 apiToken2(
     "meeting/" +
@@ -316,7 +317,7 @@ if (localStorage.getItem("jwtToken")){
   getBookmark()
 }
 function fixCommentEnableInput(commentId,content){
-  console.log(fixCommentMode)
+  tempFixSubmitContent.value = content
   fixCommentMode.value[commentId] = true
 
 }
