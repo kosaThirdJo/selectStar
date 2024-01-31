@@ -101,9 +101,9 @@
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
                 <div v-if="!fixCommentMode[commentEle.commentId]" v-text="commentEle.content"></div>
-                <input v-if="fixCommentMode[commentEle.commentId]" v-model="tempFixSubmitContent">
+                <input v-if="fixCommentMode[commentEle.commentId]" v-model="tempFixSubmitContent[commentEle.commentId]">
                 <span v-if="fixCommentMode[commentEle.commentId]" @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
-                <span v-if="fixCommentMode[commentEle.commentId]" class="btn">제출</span>
+                <span v-if="fixCommentMode[commentEle.commentId]" @click="fixComment(commentEle.commentId,commentIdx)" class="btn">제출</span>
                 <div v-text="commentEle.creationDate"></div>
               </div>
             </div>
@@ -317,9 +317,23 @@ if (localStorage.getItem("jwtToken")){
   getBookmark()
 }
 function fixCommentEnableInput(commentId,content){
-  tempFixSubmitContent.value = content
+  tempFixSubmitContent.value[commentId] = content
   fixCommentMode.value[commentId] = true
-
+}
+function fixComment(commentId,commentIdx){
+  apiToken2("comment/meeting/" + commentId,
+      "PATCH",
+      {
+        content:tempFixSubmitContent.value[commentId]
+      },
+      localStorage.getItem("jwtToken")
+  ).then(
+      () => {
+        // 1 댓글 본문 변경
+        commentResult.value[commentIdx].content = tempFixSubmitContent.value[commentId]
+        // 2 버튼 활성화 끄기
+        fixCommentMode.value[commentId] = false
+      })
 }
 </script>
 
