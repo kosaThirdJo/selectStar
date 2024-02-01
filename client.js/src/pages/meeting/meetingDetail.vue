@@ -101,9 +101,10 @@
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
                 <div v-if="!fixCommentMode[commentEle.commentId]" v-text="commentEle.content"></div>
-                <input v-if="fixCommentMode[commentEle.commentId]" v-model="tempFixSubmitContent[commentEle.commentId]">
-                <span v-if="fixCommentMode[commentEle.commentId]" @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
+                <input v-if="fixCommentMode[commentEle.commentId]" style="width: 80%" v-model="tempFixSubmitContent[commentEle.commentId]">
+
                 <span v-if="fixCommentMode[commentEle.commentId]" @click="fixComment(commentEle.commentId,commentIdx)" class="btn">제출</span>
+                <span v-if="fixCommentMode[commentEle.commentId]" @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
                 <div v-text="commentEle.creationDate"></div>
               </div>
             </div>
