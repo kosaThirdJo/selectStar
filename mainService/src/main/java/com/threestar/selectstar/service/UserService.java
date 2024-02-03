@@ -9,7 +9,9 @@ import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import com.threestar.selectstar.entity.Portfolio;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +30,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    //포트폴리오 파일
+    private final PortfolioRepository portfolioRepository;
+    private final PortfolioService portfolioService;
 
     // 회원 가입
     @Transactional
@@ -112,6 +118,14 @@ public class UserService {
             User oldUserEntity = userO.get();
             oldUserEntity.setAboutMe(reqDTO.getAboutMe());
             oldUserEntity.setProfileContent(reqDTO.getProfileContent());
+            //첨부파일
+            Optional<Portfolio> portfolioOptional = portfolioRepository.findByUser(oldUserEntity);
+            if(portfolioOptional.isEmpty()){//기존 포폴파일 없을 경우
+                //새로 추가
+                portfolioService.savePortfolioFile(oldUserEntity, reqDTO.getProfileFile());
+            }else{
+                //기존 포폴 삭제 후 저장
+            }
             try {
                 userRepository.save(oldUserEntity);
                 return "success";
@@ -155,7 +169,7 @@ public class UserService {
         }
     }
 
-	//마이페이지 개인정보 수정 요청(UserService 이동 예정)
+	//마이페이지 개인정보 수정 요청
 	@jakarta.transaction.Transactional
 	public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
 		Optional<User> userO = userRepository.findById(uId);

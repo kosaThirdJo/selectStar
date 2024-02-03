@@ -34,6 +34,9 @@
           <span class="frame-profile-textcnt-cnt">{{myInfo.profileContent? myInfo.profileContent.length : 0}}</span>
         </div>
       </div>
+        <div class="frame-profile-file">
+            <input type="file" name="profileFile" />
+        </div>
       <div class="frame-bottom">
         <input @click="updateData()" id="submitbutton" class="button-submit"  value="수정하기"/>
       </div>
@@ -50,22 +53,26 @@ import Sidebar from "./Sidebar.vue";
 const router = useRouter();
 
 const myInfo = ref({
-  "userId":"",
-  "aboutMe" : "",
-  "profileContent" : ""
+    "userId":"",
+    "aboutMe" : "",
+    "profileContent" : "",
+    "profileFile": ""
 });
 const token = localStorage.getItem("jwtToken");
 
 function updateData(){
+    console.log(myInfo.value.profileFile);
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
   }else {
+      const formData = new FormData();
     apiToken2(
         "users/profile", "PATCH",
         {
-          aboutMe: myInfo.value.aboutMe,
-          profileContent: myInfo.value.profileContent
+            aboutMe: myInfo.value.aboutMe,
+            profileContent: myInfo.value.profileContent,
+            //profileFile: myInfo.value.profileFile
         }, token)
         .then(response2 => {
             if(response2.status===205){
