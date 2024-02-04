@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.dto.user.request.GetUserRequest;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -69,9 +70,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         // Refresh Token 발급
         String refreshToken = jwtProvider.createRefreshToken(principalDetails);
 
-        // Refresh Token을 DB에 저장
+        // Refresh Token을 DB, Cookie에 저장
         jwtProvider.saveRefreshToken(principalDetails.getUser(), refreshToken);
-
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+//        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
     }
 

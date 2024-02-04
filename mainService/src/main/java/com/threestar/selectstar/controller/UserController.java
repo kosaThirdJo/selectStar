@@ -4,6 +4,9 @@ import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.config.jwt.JwtProperties;
 import com.threestar.selectstar.config.jwt.JwtProvider;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -80,7 +83,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(res);
 	}
 
-	@GetMapping("/logout")
+	@PostMapping("/logout")
 	public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
 			userService.deleteRefreshToken(userDetails); // Refresh Token 삭제
@@ -89,54 +92,44 @@ public class UserController {
 			return new ResponseEntity<>("로그아웃 실패", HttpStatus.BAD_REQUEST);
 		}
 	}
-
-	@PostMapping("/users/validate-token")
-	public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        log.info("============="+ token);
+	@PostMapping("/users/validate-access-token")
+	public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+		log.info("============="+ token);
 		String accessToken = token.replace(JwtProperties.TOKEN_PREFIX, "");
+		Map<String, Object> response = new HashMap<>();
 
 		// Access Token 유효성 검사
-		if (jwtProvider.isAccessToken(accessToken)){
+		if (jwtProvider.isAccessToken(accessToken)) { // Access Token이 유효한 경우
 			log.info("===============access token 유효");
-			Map<String, Object> response = new HashMap<>();
 			response.put("valid", true);
 			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else { // Access Token 만료 또는 유효하지 않은 경우
+			log.info("===============access token 만료 또는 유효하지 않음");
+			response.put("valid", false);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
-
-//		// Access Token 유효성 검사
-//		if (jwtProvider.isAccessToken(token)) {
-//			// Access Token이 유효한 경우
-//			log.info("===============access token 유효");
-//			Map<String, Object> response = new HashMap<>();
-//			response.put("valid", true);
-//			return ResponseEntity.ok(response);
-//		} else {
-//			log.info("===============access token 만료");
-//			// Access Token이 만료된 경우
-//			String refreshToken = getRefreshToken(userDetails);
-//			if (refreshToken != null && jwtProvider.isRefreshToken(refreshToken)) {
-//				// Refresh Token이 유효한 경우
-//				log.info("===============refresh token 유효");
-//				String newAccessToken = jwtProvider.createAccessTokenFromRefreshToken(refreshToken);
-//
-//				if (newAccessToken != null) {
-//					// 새로운 Access Token을 생성하여 반환
-//					Map<String, Object> response = new HashMap<>();
-//					response.put("valid", true);
-//					response.put("newAccessToken", newAccessToken);
-//					return ResponseEntity.ok(response);
-//				}
-//			}
-//		}
-//
-//		// Access Token 및 Refresh Token이 유효하지 않은 경우
-//		Map<String, Object> response = new HashMap<>();
-//		response.put("valid", false);
-//		return ResponseEntity.ok(response);
-		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 
-	private String getRefreshToken(CustomUserDetails userDetails) {
-		return userService.getRefreshToken(userDetails);
+	@PostMapping("/users/validate-refresh-token")
+	public ResponseEntity<?> validateRefreshToken(@RequestBody Map<String, String> token) {
+		String refreshToken = token.get("refreshToken");
+		log.info("=================="+refreshToken);
+		Map<String, Object> response = new HashMap<>();
+
+		// Refresh Token 유효성 검사
+		if (jwtProvider.isRefreshToken(refreshToken)) { // Refresh Token이 유효한 경우
+			log.info("===============refresh token 유효");
+
+			// Access Token 재발급
+			String newAccessToken = jwtProvider.createAccessTokenFromRefreshToken(refreshToken);
+
+			// 새로운 Access Token을 응답에 포함
+			response.put("valid", true);
+			response.put("newAccessToken", newAccessToken);
+		} else { // Refresh Token 만료 또는 유효하지 않은 경우
+			log.info("===============refresh token 만료 또는 유효하지 않음");
+			response.put("valid", false);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

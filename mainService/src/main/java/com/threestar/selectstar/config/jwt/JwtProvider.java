@@ -2,6 +2,7 @@ package com.threestar.selectstar.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.entity.RefreshToken;
@@ -62,35 +63,25 @@ public class JwtProvider {
     }
 
     public boolean isAccessToken(String token) {
-        return isValidToken(token) && Objects.equals(extractClaimType(token), "access") && isTokenExpired(token);
+        return isValidToken(token) && Objects.equals(extractClaimType(token), "access");
     }
 
 
     public boolean isRefreshToken(String token) {
-        return isValidToken(token) && Objects.equals(extractClaimType(token), "refresh") && isTokenExpired(token);
+        return isValidToken(token) && Objects.equals(extractClaimType(token), "refresh");
     }
 
 
     public boolean isValidToken(String token) {
+        log.info("=============isValidTokenMethod");
         try {
             JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
             return true;
-        } catch (Exception e) {
-            log.error("=============Exception in isValidTokenMethod", e);
+        } catch (TokenExpiredException e) {
+            log.error("============TokenExpiredException in isValidTokenMethod", e);
             return false;
-        }
-    }
-
-
-    public boolean isTokenExpired(String token) {
-        try {
-            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
-            Date expiration = decodedJWT.getExpiresAt();
-            log.info("=============expiration: " + expiration);
-            return expiration != null && expiration.after(new Date()); // 만료 시간이 존재하고 현재 시간보다 미래인 경우 true 반환
-
-        } catch (Exception e) { // 토큰 디코드 실패 또는 만료 시간이 없는 경우
-            log.error("=============Exception in isTokenExpiredMethod", e);
+        } catch (Exception e) {
+            log.error("============Exception in isValidTokenMethod", e);
             return false;
         }
     }
@@ -116,5 +107,4 @@ public class JwtProvider {
         }
         return null;
     }
-
 }

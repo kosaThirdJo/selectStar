@@ -241,8 +241,8 @@ public class UserService {
         }
     }
 
-    public String getRefreshToken(CustomUserDetails userDetails) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userDetails.getUserId());
+    public String getRefreshToken(Integer userId) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userId);
         return refreshToken.getRefreshToken();
     }
 }

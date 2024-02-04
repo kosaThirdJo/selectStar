@@ -63,8 +63,10 @@ public class SpringSecurityConfig {
                     .formLogin().disable()
                     .httpBasic().disable()
 
-                .logout(logoutConfigurer -> logoutConfigurer // 로그아웃 설정 변경
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 로그아웃 요청 URL 변경
+                .logout(logoutConfigurer -> logoutConfigurer
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/logout")
+                        .permitAll()
                 )
 
                 // JWT 인증 및 인가 필터를 추가
@@ -73,7 +75,7 @@ public class SpringSecurityConfig {
 
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/**","/assets/**","/","/index.html","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/logout","/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**","/users/validate-token").permitAll()  // 인증 필요 없음
+                .requestMatchers("/**","/assets/**","/","/index.html","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/logout","/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
 //                 .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 구현 예정
                 .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
