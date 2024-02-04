@@ -23,16 +23,19 @@ public class ChatsDTO {
         private int deleted; // 0:삭제X 1:삭제
 
         private java.sql.Date creationDate;
+
+        private java.sql.Date modificationDate;
+
         private User user;
 
-        //TODO 작성자 추가
-        public Chats toEntity() {
+        public Chats toEntity(User user) {
             return Chats.builder()
                     .title(title)
                     .content(content)
                     .user(user)
                     .deleted(deleted)
                     .creationDate(creationDate)
+                    .modificationDate(modificationDate)
                     .build();
         }
     }
@@ -51,5 +54,7 @@ public class ChatsDTO {
         private User user;
 
         private java.sql.Date creationDate;
+
+        private java.sql.Date modificationDate;
     }
 }

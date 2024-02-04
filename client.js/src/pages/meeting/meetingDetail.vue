@@ -1,5 +1,5 @@
 <template>
-  <div class="meeting-detail-container">
+  <div v-if="!isLoading" class="meeting-detail-container">
     <div class="flex-form">
       <div class="frame-writer">
         <div id="profile" class="frame-writer-profile">
@@ -18,13 +18,14 @@
             </div>
           </a>
         </div>
-        <div id="apply" class="frame-showapplicant">
+        <div  id="apply" class="frame-showapplicant">
           <span>현재 이 프로젝트에서 <span style="color: #FF9F29; font-weight: 800;" v-text="result.countApplyUsers"></span></span><span>명이 참여중입니다.</span>
         </div>
       </div>
-      <div v-if="!isLoading" id="content" class="border border-dark">
+      <div id="content" class="border border-dark">
 
         <section id="content_box">
+          <span class="btn" :class="{'btn-green': !result.bookmark}" v-text="'즐겨찾기'" @click="addBookmark()"></span>
           <div class="title-box">
             <span class="btn" :class="{'btn-silver': result.status}" v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
             <h2 v-text="result.title" id="content_title" style="display: inline"> </h2>
@@ -89,18 +90,23 @@
           </div>
           <div class="main-content-container">
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
-              <div id="comment_title" v-text="commentEle.userNickName"></div>
-              <div v-text="commentEle.content"></div>
+              <div v-text="commentEle"></div>
+              <div style="display: flex">
+              <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
+              <div style="width: 10%"><span class="btn-green">수정</span></div>
+              <div style="width: 10%"><span class="btn-green"  @click="removeComment(commentEle.commentId)">삭제</span></div>
+              </div>
+                <div v-text="commentEle.content"></div>
               <div v-text="commentEle.creationDate"></div>
             </div>
           </div>
         </section>
       </div>
-      <div v-else>
-        <div>
-          로딩 중...
-        </div>
-      </div>
+    </div>
+  </div>
+  <div v-else>
+    <div>
+      로딩 중...
     </div>
   </div>
 </template>
@@ -172,13 +178,16 @@ apiToken(
   console.log(response)
 
 });
-api(
-    "comment/meeting/" +
-    route.params.post_id,
-    "GET", ""
-).then(response => {
-  commentResult.value = response.content
-});
+function getComment(){
+  apiToken(
+      "comment/meeting/" +
+      route.params.post_id,
+      "GET", ""
+  ).then(response => {
+    commentResult.value = response.content
+  });
+}
+getComment();
 const commentInput = ref("")
 
 
@@ -190,8 +199,6 @@ function completeMeeting(){
     alert("모집 완료 취소되었습니다.");
     return;
   }
-
-
   apiToken(
       "meeting",
       "PATCH", {
@@ -214,7 +221,6 @@ function removeMeeting() {
     alert("삭제 취소되었습니다.");
     return;
   }
-
   apiToken(
       "meeting/" + route.params.post_id,
       "DELETE",
@@ -229,8 +235,9 @@ function removeMeeting() {
         router.go(-1)
       }
   )
-
 }
+
+let flagWrite = true // 엔터키 2번 입력되는 버그 수정
 function writeComment(){
   if (!localStorage.getItem("jwtToken")){
     alert("로그인을 해 주세요")
@@ -242,17 +249,51 @@ function writeComment(){
     router.go(0)
     return;
   }
-  apiToken("comment/meeting/" + route.params.post_id,
-      "POST",
+  if (flagWrite) {
+    flagWrite = false;
+    apiToken("comment/meeting/" + route.params.post_id,
+        "POST",
+        {
+          meetingId: route.params.post_id,
+          content: commentInput.value,
+        },
+        localStorage.getItem("jwtToken")
+    ).then(
+        () => {
+          getComment()
+          flagWrite = true
+        }
+    )
+  }
+}
+function addBookmark(){
+  if (!localStorage.getItem("jwtToken")){
+    alert("로그인을 해 주세요")
+    router.replace("/login")
+    return ;
+  }
+  apiToken("meeting/bookmaking/" + route.params.post_id,
+      "PATCH",
       {
-        meetingId:route.params.post_id,
-        content: commentInput.value,
       },
       localStorage.getItem("jwtToken")
   )
-  router.go(0)
+  result.value.bookmark = result.value.bookmark ?false: true;
 }
-
+function removeComment(commentid){
+  const result = confirm("삭제 하실껀가요?");
+    if(result) {
+    apiToken("comment/meeting/" + commentid,
+        "DELETE",
+        {
+        },
+        localStorage.getItem("jwtToken")
+    ).then(
+        () => {
+          getComment()
+    })
+  }
+}
 
 </script>
 
@@ -443,8 +484,11 @@ function writeComment(){
     color: white
 
   }
+  .btn-green{
+    background-color: green;
+    color: white;
 
-
+  }
 </style>
 <!--
 <style src="../css/meeting/meeting_home.css" scoped>

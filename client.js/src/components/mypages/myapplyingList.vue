@@ -98,7 +98,7 @@ import Mymeeting from "./mymeeting.vue";
 import axios, {AxiosError} from "axios";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import {api, apiToken} from "../../common.js";
+import {api, apiToken, apiToken2} from "../../common.js";
 
 const route = useRoute();
 const resultList = ref([]);
@@ -158,23 +158,21 @@ function chkCateSts(){
 
 //데이터 조회
 async function getData(){
-  try{
-    const res = await axios.get("http://43.201.149.206:8081/users/myapplying", {
-      headers:{
-        Authorization: token
-      }
-    });
-    showCount.value = 5;
-    resultList.value = res.data;
-    selectedFilters.value.category = 'all';
-    selectedFilters.value.status = 'all';
-  }catch (error){
-    console.log(error.response);
-    errorMsg.value = error.response.data;
-  }
+    apiToken2("users/myapplying", "GET", null, token)
+        .then(async  response =>{
+            if(response.data instanceof Error){
+                if(response.data.response.status === 404){
+                    errorMsg.value = response.data.response.data;
+                }
+            }else{
+                resultList.value = response.data;
+            }
+            showCount.value = 5;
+            selectedFilters.value.category = 'all';
+            selectedFilters.value.status = 'all';
+        });
 }
 onMounted(()=>{
-  console.log("myapplyingList onMount");
   getData();
 })
 const showMore = () => {

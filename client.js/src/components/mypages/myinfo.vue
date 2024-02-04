@@ -154,7 +154,7 @@
   import axios from "axios";
   import {onMounted, reactive, ref, watch} from "vue";
   import {useRoute} from "vue-router";
-  import {api, apiToken, apiToken2} from "@/common.js";
+  import {api2, apiToken2} from "@/common.js";
   const token = localStorage.getItem("jwtToken");
   const route = useRoute();//CompositionAPI 매칭된 라우트 (OptionAPI : this.$route)
   const getDataErr = reactive({});
@@ -216,14 +216,16 @@
       check.nickname = false;
       msg.value.nickname = "닉네임는 2자 이상, 20자 이하로 입력해주세요.";
     } else {
-      const response = await api(`users/checkDuplicate?type=nickname&value=${value}`, "GET");
-      if (response instanceof Error) {
-        check.nickname = false;  // 이미 존재하는 닉네임입니다.
-        msg.value.nickname = response.response.data;
-      } else {
-        check.nickname = true;
-        msg.value.nickname = response;  // 사용 가능한 닉네임입니다.
-      }
+      const response = await api2(`users/checkDuplicate?type=nickname&value=${value}`, "GET");
+      console.log(response);
+        console.log(response);
+        if(response.status===200){
+            check.nickname = true;
+            msg.value.nickname = response.data;  // 사용 가능한 닉네임입니다.
+        }else{
+            check.nickname = false;  // 이미 존재하는 닉네임입니다.
+            msg.value.nickname = response.data.response.data;
+        }
     }
   };
 
@@ -234,7 +236,7 @@
   //지역1 위치 인증
   const getLocation = async () => {
     // apiKey 가져오기
-    const apiResponse = await axios.get(`http://localhost:8081/users/apiKey`);
+    const apiResponse = await axios.get("http://"+ window.location.hostname +":8081/users/apiKey");
     const apiKey = apiResponse.data;
     // geolocation
     if (navigator.geolocation) {
@@ -259,7 +261,7 @@
   //지역2 위치 인증
   const getLocation2 = async () => {
     // apiKey 가져오기
-    const apiResponse = await axios.get(`http://43.201.149.206:8081/users/apiKey`);
+    const apiResponse = await axios.get("http://"+ window.location.hostname +":8081/users/apiKey");
     const apiKey = apiResponse.data;
     // geolocation
     if (navigator.geolocation) {
@@ -326,10 +328,9 @@
         alert("취소되었습니다.");
         window.location.reload();
       } else {
-        apiToken(
+        apiToken2(
             "users/setting",
             "PUT",
-            //myInfo.value
             {
               password: myInfo.value.password,
               email: myInfo.value.email,
@@ -342,75 +343,75 @@
             },
             token)
             .then(response => {
-              if (response instanceof Error) {
-                console.log(response);
-              } else {
-                console.log(response);
-                alert("수정완료되었습니다.");
-                window.location.reload();
-              }
+                if(response.status===205){
+                    alert("수정완료되었습니다.");
+                    window.location.reload();
+                }else {
+                    console.log(response);
+                }
             });
           }
     }else{
       alert("다시 확인해주세요");
     }
   }
-
-  onMounted(()=>{
+async function getData(){
     apiToken2("users/setting", "GET", null, token)
         .then( async (response) => {
-            console.log(response);
-          if(response instanceof Error){
-            console.log(response);
-          }else {
-            myInfo.value = await response;
-            myInfo.value.password="";
-            console.log(myInfo.value);
-          }
-          return response;
+            if(response.status===200){
+                myInfo.value = response.data;
+                myInfo.value.password="";
+                console.log(myInfo.value);
+            }else{
+                console.log(response);
+            }
+            return response.data;
         }).then(async (response)=>{
-            let langarr = (response.interestLanguage) ? response.interestLanguage.split("_") : [];
-            let langs = langarr.filter((element) => element !== "");
-            console.log(langarr);
-            //프레임워크
-            let fwarr = (response.interestFramework) ? response.interestFramework.split("_") : []
-            let fws = fwarr.filter((element) => element !== "");
-            console.log(fwarr);
-            //직무
-            let jobarr = (response.interestJob) ? response.interestJob.split("_") : [];
-            let jobs = jobarr.filter((element) => element !== "");
-            console.log(jobarr);
-            //관심언어
-            let langButtons = document.querySelectorAll('.myinfo-interest-lang-btn');
-            for (let lang of langs) {
-              for (let langBtn of langButtons) {
+        let langarr = (response.interestLanguage) ? response.interestLanguage.split("_") : [];
+        let langs = langarr.filter((element) => element !== "");
+        console.log(langarr);
+        //프레임워크
+        let fwarr = (response.interestFramework) ? response.interestFramework.split("_") : []
+        let fws = fwarr.filter((element) => element !== "");
+        console.log(fwarr);
+        //직무
+        let jobarr = (response.interestJob) ? response.interestJob.split("_") : [];
+        let jobs = jobarr.filter((element) => element !== "");
+        console.log(jobarr);
+        //관심언어
+        let langButtons = document.querySelectorAll('.myinfo-interest-lang-btn');
+        for (let lang of langs) {
+            for (let langBtn of langButtons) {
                 if (lang === langBtn.value) {
-                  langBtn.className = "myinfo-interest-lang-btn selected";
-                  selectedInterestsLang.push(langBtn.value);
+                    langBtn.className = "myinfo-interest-lang-btn selected";
+                    selectedInterestsLang.push(langBtn.value);
                 }
-              }
             }
-            //관심 프레임워크
-            let fwButtons = document.querySelectorAll('.myinfo-interest-fw-btn');
-            for (let fw of fws) {
-              for (let fwBtn of fwButtons) {
+        }
+        //관심 프레임워크
+        let fwButtons = document.querySelectorAll('.myinfo-interest-fw-btn');
+        for (let fw of fws) {
+            for (let fwBtn of fwButtons) {
                 if (fw === fwBtn.value) {
-                  fwBtn.className = "myinfo-interest-fw-btn selected";
-                  selectedInterestsFw.push(fwBtn.value);
+                    fwBtn.className = "myinfo-interest-fw-btn selected";
+                    selectedInterestsFw.push(fwBtn.value);
                 }
-              }
             }
-            //관심 직무
-            let jobButtons = document.querySelectorAll('.myinfo-interest-job-btn');
-            for (let job of jobs) {
-              for (let jobBtn of jobButtons) {
+        }
+        //관심 직무
+        let jobButtons = document.querySelectorAll('.myinfo-interest-job-btn');
+        for (let job of jobs) {
+            for (let jobBtn of jobButtons) {
                 if (job === jobBtn.value) {
-                  jobBtn.className = "myinfo-interest-job-btn selected";
-                  selectedInterestsJob.push(jobBtn.value);
+                    jobBtn.className = "myinfo-interest-job-btn selected";
+                    selectedInterestsJob.push(jobBtn.value);
                 }
-              }
             }
-        })
+        }
+    });
+}
+  onMounted(()=>{
+      getData();
         // 언어
         const interestLangButtons = document.querySelectorAll('.myinfo-interest-lang-btn');
         const selectedInterestsLangInput = document.getElementById('selected-interests-lang');
