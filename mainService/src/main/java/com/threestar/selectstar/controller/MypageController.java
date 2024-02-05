@@ -45,10 +45,13 @@ public class MypageController {
     }
 
     //마이페이지-이력관리 수정
-    @PatchMapping("/users/profile")
+    //@PatchMapping("/users/profile")
+    @PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                @RequestBody UpdateMyInfoRequest userReq) {
+        log.info("reqDTO");
+        log.info(userReq.toString());
         try {
             int uId = userDetails.getUserId();
 

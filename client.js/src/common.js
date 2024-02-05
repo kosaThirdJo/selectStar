@@ -65,10 +65,15 @@ const api2 = async (urn, method, data) => {
 }
 const apiTokenMpt = async (urn, method, data, token) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
+    console.log(method);
+    console.log(url);
+
      return (await axios({
-        url, method, data,
-        headers: {
-            'Content-Type': 'multipart/form-data',
+         url,
+         method: method,
+         data,
+         headers: {
+            //'Content-Type': 'multipart/form-data',
             Authorization: token
         }
     }).catch(e => {

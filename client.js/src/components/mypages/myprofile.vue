@@ -48,7 +48,7 @@
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
-import {api, apiToken, apiToken2} from "../../common.js";
+import {api, apiToken, apiToken2, apiTokenMpt} from "../../common.js";
 import Sidebar from "./Sidebar.vue";
 const router = useRouter();
 
@@ -67,12 +67,24 @@ function updateData(){
     window.location.reload();
   }else {
       const formData = new FormData();
-    apiToken2(
-        "users/profile", "PATCH",
+      formData.append("aboutMe", myInfo.value.aboutMe);
+      formData.append("profileContent", myInfo.value.profileContent);
+      formData.append("profileFile", myInfo.value.profileFile);
+
+      apiTokenMpt("users/profile", "PUT", formData, token)
+          .then(response2 => {
+              if(response2.status===205){
+                  alert("수정완료되었습니다.");
+                  window.location.reload();
+              }else{
+                  console.log(response2);
+              }
+          });
+    /*apiToken2(
+        "users/profile", "PUT",
         {
             aboutMe: myInfo.value.aboutMe,
             profileContent: myInfo.value.profileContent,
-            //profileFile: myInfo.value.profileFile
         }, token)
         .then(response2 => {
             if(response2.status===205){
@@ -81,7 +93,7 @@ function updateData(){
             }else{
                 console.log(response2);
             }
-        });
+        });*/
   }
 }
 async function getData(){
