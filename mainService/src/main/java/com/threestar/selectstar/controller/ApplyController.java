@@ -53,11 +53,10 @@ public class ApplyController {
                 .body(applyService.findApplyByMeetingIdValid(meetingId));
     }
     @PostMapping
-    public Map<String,String> applyAdd(@RequestBody ApplyRequest applyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    public ResponseEntity<?> applyAdd(@RequestBody ApplyRequest applyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         applyRequest.setUserId(userDetails.getUserId());
-        succesMap.put("result",applyService.addApply(applyRequest));
-        return succesMap;
+        return ResponseEntity.ok()
+                .body(applyService.addApply(applyRequest));
     }
     @PatchMapping("/reject")
     public Map<String,String> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){

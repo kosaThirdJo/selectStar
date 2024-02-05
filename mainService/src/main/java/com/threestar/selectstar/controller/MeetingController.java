@@ -44,6 +44,7 @@ public class MeetingController {
     // 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
+
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
 
         meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
