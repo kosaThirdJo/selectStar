@@ -1,8 +1,10 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {ref} from "vue";
 import {useAuthStore} from '@/stores/index';
 import router from "@/router/index.js";
-
+import {apiToken2} from "@/common.js";
+import {useCookies} from 'vue3-cookies';
+const {cookies} = useCookies();
 const auth = useAuthStore();
 
 // 토큰, 검색어
@@ -10,12 +12,32 @@ const header = ref({
   jwtToken: auth.getToken(),
   searchWord: '',
 });
-// 로그아웃  시  Pinia 스토어에서 토큰 제거
+// 로그아웃
 const logout = async () => {
-  auth.clearToken();
-  await router.push('/');
-  location.reload();
+  try {
+    await backendLogout();
+    auth.clearToken(); // 로컬 스토어에서 토큰 제거
+    cookies.remove('refreshToken');
+    await router.push('/');
+    location.reload();
+  } catch (error) {
+    console.error("로그아웃 오류", error);
+  }
 }
+
+// 백엔드 로그아웃
+const backendLogout = async () => {
+  try {
+    const response = await apiToken2("logout", "POST", null, header.value.jwtToken);
+    console.log(response);
+    if (response.status === 200) {
+      console.log("로그아웃 성공");
+    }
+  } catch (error) {
+    console.error("로그아웃 오류", error);
+  }
+}
+
 
 // 검색
 const searchResult = () => {
