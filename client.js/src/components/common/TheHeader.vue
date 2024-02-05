@@ -5,7 +5,6 @@ import router from "@/router/index.js";
 import {apiToken2} from "@/common.js";
 import {useCookies} from 'vue3-cookies';
 const {cookies} = useCookies();
-
 const auth = useAuthStore();
 
 // 토큰, 검색어

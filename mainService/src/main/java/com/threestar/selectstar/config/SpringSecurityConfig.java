@@ -57,11 +57,11 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpsecurity) throws Exception {
         httpsecurity
                 .addFilter(corsConfig.corsFilter())
-                    .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .formLogin().disable()
-                    .httpBasic().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
 
                 .logout(logoutConfigurer -> logoutConfigurer
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -75,9 +75,14 @@ public class SpringSecurityConfig {
 
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/**","/assets/**","/","/index.html","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/logout","/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
-//                 .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 구현 예정
-                .anyRequest().authenticated()  // 나머지는 인증 필요
+                        // 화이트 리스트
+//                        .requestMatchers("/**", "/assets/**", "/", "/index.html", "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**", "/users/**", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
+                        .requestMatchers("/**", "/assets/**",  "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
+                        // USER
+                        .requestMatchers("/users/**").hasRole("USER")
+                        // ADMIN
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
         return httpsecurity.build();
     }
