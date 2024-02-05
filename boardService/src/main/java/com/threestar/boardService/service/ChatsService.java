@@ -10,19 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Service
 @Slf4j
 public class ChatsService {
 
     private final ChatsRepository chatsRepository;
+
     private final UserRepository userRepository;
 
     private final S3UploadService s3UploadService;
@@ -35,14 +30,19 @@ public class ChatsService {
 
     public void addChats(ChatsDTO.RequestDTO chatsDTO, Long usersId, MultipartFile multipartFile) throws IOException {
         User user = userRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        s3UploadService.saveFile(multipartFile);
+        String fileName = s3UploadService.saveFile(multipartFile);
 
+        log.info("@@@@@@@@@@@@@ fileName : " + fileName);
+        // TODO 게시글 이미지 파일 이름 저장 fileName
 //        chatsRepository.save(chatsDTO.toEntity(user));
     }
 
     public void addChats(MultipartFile multipartFile) throws IOException {
 //        User user = userRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        s3UploadService.saveFile(multipartFile);
+
+        String fileName = s3UploadService.saveFile(multipartFile);
+
+        log.info("@@@@@@@@@@@@@ fileName : " + fileName);
 
 //        chatsRepository.save(chatsDTO.toEntity(user));
     }

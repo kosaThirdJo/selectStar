@@ -29,6 +29,7 @@ public class S3UploadService {
         return amazonS3.getUrl(bucket, originalFilename).toString();
     }
 
+    // TODO 게시글 삭제 시 이미지 삭제
     public void deleteImage(String originalFilename)  {
         amazonS3.deleteObject(bucket, originalFilename);
     }
