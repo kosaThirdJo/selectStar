@@ -11,7 +11,6 @@ import lombok.Setter;
 import java.util.Base64;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

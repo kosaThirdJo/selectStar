@@ -1,7 +1,8 @@
 package com.threestar.selectstar.config.jwt;
 
-public interface JwtProperties {
-	int EXPIRATION_TIME = 864000000; // 10일 (1/1000초)
-	String TOKEN_PREFIX = "Bearer ";
-	String HEADER_STRING = "Authorization";
+public class JwtProperties {
+	public static final int ACCESS_TOKEN_EXPIRATION_TIME = 120000; // 2시간 7200000
+	public static final int REFRESH_TOKEN_EXPIRATION_TIME = 86400000; // 1일
+	public static final String TOKEN_PREFIX = "Bearer ";
+	public static final String HEADER_STRING = "Authorization";
 }

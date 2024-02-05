@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-// UserDetails 인터페이스 구현
-// Spring Security에서 사용자의 기본 정보와 권한 정보를 제공하기 위한 것
 @Getter
 public class CustomUserDetails implements UserDetails {
 

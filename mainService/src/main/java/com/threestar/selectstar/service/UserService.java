@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import com.threestar.selectstar.entity.RefreshToken;
 import com.threestar.selectstar.entity.Portfolio;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.repository.RefreshTokenRepository;
 import com.threestar.selectstar.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ import com.threestar.selectstar.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     //포트폴리오 파일
@@ -243,4 +247,16 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void deleteRefreshToken(CustomUserDetails userDetails) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userDetails.getUserId());
+        if (refreshToken != null) {
+            refreshTokenRepository.delete(refreshToken);
+        }
+    }
+
+    public String getRefreshToken(Integer userId) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userId);
+        return refreshToken.getRefreshToken();
+    }
 }

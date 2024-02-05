@@ -86,7 +86,7 @@ public class MeetingService {
 				applyRepository));
 	}
 	@Transactional
-	public FindMeetingOneResponse findMeetingOne(Long meetingId,Integer userId){
+	public FindMeetingOneResponse findMeetingOne(Long meetingId){
 		// => 조회수 1 증가
 		Meeting entity = meetingRepository.findById(meetingId).orElseThrow(IllegalArgumentException::new);
 		entity.setViews(entity.getViews() + 1);
@@ -95,9 +95,7 @@ public class MeetingService {
 							meeting.getUser().getNickname(),
 					meeting.getUser().getAboutMe(),
 					applyRepository.countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,2),
-					null,
-					userId == null ? false :meetingMarkRepository.findMeetingMarkByMeeting_MeetingIdIsAndUsers_UserIdIs(meetingId,userId).isPresent()? true: false))
-			.orElse(null);
+					null)).orElseThrow(IllegalArgumentException::new);
 	}
 
 	@Transactional
@@ -401,6 +399,14 @@ public class MeetingService {
 			meetingMarkRepository.save(meetingMark);
 		}
 		return "success";
+	}
+	public Boolean isBookmark(long meetingId, int userId){
+		Optional<MeetingMark> mark = meetingMarkRepository.findMeetingMarkByMeeting_MeetingIdIsAndUsers_UserIdIs(meetingId, userId);
+		if (mark.isPresent()){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 

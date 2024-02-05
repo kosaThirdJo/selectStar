@@ -1,5 +1,5 @@
 <script setup>
-import {api, apiToken} from "@/common.js";
+import {api, apiToken, apiToken2} from "@/common.js";
 import router from "../../router/index.js";
 import {ref} from "vue";
 
@@ -20,7 +20,7 @@ function rejectApply(idx){
     return;
   }
 
-  apiToken("apply/reject",
+  apiToken2("apply/reject",
       "PATCH",
       {
         meetingId:props.meetingId,
@@ -41,7 +41,7 @@ function recognizeApply(idx){
     alert("수락 취소되었습니다.");
     return;
   }
-  apiToken("apply/recognize",
+  apiToken2("apply/recognize",
       "PATCH",
       {
         meetingId:props.meetingId,
@@ -57,13 +57,13 @@ function recognizeApply(idx){
 }
 
 function GetValidApply(){
-  apiToken("apply/meeting/valid?meetingId="+props.meetingId,
+  apiToken2("apply/meeting/valid?meetingId="+props.meetingId,
   "GET",
       "",
       localStorage.getItem("jwtToken")
       ).then(
           response =>{
-            validObj.value = response;
+            validObj.value = response.data;
 
           })
 }
