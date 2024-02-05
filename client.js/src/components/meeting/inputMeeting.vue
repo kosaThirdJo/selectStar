@@ -1,6 +1,6 @@
 <script setup>
 import {defineProps, onMounted, ref} from "vue";
-import {api, apiToken} from "@/common.js";
+import {api, api2, apiToken, apiToken2} from "@/common.js";
 import {useRoute, useRouter} from "vue-router";
 import { useAuthStore } from '@/stores/index';
 const router = useRouter()
@@ -31,7 +31,7 @@ function write() {
   }
   //수정 모드
   if (p.type === "fix") {
-    apiToken(
+    apiToken2(
         "meeting",
         "PUT",
         writeVal.value,
@@ -44,7 +44,7 @@ function write() {
     )
   } else {
     //쓰기 모드
-    apiToken(
+    apiToken2(
         "meeting",
         "POST",
         writeVal.value,
@@ -116,13 +116,13 @@ const writeVal = ref({
 onMounted(() => {
   if (p.type === "fix") {
     // => 원래 데이터 받아 오기
-    api(
+    api2(
         "meeting/" + route.params.fix_id,
         "GET",
         ""
     ).then(
-        async (response) => {
-          // console.log(response)
+        async (responseAll) => {
+          const response = responseAll.data
           writeVal.value.description = await response.description
           writeVal.value.location = response.location
           writeVal.value.title = response.title
@@ -138,7 +138,8 @@ onMounted(() => {
           return response
         }
     ).then(
-        (response) =>{
+        (responseAll) =>{
+          const response = responseAll.data
           // 버튼 누르기
           let langarr = (response.interestLanguage) ? response.interestLanguage.split("_") : [];
           let langs = langarr.filter((element) => element !== "");
