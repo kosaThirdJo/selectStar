@@ -27,7 +27,7 @@ const login = async () => {
       authStore.setToken(token);
       authStore.setRole(role);
 
-      // location.replace('/'); // 로그인 후 메인 페이지 이동
+      location.replace('/'); // 로그인 후 메인 페이지 이동
     } else {
       // 로그인 실패 시 처리
       alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
