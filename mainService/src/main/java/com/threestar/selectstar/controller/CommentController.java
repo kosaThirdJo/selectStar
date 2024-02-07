@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO map => dto
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
@@ -31,9 +33,9 @@ public class CommentController {
     @GetMapping("/meeting/{meetingId}")
     public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(
             @PathVariable Long meetingId,
-            @RequestParam(defaultValue = "0") int page,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @RequestParam(defaultValue = "0") int page
     ){
+        System.out.println(1);
         return ResponseEntity.ok()
                         .body(commentService.findComment(meetingId, PageRequest.of(page,10)));
     }

@@ -96,6 +96,7 @@
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
               <div style="background: white; border-radius: 5%">
               <div style="display: flex">
+
               <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%" @click="fixCommentEnableInput(commentEle.commentId,commentEle.content)">수정</span></div>
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
@@ -123,7 +124,7 @@
 
 import { ref, watch } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {apiToken2} from "@/common.js";
+import {api2, apiToken2} from "@/common.js";
 import Modal from '../../components/meeting/applyModal.vue'
 import ApplyValidModal from "@/components/meeting/myApplyModal.vue";
 import ApplyReason from "@/components/meeting/applyReasonModal.vue";
@@ -187,19 +188,18 @@ apiToken2(
   viewBtnApplyCompleting.value = true
 });
 function getComment(){
-  apiToken2(
+  api2(
       "comment/meeting/" +
       route.params.post_id,
       "GET", ""
-  ).then(response => {
+  ).then((response) => {
+    console.log(response)
     commentResult.value = response.data.content
   });
 }
 getComment();
+
 const commentInput = ref("")
-
-
-
 function completeMeeting(){
   const result = confirm("모집 완료 하실껀가요?");
   if(result) {

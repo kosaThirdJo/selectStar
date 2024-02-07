@@ -43,7 +43,7 @@ public class MeetingController {
     }
     // 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public FindMeetingOneResponse meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
 
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
 
@@ -51,8 +51,7 @@ public class MeetingController {
         if (userDetails != null){
         meetingOne.setLoginId(userDetails.getUserId());
         }
-        return ResponseEntity.ok()
-                .body(meetingOne);
+        return meetingOne;
     }
     // 등록
     @PostMapping
