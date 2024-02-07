@@ -94,4 +94,24 @@ public class User {
     public void updatePassword(String password){
         this.password = password;
     }
+
+    public void updateMyIProfile(String aboutMe, String profileContent){
+        this.aboutMe = aboutMe;
+        this.profileContent = profileContent;
+    }
+    public void updateMyInfo(String password, String email,
+                             String nickname, String loc1, String loc2,
+                             String interestLang, String interestFw, String interestJob){
+        this.password = password;
+        this.email = email;
+        this.nickname = nickname;
+        this.location1 = loc1;
+        this.location2 = loc2;
+        this.interestLanguage = interestLang;
+        this.interestFramework = interestFw;
+        this.interestJob = interestJob;
+    }
+    public void updateProfilePhoto(byte[] byteImg){
+        this.profilePhoto = byteImg;
+    }
 }
