@@ -4,22 +4,40 @@ import { ref } from "vue";
 export const useAuthStore = defineStore('auth', () => {
     const token = ref('');
     const role = ref('');
-    function setToken(token){
+
+    const login = (newToken, newRole) => {
+        token.value = newToken;
+        role.value = newRole;
+        localStorage.setItem('jwtToken', newToken);
+    };
+    const logout = () => {
+        token.value = '';
+        role.value = '';
+        localStorage.removeItem('jwtToken');
+    };
+    const getToken = () => {
+        // return token.value;
+        return localStorage.getItem('jwtToken');
+    };
+
+    const getRole = () => {
+        return role.value;
+    };
+    /*function setToken(token){
         this.token = token;
         localStorage.setItem('jwtToken', token);
-    }
-    function setRole(role) { // 추가: 사용자의 역할 정보를 설정하는 메서드
-        this.role = role;
     }
     function clearToken() {
         this.token = null;
         this.role = '';
         localStorage.removeItem('jwtToken');
-    }
-    function getToken(){
+    }*/
+/*    function getToken(){
         return localStorage.getItem('jwtToken');
-    }
-
-    return {token, setToken, clearToken, getToken, role, setRole}
+    }*/
+/*    function setRole(role) {
+        this.role = role;
+    }*/
+    return {login, logout, getToken, getRole, token, role}
 
 })

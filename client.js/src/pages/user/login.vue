@@ -2,32 +2,31 @@
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import axios from "axios";
+import {loginApi} from "@/common.js";
 import {useAuthStore} from '@/stores/index';
-import {api, loginApi} from "@/common.js";
-
+const { login } = useAuthStore();
 const router = useRouter();
-const authStore = useAuthStore();
-
 const loginInfo = ref({
   name: '',
   password: '',
 })
 
 axios.defaults.withCredentials = true;
-const login = async () => {
+const loginHandler  = async () => {
   try {
     const response = await loginApi('login', 'POST', loginInfo.value);
-    console.log(response);
-    console.log(response.headers['authorization']);
 
     if (response.status === 200) {
       const token = response.headers['authorization'];
-      const role = response.data.role;
+      const role = response.headers['role'];
 
-      authStore.setToken(token);
-      authStore.setRole(role);
+      login(token, role);
 
-      location.replace('/'); // 로그인 후 메인 페이지 이동
+      if (role === 'USER') {
+        location.replace('/');
+      } else if (role === 'ADMIN') {
+        location.replace('/admin');
+      }
     } else {
       // 로그인 실패 시 처리
       alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
@@ -60,7 +59,7 @@ const login = async () => {
 
       <div class="login-form">
         <!-- 로그인 form  -->
-        <form @submit.prevent="login">
+        <form @submit.prevent="loginHandler ">
           <div class="login-form-input">
             <!--  아이디  -->
             <div class="login-form-input-box">
