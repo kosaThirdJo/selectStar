@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from "axios";
 import { useAuthStore } from '@/stores/index';
-import {api, loginApi} from "@/common.js";
+import {loginApi} from "@/common.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
