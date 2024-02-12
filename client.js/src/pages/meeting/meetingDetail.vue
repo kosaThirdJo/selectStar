@@ -208,7 +208,7 @@ function completeMeeting(){
     return;
   }
   apiToken2(
-      "meeting",
+      "meeting/complete",
       "PATCH", {
         "meetingId":route.params.post_id},
       localStorage.getItem("jwtToken")

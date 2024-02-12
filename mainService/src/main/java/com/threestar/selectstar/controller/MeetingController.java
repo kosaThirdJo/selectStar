@@ -37,13 +37,14 @@ public class MeetingController {
 
     // 전체 조회(페이징)
     @GetMapping
-    public ResponseEntity<Page<FindMainPageResponse>> meetingList(FindMainPageRequest findMainPageRequest){
+    public ResponseEntity<?> meetingList(FindMainPageRequest findMainPageRequest){
         return ResponseEntity.ok()
                 .body(meetingService.findMainPage(findMainPageRequest));
     }
     // 단건 조회
+    // TODO 만약 비어 있을경우 상태 처리
     @GetMapping("/{id}")
-    public FindMeetingOneResponse meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){
 
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
 
@@ -51,14 +52,16 @@ public class MeetingController {
         if (userDetails != null){
         meetingOne.setLoginId(userDetails.getUserId());
         }
-        return meetingOne;
+        return ResponseEntity.ok()
+                .body(meetingOne);
     }
     // 등록
+    // TODO 만약 유효하지 않은 등록일 경우 상태 처리
     @PostMapping
-    public Map<String,String> meetingAdd(
+    public ResponseEntity<?> meetingAdd(
             @RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,
                                          @AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+
         int error = 0;
         addUpdateMeetingRequest.setUserId(userDetails.getUserId());
         for (ConstraintViolation<AddUpdateMeetingRequest> addUpdateMeetingRequestConstraintViolation : validator.validate(addUpdateMeetingRequest)) {
@@ -66,58 +69,77 @@ public class MeetingController {
             error = 1;
         }
         if (error==1) {
-            succesMap.put("result","fail");
-            return succesMap;
+            return ResponseEntity.status(400)
+                    .build();
         }
-
-        succesMap.put("result",meetingService.addMeeting( addUpdateMeetingRequest));
-        return succesMap;
+        //TODO try catch 변경, void 변경
+        meetingService.addMeeting( addUpdateMeetingRequest);
+        return ResponseEntity.ok()
+                .body("등록되었습니다.");
     }
-    // 수정 => AddUpdateMeetingRequest 변경 불가능 한 값 생각 해야 됨...
+    //
     @PutMapping
-    public Map<String,String> meetingModify(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    public ResponseEntity<?> meetingModify(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         addUpdateMeetingRequest.setUserId(userDetails.getUserId());
-        succesMap.put("result",meetingService.updateMeeting(addUpdateMeetingRequest));
-        return succesMap;
+        //TODO try catch 변경, void 변경
+        meetingService.updateMeeting(addUpdateMeetingRequest);
+
+        return ResponseEntity.ok()
+                .body("수정 완료");
     }
     // 모집 완료
-    @PatchMapping
-    public Map<String,String> meetingComplete(@RequestBody CompleteRequest completeRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    // TODO 상태 코드 추가
+    @PatchMapping("/complete")
+    public ResponseEntity<?> meetingComplete(@RequestBody CompleteRequest completeRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
         try {
-            // 삭제 조건 추가
-            succesMap.put("result", meetingService.completeMeeting(completeRequest));
+            meetingService.completeMeeting(completeRequest);
+            return ResponseEntity.ok()
+                    .body("모집 완료 되었습니다.");
         } catch(Exception e) {
-            succesMap.put("result", "fail");
+            return ResponseEntity.status(400)
+                    .build();
         }
-        return succesMap;
     }
     
     @DeleteMapping("/{id}")
-    public Map<String,String> meetingRemove
+    public ResponseEntity<?> meetingRemove
             (@AuthenticationPrincipal CustomUserDetails userDetails,
                     @PathVariable("id") Long meetingId){
-        Map<String, String> succesMap = new HashMap<>();
-        succesMap.put("result",meetingService.removeMeeting(meetingId));
-        return succesMap;
+        try {
+            meetingService.removeMeeting(meetingId);
+                    return ResponseEntity.ok()
+                            .body("삭제 되었습니다.");
+        } catch (Exception e){
+            return ResponseEntity.status(400)
+                    .build();
+        }
     }
     @GetMapping("/bookmarking/{id}")
-    public Map<String,Boolean> getBookmark(
+    public ResponseEntity<?> getBookmark(
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @PathVariable("id") Long meetingId) {
-            Map<String, Boolean> succesMap = new HashMap<>();
-            succesMap.put("result",meetingService.isBookmark(meetingId,userDetails.getUserId()));
-            return succesMap;
+        try {
+            meetingService.isBookmark(meetingId,userDetails.getUserId());
+            return ResponseEntity.ok()
+                    .body("북마크 추가 완료");
+        } catch (Exception e){
+            return ResponseEntity.status(400)
+                    .build();
+        }
 }
-
+    // 이미 북마크 데이터가 있을 경우 북마크 상태코드를 바꿔서 스위칭함
     @PatchMapping("/bookmaking/{id}")
-    public Map<String, String> meetingBookmark(
+    public ResponseEntity<?> meetingBookmark(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable("id") Long meetingId) {
-        Map<String, String> succesMap = new HashMap<>();
-        succesMap.put("result",meetingService.bookMarkingMeeting(meetingId, userDetails.getUserId()));
-            return succesMap;
+        try {
+            meetingService.bookMarkingMeeting(meetingId, userDetails.getUserId());
+            return ResponseEntity.ok()
+                    .build();
+        } catch (Exception e){
+            return ResponseEntity.status(400)
+                    .build();
+        }
     }
 
 }
