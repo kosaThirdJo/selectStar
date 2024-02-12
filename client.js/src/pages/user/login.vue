@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router';
 import axios from "axios";
 import { useAuthStore } from '@/stores/index';
 import {loginApi} from "@/common.js";
-
+const auth = useAuthStore();
 const router = useRouter();
 const loginInfo = ref({
   name: '',
@@ -20,7 +20,7 @@ const loginHandler  = async () => {
       const token = response.headers['authorization'];
       const role = response.headers['role'];
 
-      login(token, role);
+      auth.login(token, role);
 
       if (role === 'USER') {
         location.replace('/');
@@ -28,7 +28,6 @@ const loginHandler  = async () => {
         location.replace('/admin');
       }
     } else {
-      // 로그인 실패 시 처리
       alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
       console.error('로그인 실패:', response.status, response.data);
     }

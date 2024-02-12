@@ -106,12 +106,12 @@ const searchWord = ref('');
           <div class="main-header-button">
             <!-- 로그인하지 않았을 경우 -->
             <router-link v-if="!jwtToken" to="/login">
-              <button class="main-header-button-login">
+              <button class="main-header-button-login" :class="{ 'main-header-button-login-active': $route.path === '/login'}">
                 <span class="main-header-button-login-text"><span>로그인</span></span>
               </button>
             </router-link>
             <router-link v-if="!jwtToken" to="/signup">
-              <button class="main-header-button-signup">
+              <button class="main-header-button-signup" :class="{ 'main-header-button-signup-active': $route.path === '/signup'}">
                 <span class="main-header-button-signup-text"><span>회원가입</span></span>
               </button>
             </router-link>
