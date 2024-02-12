@@ -282,8 +282,7 @@ function getBookmark(){
       localStorage.getItem("jwtToken")
   ).then(
       (response) => {
-        bookmark.value.bookmark = response.data.result
-        console.log(bookmark)
+        bookmark.value.bookmark = response.data
       })
 }
 function addBookmark(){

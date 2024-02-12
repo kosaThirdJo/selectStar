@@ -13,6 +13,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -74,8 +75,8 @@ public class MeetingController {
         }
         //TODO try catch 변경, void 변경
         meetingService.addMeeting( addUpdateMeetingRequest);
-        return ResponseEntity.ok()
-                .body("등록되었습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
     //
     @PutMapping
@@ -119,9 +120,9 @@ public class MeetingController {
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @PathVariable("id") Long meetingId) {
         try {
-            meetingService.isBookmark(meetingId,userDetails.getUserId());
+
             return ResponseEntity.ok()
-                    .body("북마크 추가 완료");
+                    .body(meetingService.isBookmark(meetingId,userDetails.getUserId()));
         } catch (Exception e){
             return ResponseEntity.status(400)
                     .build();

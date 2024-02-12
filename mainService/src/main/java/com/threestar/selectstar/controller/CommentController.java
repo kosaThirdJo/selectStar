@@ -35,8 +35,7 @@ public class CommentController {
             @PathVariable Long meetingId,
             @RequestParam(defaultValue = "0") int page
     ){
-        System.out.println(1);
-        return ResponseEntity.ok()
+     return ResponseEntity.ok()
                         .body(commentService.findComment(meetingId, PageRequest.of(page,10)));
     }
 
