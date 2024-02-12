@@ -20,12 +20,14 @@ public class AddCommentRequest {
     private Long meetingId;
     @NotBlank
     private String content;
+    private int depth;
 
     public static Comment toEntity(AddCommentRequest addCommentRequest, User user, Meeting meeting){
         return Comment.builder()
                 .user(user)
                 .meeting(meeting)
                 .content(addCommentRequest.getContent())
+
                 .build();
     }
 
