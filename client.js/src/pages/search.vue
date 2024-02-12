@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import {useRoute} from "vue-router";
-import { api } from "../common.js";
+import { api2 } from "../common.js";
 import Card from "@/components/element/card.vue";
 import SearchNicknameCard from "@/components/element/searchNicknameCard.vue";
 
@@ -15,13 +15,13 @@ const searchNicknameResult = ref([]);
 const showCount = ref(6);  // 더보기 (기본 6개 출력)
 const showMemberCount = ref(8); // 회원 (기본 8개 출력)
 
-api(
+api2(
     `search?searchWord=${searchWord}`,
     "GET", ""
 ).then(response => {
   isLoading.value = false;
-  searchMeetingResult.value = response[0];
-  searchNicknameResult.value = response[1];
+  searchMeetingResult.value = response.data[0];
+  searchNicknameResult.value = response.data[1];
 }).catch(error => {
   console.error(error);
 });
@@ -85,10 +85,9 @@ const filterSearchResult = () =>{
   const frameworkUrn = selectedFilters.value.frameworks.length > 0 ? `&frameworks=${selectedFilters.value.frameworks}` : '';
   const jobUrn = selectedFilters.value.jobs.length > 0 ? `&jobs=${selectedFilters.value.jobs}` : '';
   const urn = `search/filter?searchWord=${searchWord}${categoryUrn}${languageUrn}${frameworkUrn}${jobUrn}`;
-  api(urn,"GET", "")
+  api2(urn,"GET", "")
     .then(response => {
-      console.log(response);
-      searchMeetingResult.value = response;
+      searchMeetingResult.value = response.data;
   }).catch(error => {
     console.error(error);
   });

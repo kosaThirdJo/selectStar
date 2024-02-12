@@ -46,7 +46,7 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> processSignUp (@RequestBody AddUserRequest request) {
 		userService.createUser(request);
-		return new ResponseEntity<>("success", HttpStatus.CREATED);
+		return new ResponseEntity<>("회원 가입 성공", HttpStatus.CREATED);
 	}
 
 	// 중복확인
@@ -60,7 +60,7 @@ public class UserController {
 				return new ResponseEntity<>("사용 가능한 닉네임입니다.", HttpStatus.OK);
 			}
 		}catch (IllegalStateException e){
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 

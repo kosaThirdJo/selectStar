@@ -2,9 +2,9 @@
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import axios from "axios";
+import { useAuthStore } from '@/stores/index';
 import {loginApi} from "@/common.js";
-import {useAuthStore} from '@/stores/index';
-const { login } = useAuthStore();
+
 const router = useRouter();
 const loginInfo = ref({
   name: '',
