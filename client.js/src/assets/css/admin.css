@@ -1,0 +1,63 @@
+.admin-component{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 3% 6%;
+    gap: 50px;
+}
+aside {
+    width: 20%;
+}
+
+section {
+    width: 80%;
+}
+/*=============== 관리자 side bar ===============*/
+.side-bar-box {
+    padding: 20px;
+    background: gray;
+}
+
+.admin-title {
+    font-size: x-large;
+}
+
+.admin-menu {
+    height: 50px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    font-size: large;
+    padding: 20px;
+}
+
+.admin-menu:hover {
+    background: #efefef;
+}
+
+.admin-menu-a {
+    color: black;
+    text-decoration: none;
+}
+
+.admin-sub-menu {
+    color: #a3a3a3;
+    margin-left: 30px;
+    border-left: 1px solid #a3a3a3;
+    padding-left: 10px;
+    height: 40px;
+    font-size: medium;
+}
+
+.admin-sub-menu:hover {
+    color: black;
+    border-left: 1px solid black;
+}
+
+/*=============== 관리자 side bar ===============*/
+
+.profile-img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+}

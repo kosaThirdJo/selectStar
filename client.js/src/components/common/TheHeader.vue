@@ -85,10 +85,6 @@ const searchWord = ref('');
                        to="/users/myprofile">
             <span>마이페이지</span>
           </router-link>
-          <router-link v-if="jwtToken" class="main-header-nav-mypage main-header-nav-meetinglist-text"
-                       to="/admin">
-            <span>관리자 페이지</span>
-          </router-link>
         </div>
         <div class="main-header-searchAndBtn">
           <!-- 03 검색 -->

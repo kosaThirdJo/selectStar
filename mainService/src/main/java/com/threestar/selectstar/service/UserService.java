@@ -240,8 +240,12 @@ public class UserService {
         }
     }
 
-    public String getRefreshToken(Integer userId) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userId);
-        return refreshToken.getRefreshToken();
+
+    @Transactional(readOnly = true)
+    public List<GetUsersListResponse> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+        return userList.stream()
+                .map(GetUsersListResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

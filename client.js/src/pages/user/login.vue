@@ -19,6 +19,8 @@ const loginHandler  = async () => {
     if (response.status === 200) {
       const token = response.headers['authorization'];
       const role = response.headers['role'];
+      console.log(token);
+      console.log(role);
 
       auth.login(token, role);
 
