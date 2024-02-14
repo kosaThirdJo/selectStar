@@ -14,8 +14,7 @@ section {
 }
 /*=============== 관리자 side bar ===============*/
 .side-bar-box {
-    padding: 20px;
-    background: gray;
+    padding: 2%;
 }
 
 .admin-title {
@@ -54,10 +53,17 @@ section {
     border-left: 1px solid black;
 }
 
-/*=============== 관리자 side bar ===============*/
+/*=============== 관리자 회원 내용 ===============*/
 
 .profile-img {
     width: 2rem;
     height: 2rem;
     border-radius: 9999px;
+}
+
+.v-data-table{
+}
+
+.v-pagination{
+    color: black;
 }
