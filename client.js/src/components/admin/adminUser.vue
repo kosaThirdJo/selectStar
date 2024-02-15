@@ -1,13 +1,28 @@
 <template>
   <section>
+    <v-text-field
+        v-model="search"
+        label="검색"
+        prepend-inner-icon="mdi-magnify"
+        single-line
+        hide-details
+        variant="solo"
+        density="compact"
+        class="w-25 mb-md-0"
+    ></v-text-field>
     <v-data-table
-        :items="sortedUsers"
+        :items="users"
         :headers="headers"
         :items-per-page.sync="itemsPerPage"
         :page="page"
         :items-length="totalItems"
         @page-update="onPageUpdate"
-        class="text-center"
+        :sort-by="sortBy"
+        :search="search"
+        items-per-page-text="VIEW"
+        page-text="{0}-{1} / 총 {2}명"
+        no-data-text="회원이 존재하지 않습니다."
+        must-sort hover
     >
       <template #item.profilePhoto="{ item }">
         <img class="profile-img" :src="getProfilePhoto(item.profilePhoto)" alt="Profile Photo"/>
@@ -36,31 +51,32 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {ref} from 'vue';
 import {api2, apiToken2} from "@/common.js";
 import defaultImg from "@/assets/image/global/userdefaultimg.png";
 
 const users = ref([]);
-const sortedUsers = computed(() => { // 회원번호 내림차순 정렬
-  return [...users.value].sort((a, b) => b.userId - a.userId);
-});
 const headers = [ // data-table header 설정
-  {title: '회원번호', value: 'userId', align: 'center'},
+  {title: '회원번호', value: 'userId', align: 'center', sortable: true},
   {title: '프로필 이미지', value: 'profilePhoto', align: 'center'},
   {title: '아이디', value: 'name', align: 'center'},
   {title: '이메일', value: 'email', align: 'center'},
-  {title: '가입 날짜', value: 'joinDate', align: 'center'},
-  {title: '회원 상태', value: 'userStatus', align: 'center'},
+  {title: '가입 날짜', value: 'joinDate', align: 'center', sortable: true},
+  {title: '회원 상태', value: 'userStatus', align: 'center', sortable: true},
   {title: '관리', value: 'management', align: 'center'},
 ];
 
 // 페이징
 const itemsPerPage = ref(10);
 const page = ref(1);
-let totalItems = ref(0);
+const totalItems = ref(0);
+const search = ref('');
 const onPageUpdate = (newPage) => {
   page.value = newPage;
 };
+const sortBy = [
+  {key: 'userId', order: 'desc'}
+]
 
 // 회원 상태
 const userStatusOptions = [
@@ -105,14 +121,25 @@ const updateUserStatus = (user) => {
     userStatus: user.selectedUserStatus
   };
   api2(`admin/users`, "PATCH", requestData)
-      .then(response=>{
+      .then(response => {
         user.userStatus = user.selectedUserStatus;
       })
-      .catch(error=> {
+      .catch(error => {
         console.error(error);
       })
 };
+
+const filter = (value, search, item) => {
+  return (
+      String(item.name).includes(search) ||
+      String(item.email).includes(search)
+  );
+};
+
 </script>
 
 <style src="@/assets/css/admin.css" scoped>
+.v-data-table-footer .v-pagination__list {
+  margin-bottom: 0 !important;
+}
 </style>

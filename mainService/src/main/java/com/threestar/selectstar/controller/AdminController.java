@@ -1,5 +1,6 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.dto.meeting.response.GetMeetingsResponse;
 import com.threestar.selectstar.dto.user.request.UpdateUserStatusRequest;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
 import com.threestar.selectstar.entity.User;
@@ -34,5 +35,12 @@ public class AdminController {
     public ResponseEntity<?> updateUserStatus(@RequestBody UpdateUserStatusRequest request) {
         adminService.updateUserStatus(request.getUserId(), request.getUserStatus());
         return ResponseEntity.ok().build();
+    }
+
+    // 모임글 전체 조회
+    @GetMapping("/meetings")
+    public ResponseEntity<?> getAllMeetings(){
+        List<GetMeetingsResponse> meetings = adminService.getAllMeetings();
+        return new ResponseEntity<>(meetings, HttpStatus.OK);
     }
 }

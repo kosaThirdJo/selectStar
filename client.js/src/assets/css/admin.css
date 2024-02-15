@@ -18,7 +18,7 @@ section {
 }
 
 .admin-title {
-    font-size: x-large;
+    font-size: 2rem;
     font-weight: bold;
     padding: 10px 0;
 }
@@ -28,7 +28,7 @@ section {
     margin: auto;
     display: flex;
     align-items: center;
-    font-size: large;
+    font-size: 1rem;
     padding: 20px;
 }
 
@@ -48,6 +48,7 @@ section {
     padding-left: 10px;
     height: 40px;
     font-size: medium;
+    text-decoration: none;
 }
 
 .admin-sub-menu:hover {
@@ -62,10 +63,6 @@ section {
     height: 2rem;
     border-radius: 9999px;
 }
-
-.v-data-table{
-}
-
-.v-pagination{
-    color: black;
+.v-pagination__list{
+    margin-bottom: 0px !important;
 }

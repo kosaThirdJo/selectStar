@@ -1,8 +1,11 @@
 package com.threestar.selectstar.service;
 
+import com.threestar.selectstar.dto.meeting.response.GetMeetingsResponse;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
+import com.threestar.selectstar.entity.Meeting;
 import com.threestar.selectstar.entity.User;
 import com.threestar.selectstar.exception.UserNotFoundException;
+import com.threestar.selectstar.repository.MeetingRepository;
 import com.threestar.selectstar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminService {
     private final UserRepository userRepository;
+    private final MeetingRepository meetingRepository;
 
     @Transactional(readOnly = true)
     public List<GetUsersListResponse> getAllUsers() {
@@ -32,5 +36,13 @@ public class AdminService {
                 .orElseThrow(() -> new UserNotFoundException("해당하는 회원 없음"));
         user.updateUserStatus(newStatus);
         userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetMeetingsResponse> getAllMeetings() {
+        List<Meeting> meetingList = meetingRepository.findAll();
+        return meetingList.stream()
+                .map(GetMeetingsResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }
