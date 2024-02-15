@@ -1,57 +1,7 @@
-<script setup>
-import { ref } from 'vue';
-import { apiToken2 } from "@/common.js";
-import defaultImg from "@/assets/image/global/userdefaultimg.png";
-
-const users = ref([]);
-const headers = [
-  { title: '회원번호', value: 'userId', align: 'center' },
-  { title: '프로필 이미지', value: 'profilePhoto', align: 'center' },
-  { title: '아이디', value: 'name', align: 'center' },
-  { title: '이메일', value: 'email', align: 'center' },
-  { title: '가입 날짜', value: 'joinDate', align: 'center' },
-  { title: '회원 상태', value: 'userStatus', align: 'center' },
-  { title: '관리', value: 'management', align: 'center' },
-];
-const itemsPerPage = ref(10);
-const page = ref(1);
-let totalItems = ref(0); // 전체 항목 수
-const selectedUserStatus = ref(null);
-const userStatusOptions = [
-  { value: 0, text: '활동' },
-  { value: 1, text: '정지' },
-  { value: 2, text: '탈퇴' }
-];
-
-apiToken2(
-    `admin/users`,
-    "GET", null, localStorage.getItem("jwtToken")
-).then(response => {
-  users.value = response.data;
-  totalItems.value = response.totalItems; // 전체 항목 수 설정
-}).catch(error => {
-  console.error(error);
-});
-const onPageUpdate = (newPage) => {
-  page.value = newPage;
-};
-const getProfilePhoto = (photo) => {
-  return photo ? photo : defaultImg;
-}
-const getUserStatus = (status) => {
-  return status === 0 ? 'text-primary' : (status === 1 ? 'text-warning' : 'text-error');
-};
-const getUserStatusString = (status) => {
-  return status === 0 ? '활동' : (status === 1 ? '정지' : '탈퇴');
-};
-const updateUserStatus = (userId) => {
-};
-</script>
-
 <template>
   <section>
     <v-data-table
-        :items="users"
+        :items="sortedUsers"
         :headers="headers"
         :items-per-page.sync="itemsPerPage"
         :page="page"
@@ -63,27 +13,106 @@ const updateUserStatus = (userId) => {
         <img class="profile-img" :src="getProfilePhoto(item.profilePhoto)" alt="Profile Photo"/>
       </template>
       <template #item.userStatus="{ item }">
-        <td class="">
+        <td class="d-flex justify-center">
           <v-chip :class="getUserStatus(item.userStatus)">
             {{ getUserStatusString(item.userStatus) }}
           </v-chip>
         </td>
       </template>
       <template #item.management="{ item }">
-        <td class="d-flex justify-center align-center">
+        <td class="d-flex justify-center">
           <v-select
-              v-model="selectedUserStatus"
+              v-model="item.selectedUserStatus"
               :items="userStatusOptions"
-              label="회원 상태"
-              outlined
-              dense
-              @change="updateUserStatus(item.userId)"
+              item-title="title"
+              item-value="value"
+              variant="underlined"
+              @update:modelValue="updateUserStatus(item)"
           ></v-select>
         </td>
       </template>
     </v-data-table>
   </section>
 </template>
+
+<script setup>
+import {computed, ref} from 'vue';
+import {api2, apiToken2} from "@/common.js";
+import defaultImg from "@/assets/image/global/userdefaultimg.png";
+
+const users = ref([]);
+const sortedUsers = computed(() => { // 회원번호 내림차순 정렬
+  return [...users.value].sort((a, b) => b.userId - a.userId);
+});
+const headers = [ // data-table header 설정
+  {title: '회원번호', value: 'userId', align: 'center'},
+  {title: '프로필 이미지', value: 'profilePhoto', align: 'center'},
+  {title: '아이디', value: 'name', align: 'center'},
+  {title: '이메일', value: 'email', align: 'center'},
+  {title: '가입 날짜', value: 'joinDate', align: 'center'},
+  {title: '회원 상태', value: 'userStatus', align: 'center'},
+  {title: '관리', value: 'management', align: 'center'},
+];
+
+// 페이징
+const itemsPerPage = ref(10);
+const page = ref(1);
+let totalItems = ref(0);
+const onPageUpdate = (newPage) => {
+  page.value = newPage;
+};
+
+// 회원 상태
+const userStatusOptions = [
+  {title: '활동', value: 0},
+  {title: '정지', value: 1},
+  {title: '탈퇴', value: 2}
+];
+
+// 회원 전체 조회
+apiToken2(
+    `admin/users`,
+    "GET", null, localStorage.getItem("jwtToken")
+).then(response => {
+  users.value = response.data.map(user => {
+    return {
+      ...user,
+      selectedUserStatus: user.userStatus
+    };
+  });
+  totalItems.value = response.totalItems;
+}).catch(error => {
+  console.error(error);
+});
+
+// 회원 프로필 이미지
+const getProfilePhoto = (photo) => {
+  return photo ? photo : defaultImg;
+}
+
+// 회원 상태 출력
+const getUserStatus = (status) => {
+  return status === 0 ? 'text-primary' : (status === 1 ? 'text-warning' : 'text-error');
+};
+const getUserStatusString = (status) => {
+  return status === 0 ? '활동' : (status === 1 ? '정지' : '탈퇴');
+};
+
+// 회원 상태 변경
+const updateUserStatus = (user) => {
+  const requestData = {
+    userId: user.userId,
+    userStatus: user.selectedUserStatus
+  };
+  api2(`admin/users`, "PATCH", requestData)
+      .then(response=>{
+        user.userStatus = user.selectedUserStatus;
+      })
+      .catch(error=> {
+        console.error(error);
+      })
+};
+</script>
 
 <style src="@/assets/css/admin.css" scoped>
 </style>

@@ -94,4 +94,7 @@ public class User {
     public void updatePassword(String password){
         this.password = password;
     }
+    public void updateUserStatus(int userStatus) {
+        this.userStatus = userStatus;
+    }
 }

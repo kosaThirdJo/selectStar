@@ -14,11 +14,13 @@ section {
 }
 /*=============== 관리자 side bar ===============*/
 .side-bar-box {
-    padding: 2%;
+    padding: 0 2%;
 }
 
 .admin-title {
     font-size: x-large;
+    font-weight: bold;
+    padding: 10px 0;
 }
 
 .admin-menu {
@@ -41,7 +43,7 @@ section {
 
 .admin-sub-menu {
     color: #a3a3a3;
-    margin-left: 30px;
+    margin-left: 22px;
     border-left: 1px solid #a3a3a3;
     padding-left: 10px;
     height: 40px;
