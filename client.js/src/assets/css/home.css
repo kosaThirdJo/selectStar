@@ -173,7 +173,7 @@ footer {
     border: 3px solid #FF9F29;
 }
 
-.main-header-button-login:hover {
+.main-header-button-login:hover, .main-header-button-login-active {
     background-color: #FF9F29;
     color: white;
     border: 3px solid #FF9F29;
@@ -185,7 +185,7 @@ footer {
     border: 3px solid #1A4D2E;
 }
 
-.main-header-button-signup:hover {
+.main-header-button-signup:hover, .main-header-button-signup-active {
     background-color: #1A4D2E;
     color: white;
     border: 3px solid #1A4D2E;

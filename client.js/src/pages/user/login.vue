@@ -1,31 +1,41 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
 import axios from "axios";
 import { useAuthStore } from '@/stores/index';
 import {loginApi} from "@/common.js";
-
+const auth = useAuthStore();
 const router = useRouter();
-const authStore = useAuthStore();
-
 const loginInfo = ref({
-  name:'',
-  password:'',
+  name: '',
+  password: '',
 })
 
 axios.defaults.withCredentials = true;
-const login = async () => {
-  const response = await loginApi("login", "POST", loginInfo.value);
-  if (response.data instanceof Error) {
-    alert("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.");
-  } else if(response.status === 200){
+const loginHandler  = async () => {
+  try {
+    const response = await loginApi('login', 'POST', loginInfo.value);
+
+    if (response.status === 200) {
       const token = response.headers['authorization'];
-      authStore.setToken(token);
-      location.replace("/");  // 로그인 후 메인 페이지 이동
+      const role = response.headers['role'];
+      console.log(token);
+      console.log(role);
+
+      auth.login(token, role);
+
+      if (role === 'USER') {
+        location.replace('/');
+      } else if (role === 'ADMIN') {
+        location.replace('/admin');
+      }
     } else {
-      // 로그인 실패 시 처리
+      alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
       console.error('로그인 실패:', response.status, response.data);
     }
+  } catch (error) {
+    console.error('로그인 오류:', error);
+  }
 };
 
 </script>
@@ -50,13 +60,14 @@ const login = async () => {
 
       <div class="login-form">
         <!-- 로그인 form  -->
-        <form @submit.prevent="login">
+        <form @submit.prevent="loginHandler ">
           <div class="login-form-input">
             <!--  아이디  -->
             <div class="login-form-input-box">
               <span class="login-form-input-box-title">아이디</span>
               <div class="login-form-input-withbtn">
-                <input v-model="loginInfo.name" type="text" id="name" name="loginName" class="login-form-input-box-content-withbtn" />
+                <input v-model="loginInfo.name" type="text" id="name" name="loginName"
+                       class="login-form-input-box-content-withbtn"/>
               </div>
               <div class="login-form-input-check-alert" id="checkId">
                 <span></span>
@@ -66,7 +77,8 @@ const login = async () => {
             <!--  비밀번호  -->
             <div class="login-form-input-box">
               <span class="login-form-input-box-title">비밀번호</span>
-              <input v-model="loginInfo.password" type="password" id="password" name="loginPassword" class="login-form-input-box-content" />
+              <input v-model="loginInfo.password" type="password" id="password" name="loginPassword"
+                     class="login-form-input-box-content"/>
               <div class="login-form-input-check-alert" id="checkPassword">
                 <span></span>
               </div>

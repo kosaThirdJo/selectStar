@@ -74,7 +74,7 @@ const apiToken2 = async (urn, method, data, token) => {
             }
         }
     } catch (error) {
-        console.error('토큰 유효성 확인에 실패', error);
+        console.error('토큰 유효성 확인 실패', error);
         if (error.response && error.response.status === 401) {
             // 4. 로그아웃 처리
             await handleLogout();

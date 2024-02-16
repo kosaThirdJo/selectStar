@@ -4,6 +4,7 @@ import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.config.jwt.JwtProperties;
 import com.threestar.selectstar.config.jwt.JwtProvider;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import com.threestar.selectstar.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,16 +64,18 @@ public class UserController {
 		}
 	}
 
-	// 로그인
+/*	// 로그인
 	@PostMapping("/login")
-	public ResponseEntity<String> processLogin(@RequestBody GetUserRequest request){
+	public ResponseEntity<?> processLogin(@RequestBody GetUserRequest request){
 		try {
-			userService.loginUser(request);
-			return ResponseEntity.ok("로그인 성공");
+			User user = userService.loginUser(request);
+			log.info("=================로그인==아이디"+user.getName());
+			log.info("=================로그인==회원역할"+user.getRole());
+			return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
 		} catch (IllegalStateException e){
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-    }
+    }*/
 
 	//다른 유저 프로필 조회
 	@GetMapping("/profiles/info/{id}")

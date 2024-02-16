@@ -1,17 +1,46 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.dto.meeting.response.GetMeetingsResponse;
+import com.threestar.selectstar.dto.user.request.UpdateUserStatusRequest;
+import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
+import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.service.AdminService;
+import com.threestar.selectstar.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/admin/users")
-    public ResponseEntity<?> getAllUsers(Pageable pageable){
+    private final AdminService adminService;
 
-        return new ResponseEntity<>(HttpStatus.OK);
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    // 회원 전체 조회
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers(){
+        List<GetUsersListResponse> users = adminService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // 회원 상태 변경
+    @PatchMapping("/users")
+    public ResponseEntity<?> updateUserStatus(@RequestBody UpdateUserStatusRequest request) {
+        adminService.updateUserStatus(request.getUserId(), request.getUserStatus());
+        return ResponseEntity.ok().build();
+    }
+
+    // 모임글 전체 조회
+    @GetMapping("/meetings")
+    public ResponseEntity<?> getAllMeetings(){
+        List<GetMeetingsResponse> meetings = adminService.getAllMeetings();
+        return new ResponseEntity<>(meetings, HttpStatus.OK);
     }
 }
