@@ -17,7 +17,10 @@ import mymeetingList from "../components/mypages/mymeetingList.vue"
 import myapplyingList from "../components/mypages/myapplyingList.vue"
 //user profile
 import userprofile from "../pages/userprofile.vue"
-
+// ammin
+import admin from "@/pages/user/admin.vue";
+import adminUser from "@/components/admin/adminUser.vue";
+import adminMeeting from "@/components/admin/adminMeeting.vue";
 // 동적 매핑법 :변수
 const router = createRouter({
     history: createWebHistory(),
@@ -45,7 +48,13 @@ const router = createRouter({
                     {path: 'myapplying', name: 'myapplyinglist',component:myapplyingList}
                 ]},
             //user profile
-            {path: '/profiles/info/:user_id', name: 'userprofile', component: userprofile}
+            {path: '/profiles/info/:user_id', name: 'userprofile', component: userprofile},
+            // admin
+            {path:'/admin', component: admin,
+                children:[
+                    {path:'users', name:'users', component: adminUser},
+                    {path:'meetings', name:'meetings', component: adminMeeting},
+                ]},
 
         ]
 })

@@ -78,6 +78,7 @@ public class SpringSecurityConfig {
                         // 화이트 리스트
 //                        .requestMatchers("/**", "/assets/**", "/", "/index.html", "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**", "/users/**", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
                         .requestMatchers("/**", "/assets/**",  "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**","/users/apiKey","/signup", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음                        // USER
+                        // USER
                         .requestMatchers("/users/**").hasRole("USER")
                         // ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")

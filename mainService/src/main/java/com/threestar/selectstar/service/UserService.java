@@ -66,12 +66,11 @@ public class UserService {
 
     // 로그인
     @Transactional(readOnly = true)
-    public void loginUser(GetUserRequest request) {
-        userRepository.findByNameAndPassword(request.getName(), request.getPassword())
-                .ifPresent(user -> {
-                    throw new IllegalStateException("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.");
-                });
+    public User loginUser(GetUserRequest request) {
+        return userRepository.findByNameAndPassword(request.getName(), request.getPassword())
+                .orElseThrow(() -> new IllegalStateException("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요."));
     }
+
 
     // 회원 검색
     @Transactional(readOnly = true)
@@ -250,8 +249,4 @@ public class UserService {
         }
     }
 
-    public String getRefreshToken(Integer userId) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userId);
-        return refreshToken.getRefreshToken();
-    }
 }

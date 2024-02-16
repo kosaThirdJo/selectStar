@@ -75,8 +75,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         Cookie cookie = new Cookie("refreshToken", refreshToken);
 //        cookie.setHttpOnly(true);
         cookie.setPath("/");
+
         response.addCookie(cookie);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        response.addHeader("Role", principalDetails.getUser().getRole());
     }
 
 }

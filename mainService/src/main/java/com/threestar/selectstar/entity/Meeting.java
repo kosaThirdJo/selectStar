@@ -51,8 +51,7 @@ public class Meeting {
     private int applicationCount;
     private String location;
     private String description;
-    @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
-    private LocalDate updateDate  = LocalDate.now();
+    private Date updateDate  = Date.valueOf(LocalDate.now());
     @CreationTimestamp
     private Date creationDate;
     private String interestLanguage;
@@ -72,5 +71,6 @@ public class Meeting {
         this.interestFramework = updateRequest.getInterestFramework();
         this.interestJob = updateRequest.getInterestJob();
         this.description = updateRequest.getDescription();
+        this.updateDate = Date.valueOf(LocalDate.now());
     }
 }
