@@ -115,22 +115,65 @@ const api2 = async (urn, method, data) => {
     }))
 }
 const apiTokenMpt = async (urn, method, data, token) => {
-    const url = "http://"+  window.location.hostname + ":8081/" +  urn
+    /*const url = "http://"+  window.location.hostname + ":8081/" +  urn
     console.log(method);
     console.log(url);
 
      return (await axios({
          url,
-         method: method,
+         method,
          data,
          headers: {
-            //'Content-Type': 'multipart/form-data',
-            Authorization: token
+             'Content-Type': 'multipart/form-data',
+             Authorization: token,
+             credentials: 'include'
+        }*/
+    const url = "http://" + window.location.hostname + ":8081/" + urn
+    const refreshToken = cookies.get('refreshToken');
+    console.log(method);
+    console.log(url);
+    try {
+        // AccessToken 유효성 확인
+        const accessUrl = `http://${window.location.hostname}:8081/users/validate-access-token`;
+        const accessResponse = await axios.post(accessUrl, null, {
+            headers: {
+               // 'Content-Type': 'multipart/form-data',
+                Authorization: token
+            }
+        });
+        if (accessResponse.data.valid === true) {
+            console.log('Access 토큰 유효');
+            return await sendRequestWithTokenMpf(url, method, data, token);
+        } else {
+            console.log('Access 토큰이 만료되었거나 유효하지 않음');
+
+            // Access Token이 만료되면 Refresh Token을 통해 새로운 Access Token을 요청
+            const refreshUrl = `http://${window.location.hostname}:8081/users/validate-refresh-token`;
+            const refreshResponse = await axios.post(refreshUrl, {
+                refreshToken: refreshToken
+            });
+
+            if (refreshResponse.data.valid) {
+                const newAccessToken = "Bearer " + refreshResponse.data.newAccessToken;
+                localStorage.setItem("jwtToken", newAccessToken); // 새로운 Access Token을 로컬 스토리지에 저장
+                console.log(newAccessToken);
+                return await sendRequestWithTokenMpf(url, method, data, newAccessToken); // 새로운 Access Token으로 요청 재시도
+            } else {
+                console.log('Refresh Token이 만료되었거나 유효하지 않음');
+                await handleLogout();
+            }
         }
-    }).catch(e => {
+    }catch (error) {
+        console.error('토큰 유효성 확인에 실패', error);
+        if (error.response && error.response.status === 401) {
+            // 4. 로그아웃 처리
+            await handleLogout();
+        }
+    }
+/*    }).catch(e => {
         console.log(e);
         return { data: e}; //error 발생 시 e 반환
-    }))
+    }))*/
 }
 const loginApi = async (urn, method, data) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
@@ -152,6 +195,25 @@ const sendRequestWithToken = async (url, method, data, token) => {
             method,
             data,
             headers: {
+                Authorization: token,
+            },
+        });
+    } catch (error) {
+        console.error('호출 오류', error);
+        throw error;
+    }
+};
+const sendRequestWithTokenMpf = async (url, method, data, token) => {
+    console.log(url);
+    console.log(method);
+    console.log(data);
+    try {
+        return await axios({
+            url,
+            method,
+            data,
+            headers: {
+                'Content-Type': 'multipart/form-data',
                 Authorization: token,
             },
         });

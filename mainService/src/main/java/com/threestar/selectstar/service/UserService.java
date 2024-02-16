@@ -121,9 +121,6 @@ public class UserService {
         } else {
             User oldUserEntity = userO.get();
             oldUserEntity.updateMyIProfile(reqDTO.getAboutMe(), reqDTO.getProfileContent());
-            /*User oldUserEntity = userO.get();
-            oldUserEntity.setAboutMe(reqDTO.getAboutMe());
-            oldUserEntity.setProfileContent(reqDTO.getProfileContent());*/
             //첨부파일
             Optional<Portfolio> portfolioOptional = portfolioRepository.findByUser(oldUserEntity);
             if(portfolioOptional.isEmpty()){//기존 포폴파일 없을 경우
@@ -187,14 +184,6 @@ public class UserService {
             oldUserEntity.updateMyInfo(passwordEncoder.encode(reqDTO.getPassword()), reqDTO.getEmail(),
                     reqDTO.getNickname(), reqDTO.getLocation1(), reqDTO.getLocation2(),reqDTO.getInterestLanguage(),
                     reqDTO.getInterestFramework(), reqDTO.getInterestJob()) ;
-			/*oldUserEntity.setPassword(passwordEncoder.encode(reqDTO.getPassword()));
-			oldUserEntity.setEmail(reqDTO.getEmail());
-			oldUserEntity.setNickname(reqDTO.getNickname());
-			oldUserEntity.setLocation1(reqDTO.getLocation1());
-			oldUserEntity.setLocation2(reqDTO.getLocation2());
-			oldUserEntity.setInterestLanguage(reqDTO.getInterestLanguage());
-			oldUserEntity.setInterestFramework(reqDTO.getInterestFramework());
-			oldUserEntity.setInterestJob(reqDTO.getInterestJob());*/
 			try {
 				userRepository.save(oldUserEntity);
 				return "success";

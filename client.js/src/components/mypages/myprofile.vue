@@ -61,7 +61,6 @@ const myInfo = ref({
 const token = localStorage.getItem("jwtToken");
 
 function updateData(){
-    console.log(myInfo.value.profileFile);
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
@@ -70,7 +69,7 @@ function updateData(){
       formData.append("aboutMe", myInfo.value.aboutMe);
       formData.append("profileContent", myInfo.value.profileContent);
       formData.append("profileFile", myInfo.value.profileFile);
-
+      console.log(formData);
       apiTokenMpt("users/profile", "PUT", formData, token)
           .then(response2 => {
               if(response2.status===205){
