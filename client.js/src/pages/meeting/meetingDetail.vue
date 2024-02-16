@@ -67,11 +67,18 @@
 
 
           <div class="view-box">
-            <span></span>
             <span style="font-weight: bold"> 조회수 </span>
             <span v-text="result.views"></span>
           </div>
+          <div class="view-box">
+            <span style="font-weight: bold"> 등록일 </span>
+            <span v-text="result.creationDate"></span>
+          </div>
           <div v-text="result.description" id="content_description" class="main-content-box">
+          </div>
+          <div v-if="result.updateDate != result.creationDate " id="fix_date_line">
+            <span style="font-weight: bold">수정일 </span>
+            <span v-text="result.updateDate"></span>
           </div>
           <div id="end_date_line">
             <span style="font-weight: bold">마감일 </span>
@@ -96,6 +103,7 @@
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
               <div style="background: white; border-radius: 5%">
               <div style="display: flex">
+
               <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%" @click="fixCommentEnableInput(commentEle.commentId,commentEle.content)">수정</span></div>
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
@@ -123,7 +131,7 @@
 
 import { ref, watch } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {apiToken2} from "@/common.js";
+import {api2, apiToken2} from "@/common.js";
 import Modal from '../../components/meeting/applyModal.vue'
 import ApplyValidModal from "@/components/meeting/myApplyModal.vue";
 import ApplyReason from "@/components/meeting/applyReasonModal.vue";
@@ -187,19 +195,18 @@ apiToken2(
   viewBtnApplyCompleting.value = true
 });
 function getComment(){
-  apiToken2(
+  api2(
       "comment/meeting/" +
       route.params.post_id,
       "GET", ""
-  ).then(response => {
+  ).then((response) => {
+    console.log(response)
     commentResult.value = response.data.content
   });
 }
 getComment();
+
 const commentInput = ref("")
-
-
-
 function completeMeeting(){
   const result = confirm("모집 완료 하실껀가요?");
   if(result) {
@@ -208,7 +215,7 @@ function completeMeeting(){
     return;
   }
   apiToken2(
-      "meeting",
+      "meeting/complete",
       "PATCH", {
         "meetingId":route.params.post_id},
       localStorage.getItem("jwtToken")
@@ -282,8 +289,7 @@ function getBookmark(){
       localStorage.getItem("jwtToken")
   ).then(
       (response) => {
-        bookmark.value.bookmark = response.data.result
-        console.log(bookmark)
+        bookmark.value.bookmark = response.data
       })
 }
 function addBookmark(){

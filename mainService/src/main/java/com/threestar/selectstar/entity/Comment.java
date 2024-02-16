@@ -30,7 +30,7 @@ public class Comment {
     private java.sql.Date creationDate;
     @Setter
     private int deleted; // 0:삭제X 1:삭제
-
+    private int depth;
 
 
 

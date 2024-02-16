@@ -30,6 +30,7 @@ public class FindMeetingOneResponse {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
+    private Date updateDate;
     @Setter
     private Integer loginId;
     private int countApplyUsers;
@@ -56,6 +57,7 @@ public class FindMeetingOneResponse {
                 .applicationCount(meeting.getApplicationCount())
                 .location(meeting.getLocation())
                 .creationDate(meeting.getCreationDate())
+                .updateDate(meeting.getUpdateDate())
                 .interestLanguage(meeting.getInterestLanguage())
                 .interestFramework(meeting.getInterestFramework())
                 .interestJob(meeting.getInterestJob())
