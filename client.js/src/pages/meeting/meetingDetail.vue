@@ -67,11 +67,18 @@
 
 
           <div class="view-box">
-            <span></span>
             <span style="font-weight: bold"> 조회수 </span>
             <span v-text="result.views"></span>
           </div>
+          <div class="view-box">
+            <span style="font-weight: bold"> 등록일 </span>
+            <span v-text="result.creationDate"></span>
+          </div>
           <div v-text="result.description" id="content_description" class="main-content-box">
+          </div>
+          <div v-if="result.updateDate != result.creationDate " id="fix_date_line">
+            <span style="font-weight: bold">수정일 </span>
+            <span v-text="result.updateDate"></span>
           </div>
           <div id="end_date_line">
             <span style="font-weight: bold">마감일 </span>
