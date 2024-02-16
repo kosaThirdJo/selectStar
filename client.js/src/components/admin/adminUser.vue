@@ -1,5 +1,6 @@
 <template>
   <section>
+    <!-- 검색창 -->
     <v-text-field
         v-model="search"
         label="검색"
@@ -8,8 +9,9 @@
         hide-details
         variant="solo"
         density="compact"
-        class="w-25 mb-md-0"
+        class="w-25 float-right"
     ></v-text-field>
+    <!-- 회원 목록 -->
     <v-data-table
         :items="users"
         :headers="headers"
@@ -24,9 +26,11 @@
         no-data-text="회원이 존재하지 않습니다."
         must-sort hover
     >
+      <!-- 프로필 이미지 -->
       <template #item.profilePhoto="{ item }">
         <img class="profile-img" :src="getProfilePhoto(item.profilePhoto)" alt="Profile Photo"/>
       </template>
+      <!-- 회원 상태 -->
       <template #item.userStatus="{ item }">
         <td class="d-flex justify-center">
           <v-chip :class="getUserStatus(item.userStatus)">
@@ -34,6 +38,7 @@
           </v-chip>
         </td>
       </template>
+      <!-- 회원 상태 변경 -->
       <template #item.management="{ item }">
         <td class="d-flex justify-center">
           <v-select
@@ -70,10 +75,10 @@ const headers = [ // data-table header 설정
 const itemsPerPage = ref(10);
 const page = ref(1);
 const totalItems = ref(0);
-const search = ref('');
 const onPageUpdate = (newPage) => {
   page.value = newPage;
 };
+const search = ref('');
 const sortBy = [
   {key: 'userId', order: 'desc'}
 ]
@@ -128,14 +133,6 @@ const updateUserStatus = (user) => {
         console.error(error);
       })
 };
-
-const filter = (value, search, item) => {
-  return (
-      String(item.name).includes(search) ||
-      String(item.email).includes(search)
-  );
-};
-
 </script>
 
 <style src="@/assets/css/admin.css" scoped>
