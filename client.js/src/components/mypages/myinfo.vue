@@ -143,7 +143,8 @@
           </div>
         </div>
         <div class="frame-bottom">
-          <div class="myinfo-updatebtn" @click="submitupdateInfo()">수정</div>
+            <div class="myinfo-updatebtn" @click="submitupdateInfo()">수정</div>
+            <div class="myinfo-resignbtn" @click="submitupdateUserStatus()">탈퇴</div>
         </div>
       </div>
     </div>
@@ -235,52 +236,57 @@
 
   //지역1 위치 인증
   const getLocation = async () => {
-    // apiKey 가져오기
-    const apiResponse = await axios.get("http://"+ window.location.hostname +":8081/users/apiKey");
-    const apiKey = apiResponse.data;
-    // geolocation
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const x = position.coords.longitude;
-        const y = position.coords.latitude;
-        if (x && y) {
-          // kakaoapi
-          const response = await axios.get(
-              `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
-              {headers: {Authorization: `KakaoAK ${apiKey}`}}
-          );
-          console.log(response.data.documents[0]);
-          myInfo.value.location1 = response.data.documents[0].region_1depth_name;
-        }
-      });
-    } else {
-      alert('브라우저가 위치 정보를 지원하지 않습니다.');
-    }
+      // apiKey 가져오기
+      api2("users/apiKey", "GET")
+          .then(response => {
+              const apiKey = response.data;
+              // geolocation
+              if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(async (position) => {
+                      const x = position.coords.longitude;
+                      const y = position.coords.latitude;
+                      if (x && y) {
+                          // kakaoapi
+                          const response = await axios.get(
+                              `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
+                              {headers: {Authorization: `KakaoAK ${apiKey}`}}
+                          );
+                          const data = response.data.documents[0];
+                          myInfo.value.location1 = data.region_1depth_name + ' ' + data.region_2depth_name;
+                          //check.location = true;
+                      }
+                  });
+              } else {
+                  alert('브라우저가 위치 정보를 지원하지 않습니다.');
+              }
+          });
   };
 
   //지역2 위치 인증
   const getLocation2 = async () => {
-    // apiKey 가져오기
-    const apiResponse = await axios.get("http://"+ window.location.hostname +":8081/users/apiKey");
-    const apiKey = apiResponse.data;
-    // geolocation
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const x = position.coords.longitude;
-        const y = position.coords.latitude;
-        if (x && y) {
-          // kakaoapi
-          const response = await axios.get(
-              `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
-              {headers: {Authorization: `KakaoAK ${apiKey}`}}
-          );
-          console.log(response.data.documents[0]);
-          myInfo.value.location2 = response.data.documents[0].region_1depth_name;
-        }
-      });
-    } else {
-      alert('브라우저가 위치 정보를 지원하지 않습니다.');
-    }
+      api2("users/apiKey", "GET")
+          .then(response => {
+              const apiKey = response.data;
+              // geolocation
+              if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(async (position) => {
+                      const x = position.coords.longitude;
+                      const y = position.coords.latitude;
+                      if (x && y) {
+                          // kakaoapi
+                          const response = await axios.get(
+                              `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
+                              {headers: {Authorization: `KakaoAK ${apiKey}`}}
+                          );
+                          const data = response.data.documents[0];
+                          myInfo.value.location2 = data.region_1depth_name + ' ' + data.region_2depth_name;
+                      }
+                  });
+              } else {
+                  alert('브라우저가 위치 정보를 지원하지 않습니다.');
+              }
+          });
+
   };
   function selectInterests(buttons, selectedInterests, selectedInterestsInput, type) {
     buttons.forEach(button => {
@@ -354,6 +360,22 @@
     }else{
       alert("다시 확인해주세요");
     }
+  }
+  //탈퇴
+  async function submitupdateUserStatus() {
+          if (!confirm("정말 탈퇴하시겠습니까?")) {
+              window.location.reload();
+          } else {
+              apiToken2("users/status", "PUT", null, token)
+                  .then(response => {
+                      if(response.status===205){
+                          alert("메인화면으로 이동..");
+                          window.location.reload();
+                      }else {
+                          console.log(response);
+                      }
+                  });
+          }
   }
 async function getData(){
     apiToken2("users/setting", "GET", null, token)

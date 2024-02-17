@@ -106,6 +106,7 @@ public class UserService {
                     .profilePhoto(encodeImg)
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
+                    .profileFile(null)
                     .build();
             //return new GetMyInfoResponse(userE);
         }
@@ -192,6 +193,24 @@ public class UserService {
 			}
 		}
 	}
+    //마이페이지(개인정보수정)-회원 탈퇴
+    @jakarta.transaction.Transactional
+    public String updateUserStatus(int uId){
+        Optional<User> userO = userRepository.findById(uId);
+        if(userO.isEmpty()){
+            return "찾는 사용자가 없습니다.";
+        }else {
+            User oldUserEntity = userO.get();
+            oldUserEntity.updateUserStatus(1);
+            try {
+                userRepository.save(oldUserEntity);
+                return "success";
+            } catch (Exception e) {
+                log.info("update user status exception", e.getMessage());
+                return e.getMessage();
+            }
+        }
+    }
 
 	//프로필 이미지 수정
 	@jakarta.transaction.Transactional

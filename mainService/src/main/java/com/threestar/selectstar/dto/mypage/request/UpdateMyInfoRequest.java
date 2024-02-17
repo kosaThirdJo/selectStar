@@ -32,5 +32,6 @@ public class UpdateMyInfoRequest {
 
     private byte[] profilePhoto;
 
-
+    //탈퇴
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 }

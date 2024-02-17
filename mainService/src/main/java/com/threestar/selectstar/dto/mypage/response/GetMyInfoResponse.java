@@ -29,6 +29,9 @@ public class GetMyInfoResponse {
 
 
     private String profilePhoto;
+
+    //탈퇴여부
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 /*
     //생성자 사용 Entity -> DTO
     public GetMyInfoResponse(User user){

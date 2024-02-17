@@ -57,7 +57,7 @@ public class User {
     private String role;
 
     @ColumnDefault(value = "0")
-    private int userStatus;
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 
     @Override
     public boolean equals(Object o) {

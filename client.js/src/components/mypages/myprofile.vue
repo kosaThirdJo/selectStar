@@ -35,7 +35,9 @@
         </div>
       </div>
         <div class="frame-profile-file">
-            <input type="file" name="profileFile" />
+            <input
+                type="file"
+                name="profileFile"/>
         </div>
       <div class="frame-bottom">
         <input @click="updateData()" id="submitbutton" class="button-submit"  value="수정하기"/>
@@ -56,7 +58,7 @@ const myInfo = ref({
     "userId":"",
     "aboutMe" : "",
     "profileContent" : "",
-    "profileFile": ""
+    "profileFile": null
 });
 const token = localStorage.getItem("jwtToken");
 
@@ -65,34 +67,26 @@ function updateData(){
     alert("취소되었습니다.");
     window.location.reload();
   }else {
-      const formData = new FormData();
-      formData.append("aboutMe", myInfo.value.aboutMe);
-      formData.append("profileContent", myInfo.value.profileContent);
+      let formData = new FormData();
+      //formData.append("aboutMe", myInfo.value.aboutMe);
+      //formData.append("profileContent", myInfo.value.profileContent);
       formData.append("profileFile", myInfo.value.profileFile);
-      console.log(formData);
-      apiTokenMpt("users/profile", "PUT", formData, token)
+      console.log(formData.get("profileFile"));
+      //apiTokenMpt("users/profile", "PUT", formData, token)
+      apiTokenMpt("users/profile",
+          "PUT",
+          {"aboutMe": myInfo.value.aboutMe,
+              "profileContent": myInfo.value.profileContent},
+          token)
           .then(response2 => {
+              console.log(response2);
               if(response2.status===205){
                   alert("수정완료되었습니다.");
-                  window.location.reload();
+                  //window.location.reload();
               }else{
                   console.log(response2);
               }
           });
-    /*apiToken2(
-        "users/profile", "PUT",
-        {
-            aboutMe: myInfo.value.aboutMe,
-            profileContent: myInfo.value.profileContent,
-        }, token)
-        .then(response2 => {
-            if(response2.status===205){
-                alert("수정완료되었습니다.");
-                window.location.reload();
-            }else{
-                console.log(response2);
-            }
-        });*/
   }
 }
 async function getData(){

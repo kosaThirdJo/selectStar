@@ -45,11 +45,12 @@ public class MypageController {
     }
 
     //마이페이지-이력관리 수정
-    //@PatchMapping("/users/profile")
-    @PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    //@PatchMapping("/users/profile") // @RequestPart(name = "profilePhoto") MultipartFile file
+    //@PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value="/users/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @RequestBody UpdateMyInfoRequest userReq) {
+                                               @RequestPart UpdateMyInfoRequest userReq) {
         log.info("reqDTO");
         log.info(userReq.toString());
         try {
@@ -90,6 +91,27 @@ public class MypageController {
 
             String res = userService.updateMyInfo(uId, req);
             log.info("update myProfileInfo res");
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        }catch (UserNotFoundException unfe){
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
+        }
+    }
+
+    //회원 탈퇴
+    @RequestMapping(value = "/users/status", method = RequestMethod.PATCH)
+    @ResponseBody
+    public ResponseEntity<?> updateUserStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @RequestBody UpdateMyInfoRequest req){
+        try {
+            int uId = userDetails.getUserId();
+
+            String res = userService.updateUserStatus(uId);
+            log.info("update user status res");
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {

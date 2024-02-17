@@ -89,25 +89,8 @@ async function getData(){
                 if(myInfo.value.profilePhoto === ""){
                     myInfo.value.profilePhoto = defaultImg;
                 }
-                //console.log(myInfo.value);
             }
-
         });
-/*  try {
-    const response1 = (await axios.get("http://"+window.location.hostname+":8081/users/profile", {
-      headers : {
-        Authorization: token
-      }
-    }));
-    myInfo.value = response1.data;
-    if(myInfo.value.profilePhoto === ""){
-      myInfo.value.profilePhoto = defaultImg;
-    }
-    console.log(myInfo.value);
-  }catch (error){
-    getDataErr.value =error;
-    //console.log(getDataErr.value);
-  }*/
 }
 onMounted(()=>{
   getData();
@@ -135,23 +118,25 @@ function updateProfileImg(){
       //multipart/form-data 형식으로 전송
      let fd = new FormData();
      fd.append("profilePhoto", imgfileInput.value.files[0]);
-     /*apiTokenMpt("users/setting/img", "PUT", fd, token)
+     apiTokenMpt("users/setting/img", "PUT", fd, token)
          .then(response =>{
              console.log(response);
-             //window.location.reload();
-         });*/
-     axios.put("http://"+window.location.hostname+":8081/users/setting/img", fd, {
-       headers: {
-         'Content-Type' : 'multipart/form-data',
-         'Authorization' : token
-       }
-     }).then(res => {
-           console.log(res);
-           window.location.reload();
-         }).then(error => {
-       console.log(error);
-     });
-     console.log("수정완료");
+             window.location.reload();
+         });
+     /*
+      axios.put("http://"+window.location.hostname+":8081/users/setting/img", fd, {
+          headers: {
+              'Content-Type' : 'multipart/form-data',
+              'Authorization' : token
+          }
+      }).then(res => {
+          console.log(res);
+          window.location.reload();
+      }).then(error => {
+          console.log(error);
+      });
+      */
+     //console.log("수정완료");
    }
   }
 </script>

@@ -333,9 +333,8 @@ flex-shrink: 0;
     flex-shrink: 0;
     justify-content:center;
 }
-
 .myinfo-updatebtn {
-  gap: 10px;
+/*  gap: 10px;*/
   width: 100px;
   height: 40px;
   display: flex;
@@ -355,4 +354,29 @@ flex-shrink: 0;
   font-stretch: normal;
   text-decoration: none;
   cursor: pointer;
+  left: 0;
+}
+
+.myinfo-resignbtn {
+/*  gap: 10px;*/
+  width: 100px;
+  height: 40px;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  align-self: stretch;
+  align-items: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: #55565B;
+  color: rgba(250, 243, 227, 1);
+  font-size: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-stretch: normal;
+  text-decoration: none;
+  cursor: pointer;
+  rignt: 0;
 }
