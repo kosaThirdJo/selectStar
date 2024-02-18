@@ -27,6 +27,15 @@
         must-sort hover
         class="text-center"
     >
+      <!-- 모임글 제목 -->
+      <template #item.title="{ item }">
+        <router-link
+            :to="`/meet/${item.meetingId}`"
+            class="text-center text-decoration-none text-black"
+        >
+          {{ item.title }}
+        </router-link>
+      </template>
       <!-- 모임글 상태 -->
       <template #item.status="{ item }">
         <td class="d-flex justify-center">
@@ -50,12 +59,17 @@
       </template>
     </v-data-table>
     <!-- 확인 모달 -->
-    <v-dialog v-model="confirmationModal" max-width="500px">
+    <v-dialog v-model="confirmationModal" max-width="500px" min-height="500px">
       <v-card>
-        <v-card-title>삭제 확인</v-card-title>
-        <v-card-text>정말로 삭제하시겠습니까?</v-card-text>
-        <v-card-actions>
-          <v-btn color="error" @click="deleteItem">삭제</v-btn>
+        <v-card-title>게시물 삭제 {{ currentItemToDelete && currentItemToDelete.deleted === 0 ? '' : '취소' }}</v-card-title>
+        <v-card-text>글을 정말 삭제 {{
+            currentItemToDelete && currentItemToDelete.deleted === 0 ? '' : '취소'
+          }}하시겠습니까?
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn color="error" @click="deleteItem(currentItemToDelete)">삭제
+            {{ currentItemToDelete && currentItemToDelete.deleted === 0 ? '' : '취소' }}
+          </v-btn>
           <v-btn @click="closeConfirmationModal">취소</v-btn>
         </v-card-actions>
       </v-card>
@@ -131,20 +145,23 @@ apiToken2(
 });
 
 
-// 회원 상태 변경
-const updateUserStatus = (user) => {
+// 모임 글 삭제, 삭제 취소
+const deleteItem = (meeting) => {
+  const changedDelete = meeting.deleted === 0 ? 1 : 0;
   const requestData = {
-    userId: user.userId,
-    userStatus: user.selectedUserStatus
+    meetingId: meeting.meetingId,
+    deleted: meeting.deleted
   };
-  api2(`admin/users`, "PATCH", requestData)
-      .then(response=>{
-        user.userStatus = user.selectedUserStatus;
+  api2('admin/meetings/delete', "PATCH", requestData)
+      .then(() => {
+        meeting.deleted = changedDelete;
       })
-      .catch(error=> {
+      .catch(error => {
         console.error(error);
-      })
+      });
+  closeConfirmationModal(); // 모달 닫기
 };
+
 </script>
 
 <style src="@/assets/css/admin.css" scoped>

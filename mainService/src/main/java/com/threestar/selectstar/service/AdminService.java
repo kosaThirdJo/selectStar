@@ -4,6 +4,7 @@ import com.threestar.selectstar.dto.meeting.response.GetMeetingsResponse;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
 import com.threestar.selectstar.entity.Meeting;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import com.threestar.selectstar.repository.MeetingRepository;
 import com.threestar.selectstar.repository.UserRepository;
@@ -44,5 +45,13 @@ public class AdminService {
         return meetingList.stream()
                 .map(GetMeetingsResponse::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteMeeting(long meetingId, int deleted) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new MeetingNotFoundException("해당하는 모임글 없음"));
+        meeting.updateDeleted(deleted);
+        meetingRepository.save(meeting);
     }
 }

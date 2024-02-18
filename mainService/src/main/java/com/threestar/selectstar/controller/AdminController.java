@@ -1,5 +1,6 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.dto.meeting.request.UpdateDeletedStatusRequest;
 import com.threestar.selectstar.dto.meeting.response.GetMeetingsResponse;
 import com.threestar.selectstar.dto.user.request.UpdateUserStatusRequest;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
@@ -42,5 +43,12 @@ public class AdminController {
     public ResponseEntity<?> getAllMeetings(){
         List<GetMeetingsResponse> meetings = adminService.getAllMeetings();
         return new ResponseEntity<>(meetings, HttpStatus.OK);
+    }
+
+    // 모임글 삭제
+    @PatchMapping("/meetings/delete")
+    public ResponseEntity<?> deleteMeeting(@RequestBody UpdateDeletedStatusRequest request) {
+        adminService.deleteMeeting(request.getMeetingId(), request.getDeleted());
+        return ResponseEntity.ok().build();
     }
 }
