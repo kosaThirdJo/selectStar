@@ -219,7 +219,7 @@ const showMore = () => {
             </div>
             <div>찾으시는 모임이 없나요? 직접 만들어 보세요!</div>
             <div class="search-filter-result-none-btn">
-              <a href="/meeting/write" class="search-filter-result-none-meetingbtn">모임 만들기</a>
+              <a href="/meet/write" class="search-filter-result-none-meetingbtn">모임 만들기</a>
             </div>
           </div>
         </div>
