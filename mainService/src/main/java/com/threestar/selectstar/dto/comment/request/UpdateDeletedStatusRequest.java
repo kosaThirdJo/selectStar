@@ -1,9 +1,9 @@
-package com.threestar.selectstar.dto.meeting.request;
+package com.threestar.selectstar.dto.comment.request;
 
 import lombok.Getter;
 
 @Getter
 public class UpdateDeletedStatusRequest {
-    private long meetingId;
+    private long commentId;
     private int deleted;
 }

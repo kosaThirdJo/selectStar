@@ -33,5 +33,7 @@ public class Comment {
     private int depth;
 
 
-
+    public void updateDeleted(int deleted) {
+        this.deleted = deleted == 0 ? 1 : 0;
+    }
 }
