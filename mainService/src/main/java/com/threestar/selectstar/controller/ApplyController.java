@@ -33,7 +33,7 @@ public class ApplyController {
                     .body(applyService.checkApply(userDetails.getUserId(),meetingId)); // 신청 없으면 에러
 
         } catch (Exception e){
-            return ResponseEntity.status(404)
+            return ResponseEntity.status(204)
                     .build();
         }
      }

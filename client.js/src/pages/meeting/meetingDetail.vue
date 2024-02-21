@@ -156,44 +156,87 @@ const bookmark = ref([])
 const fixCommentMode = ref([])
 const tempFixSubmitContent = ref([])
 
-apiToken2(
-    "meeting/" +
-    route.params.post_id,
-    "GET", null,
-    localStorage.getItem("jwtToken")
-).then(response => {
-  result.value = response.data
-  console.log(result)
-  isLoading.value = false;
-  if (!localStorage.getItem("jwtToken")){
-    return
-  }
-  // 로그인아이디와 작성자가 다를경우
-  if (response.data.loginId !== response.data.userId){
-    // 신청 테이블 조회
-    apiToken2(
-        "apply/check?meetingId=" + route.params.post_id,
-        "GET",
-        "",
-        localStorage.getItem("jwtToken")
-    ).catch(e => {
-      console.log(e)
-    }).then(response1 => {
-          console.log(response1)
-      if (response1.data){
-        viewBtnNowApplyInfo.value = true
-      } else {
-        viewBtnApply.value = true
-      }
-        })
-    return;
-  }
-  // 자기가 작성자인 경우
-  viewBtnRemoveMeeting.value = true
-  viewBtnApplyList.value = true
-  viewBtnFix.value = true
-  viewBtnApplyCompleting.value = true
-});
+if (localStorage.getItem("jwtToken")) {
+  apiToken2(
+      "meeting/" +
+      route.params.post_id,
+      "GET", null,
+      localStorage.getItem("jwtToken")
+  ).then(response => {
+    result.value = response.data
+    console.log(result)
+    isLoading.value = false;
+
+    if (!localStorage.getItem("jwtToken")) {
+      return
+    }
+    // 로그인아이디와 작성자가 다를경우
+    if (response.data.loginId !== response.data.userId) {
+      // 신청 테이블 조회
+      apiToken2(
+          "apply/check?meetingId=" + route.params.post_id,
+          "GET",
+          "",
+          localStorage.getItem("jwtToken")
+      ).catch(e => {
+        console.log(e)
+      }).then(response1 => {
+        console.log(response1)
+        if (response1.data) {
+          viewBtnNowApplyInfo.value = true
+        } else {
+          viewBtnApply.value = true
+        }
+      })
+      return;
+    }
+    // 자기가 작성자인 경우
+    viewBtnRemoveMeeting.value = true
+    viewBtnApplyList.value = true
+    viewBtnFix.value = true
+    viewBtnApplyCompleting.value = true
+  });
+} else {
+  api2(
+      "meeting/" +
+      route.params.post_id,
+      "GET", null
+  ).then(response => {
+    result.value = response.data
+    console.log(result)
+    isLoading.value = false;
+
+    if (!localStorage.getItem("jwtToken")) {
+      return
+    }
+    // 로그인아이디와 작성자가 다를경우
+    if (response.data.loginId !== response.data.userId) {
+      // 신청 테이블 조회
+      apiToken2(
+          "apply/check?meetingId=" + route.params.post_id,
+          "GET",
+          "",
+          localStorage.getItem("jwtToken")
+      ).catch(e => {
+        console.log(e)
+      }).then(response1 => {
+        console.log(response1)
+        if (response1.data) {
+          viewBtnNowApplyInfo.value = true
+        } else {
+          viewBtnApply.value = true
+        }
+      })
+      return;
+    }
+    // 자기가 작성자인 경우
+    viewBtnRemoveMeeting.value = true
+    viewBtnApplyList.value = true
+    viewBtnFix.value = true
+    viewBtnApplyCompleting.value = true
+  });
+}
+
 function getComment(){
   api2(
       "comment/meeting/" +

@@ -57,15 +57,17 @@ function recognizeApply(idx){
 }
 
 function GetValidApply(){
-  apiToken2("apply/meeting/valid?meetingId="+props.meetingId,
-  "GET",
-      "",
-      localStorage.getItem("jwtToken")
-      ).then(
-          response =>{
-            validObj.value = response.data;
+  if (localStorage.getItem("jwtToken")) {
+    apiToken2("apply/meeting/valid?meetingId=" + props.meetingId,
+        "GET",
+        "",
+        localStorage.getItem("jwtToken")
+    ).then(
+        response => {
+          validObj.value = response.data;
 
-          })
+        })
+  }
 }
 GetValidApply()
 
