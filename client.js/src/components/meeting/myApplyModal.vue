@@ -33,6 +33,7 @@ function checkValidApply(){
   )
 }
 onMounted(() => {
+  if (localStorage.getItem("jwtToken"))
   checkValidApply();
 });
 </script>
