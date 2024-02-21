@@ -30,6 +30,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final NumberPath<Integer> deleted = createNumber("deleted", Integer.class);
 
+    public final NumberPath<Integer> depth = createNumber("depth", Integer.class);
+
     public final QMeeting meeting;
 
     public final QUser user;

@@ -21,6 +21,7 @@ import userprofile from "../pages/userprofile.vue"
 import admin from "@/pages/user/admin.vue";
 import adminUser from "@/components/admin/adminUser.vue";
 import adminMeeting from "@/components/admin/adminMeeting.vue";
+import adminMeetingComment from "@/components/admin/adminMeetingComment.vue";
 // 동적 매핑법 :변수
 const router = createRouter({
     history: createWebHistory(),
@@ -54,6 +55,7 @@ const router = createRouter({
                 children:[
                     {path:'users', name:'users', component: adminUser},
                     {path:'meetings', name:'meetings', component: adminMeeting},
+                    {path:'comments', name:'comments', component: adminMeetingComment},
                 ]},
 
         ]
