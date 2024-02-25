@@ -5,7 +5,7 @@ import router from '@/router/index.js';
 import {ref} from "vue";
 import {apiToken2} from "@/common.js";
 
-const {logout, getToken} = useAuthStore();
+const {logout, getToken, getRole} = useAuthStore();
 const {cookies} = useCookies();
 
 const logoutHandler = async () => {
@@ -38,7 +38,7 @@ const searchResult = () => {
 
 const jwtToken = getToken();
 const searchWord = ref('');
-
+const role = getRole();
 </script>
 
 <template>
@@ -81,11 +81,11 @@ const searchWord = ref('');
           </div>
 
           <!-- 02-04 마이페이지 / 관리자 페이지 -->
-          <router-link v-if="jwtToken" class="main-header-nav-mypage main-header-nav-meetinglist-text"
+          <router-link v-if="jwtToken && role==='USER'" class="main-header-nav-mypage main-header-nav-meetinglist-text"
                        to="/users/myprofile">
             <span>마이페이지</span>
           </router-link>
-          <router-link v-if="jwtToken" class="main-header-nav-mypage main-header-nav-meetinglist-text"
+          <router-link v-if="jwtToken && role==='ADMIN'" class="main-header-nav-mypage main-header-nav-meetinglist-text"
                        to="/admin/users">
             <span>관리자페이지</span>
           </router-link>
@@ -106,12 +106,14 @@ const searchWord = ref('');
           <div class="main-header-button">
             <!-- 로그인하지 않았을 경우 -->
             <router-link v-if="!jwtToken" to="/login">
-              <button class="main-header-button-login" :class="{ 'main-header-button-login-active': $route.path === '/login'}">
+              <button class="main-header-button-login"
+                      :class="{ 'main-header-button-login-active': $route.path === '/login'}">
                 <span class="main-header-button-login-text"><span>로그인</span></span>
               </button>
             </router-link>
             <router-link v-if="!jwtToken" to="/signup">
-              <button class="main-header-button-signup" :class="{ 'main-header-button-signup-active': $route.path === '/signup'}">
+              <button class="main-header-button-signup"
+                      :class="{ 'main-header-button-signup-active': $route.path === '/signup'}">
                 <span class="main-header-button-signup-text"><span>회원가입</span></span>
               </button>
             </router-link>

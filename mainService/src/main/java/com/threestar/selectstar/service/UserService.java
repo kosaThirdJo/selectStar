@@ -12,6 +12,7 @@ import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
 import com.threestar.selectstar.entity.RefreshToken;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.exception.UserNotFoundException;
 import com.threestar.selectstar.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -238,6 +239,13 @@ public class UserService {
         if (refreshToken != null) {
             refreshTokenRepository.delete(refreshToken);
         }
+    }
+
+    // 회원 상태 조회
+    @Transactional(readOnly = true)
+    public User getUserStatus(String name) {
+        return (User) userRepository.findByName(name)
+                .orElseThrow(() -> new UserNotFoundException("사용자 없음"));
     }
 
 }

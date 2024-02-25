@@ -25,14 +25,14 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         this.getRoleList().forEach(role-> {
-            authorities.add(()-> {return role;});
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         });
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.user != null ? this.user.getPassword() : "";
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public List<String> getRoleList(){
-        if(!user.getRole().isEmpty()){
+        if(user != null && !user.getRole().isEmpty()){
             return Arrays.asList(user.getRole().split(","));
         }
         return new ArrayList<>();
