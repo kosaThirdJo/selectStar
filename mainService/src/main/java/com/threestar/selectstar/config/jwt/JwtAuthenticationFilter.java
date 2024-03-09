@@ -1,19 +1,26 @@
 package com.threestar.selectstar.config.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.dto.user.request.GetUserRequest;
+import com.threestar.selectstar.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 // JWT 인증 필터
 @Slf4j
@@ -30,10 +37,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         this.authenticationManager = authenticationManager;
     }
 
+    @Autowired
+    private UserService userService;
     private GetUserRequest loginRequest;
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
 
         // LoginRequest
         ObjectMapper om = new ObjectMapper();
@@ -44,15 +53,49 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
             log.error("로그인 요청 오류", e);
         }
 
-        log.info("JwtAuthenticationFilter : "+loginRequest);
+//        log.info("JwtAuthenticationFilter : "+loginRequest);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getName(), loginRequest.getPassword());
-        log.info("JwtAuthenticationFilter : 토큰생성완료");
+//        log.info("JwtAuthenticationFilter : 토큰생성완료");
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        CustomUserDetails principalDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        // 로그인 시도하는 user 상태 조회
+        int userStatus = userService.getUserStatus(loginRequest.getName()).getUserStatus();
+
+        // 정지된 사용자 또는 탈퇴한 사용자인 경우
+        if (userStatus != 0) {
+
+            // 상태 코드와 메시지를 설정하여 클라이언트에게 전달
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // 메시지
+            String message = "";
+            if (userStatus == 1) {
+                message = "정지된 사용자입니다.";
+            } else {
+                message = "탈퇴한 사용자입니다.";
+            }
+
+            // JSON 형태로 메시지 작성
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(Map.of("message", message));
+
+            // 응답에 JSON 메시지 작성
+            PrintWriter writer = response.getWriter();
+            writer.println(jsonResponse);
+            writer.flush();
+
+            // 인증 실패를 나타내는 객체 반환
+            return null;
+        }
+
+        /*CustomUserDetails principalDetails = (CustomUserDetails) authentication.getPrincipal();
         log.info("user ID : " + principalDetails.getUser().getName());
-        log.info("user Password : " + principalDetails.getUser().getPassword());
+        log.info("user Password : " + principalDetails.getUser().getPassword());*/
+
 		return authentication;
     }
 

@@ -129,13 +129,16 @@ const apiTokenMpt = async (urn, method, data, token) => {
 const loginApi = async (urn, method, data) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
     return (await axios({
-        url, method, data, headers: {
-            "X-Requested-With": "XMLHttpRequest"
+        url,
+        method: method,
+        data,
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
         }
-    }).catch(e => {
-        console.log(url);
-        console.log(e);
-        return{data: e};
+    }).catch(error => {
+        console.log('로그인 오류:', error.response.status, error.response.data);
+        return error.response;
     }))
 }
 

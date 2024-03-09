@@ -9,11 +9,13 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = newToken;
         role.value = newRole;
         localStorage.setItem('jwtToken', newToken);
+        localStorage.setItem('role', newRole);
     };
     const logout = () => {
         token.value = '';
         role.value = '';
         localStorage.removeItem('jwtToken');
+        localStorage.removeItem('role');
     };
     const getToken = () => {
         // return token.value;
@@ -21,23 +23,9 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     const getRole = () => {
-        return role.value;
+        // return role.value;
+        return localStorage.getItem('role');
     };
-    /*function setToken(token){
-        this.token = token;
-        localStorage.setItem('jwtToken', token);
-    }
-    function clearToken() {
-        this.token = null;
-        this.role = '';
-        localStorage.removeItem('jwtToken');
-    }*/
-/*    function getToken(){
-        return localStorage.getItem('jwtToken');
-    }*/
-/*    function setRole(role) {
-        this.role = role;
-    }*/
     return {login, logout, getToken, getRole, token, role}
 
 })
