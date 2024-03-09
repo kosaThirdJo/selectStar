@@ -74,7 +74,7 @@
             <span style="font-weight: bold"> 등록일 </span>
             <span v-text="result.creationDate"></span>
           </div>
-          <div v-text="result.description" id="content_description" class="main-content-box">
+          <div v-html="result.description.replaceAll('\n','<br>')" id="content_description" class="main-content-box">
           </div>
           <div v-if="result.updateDate != result.creationDate " id="fix_date_line">
             <span style="font-weight: bold">수정일 </span>
@@ -90,7 +90,7 @@
           </div>
         </section>
         <section id="comment_box">
-          <div><span style="font-weight: bold">댓글 </span><span v-text="commentResult.length" style="color: #1A4D2E"></span>
+          <div><span style="font-weight: bold">댓글 </span><span v-text="commentResult.totalElements" style="color: #1A4D2E"></span>
           </div>
           <div id="comment_input_line">
             <input id="comment_input" v-model="commentInput"
@@ -100,7 +100,7 @@
             <span id="comment_button" class="btn btn-primary mr-3" style="width: 55px;" @click="writeComment()">등록</span>
           </div>
           <div class="main-content-container">
-            <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult">
+            <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult.content">
               <div style="background: white; border-radius: 5%">
               <div style="display: flex">
 
@@ -108,7 +108,7 @@
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%" @click="fixCommentEnableInput(commentEle.commentId,commentEle.content)">수정</span></div>
               <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
               </div>
-                <div v-if="!fixCommentMode[commentEle.commentId]" v-text="commentEle.content"></div>
+                <div v-if="!fixCommentMode[commentEle.commentId]" v-html="commentEle.content.replaceAll('\n','<br>')"></div>
                 <input v-if="fixCommentMode[commentEle.commentId]" style="width: 80%" v-model="tempFixSubmitContent[commentEle.commentId]">
 
                 <span v-if="fixCommentMode[commentEle.commentId]" @click="fixComment(commentEle.commentId,commentIdx)" class="btn">제출</span>
@@ -244,7 +244,7 @@ function getComment(){
       "GET", ""
   ).then((response) => {
     console.log(response)
-    commentResult.value = response.data.content
+    commentResult.value = response.data
   });
 }
 getComment();

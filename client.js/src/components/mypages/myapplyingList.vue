@@ -156,7 +156,6 @@ function chkCateSts(){
       })
 }
 
-//데이터 조회
 async function getData(){
     apiToken2("users/myapplying", "GET", null, token)
         .then(async  response =>{

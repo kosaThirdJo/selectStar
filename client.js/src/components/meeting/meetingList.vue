@@ -108,10 +108,10 @@ import Card from "../element/card.vue";
 import {api2} from "@/common.js";
 import {useRoute} from "vue-router";
 import router from "../../router/index.js";
-
+//TODO 댓글수 삭제했을경우 수정해야 함
 const route = useRoute();
 
-  const req = ref({
+const req = ref({
   page:(useRoute().query.page!== undefined) ? parseInt(useRoute().query.page): 0,
   size:(useRoute().query.size!== undefined) ? parseInt(useRoute().query.size): 9,
   order:(useRoute().query.order!== undefined) ? useRoute().query.order: "desc",
