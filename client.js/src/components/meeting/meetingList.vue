@@ -61,15 +61,30 @@
 </style>
 <template>
   <div class="frame">
-  <div class="button-create-meeting">
-    <router-link :to="'/meet/write'" class="content_list_btn make-meeting">
+
+  <div class="container">
+    <div class="button-create-meeting container">
+      <div class="v-row">
+        <v-select :items="selectItem.items" item-title="name"
+                  v-model="req.criteria"
+                  class="v-col-2">
+        </v-select>
+        <div
+            class="v-col-8"
+        ></div>
+        <div
+            class="v-col-lg-2">
+          <router-link :to="'/meet/write'" class="content_list_btn make-meeting"
+          >
       <span class="circle" aria-hidden="true">
           <span class="icon arrow"></span>
       </span>
-      <span class="button-text">모임 만들기</span>
-    </router-link>
-  </div>
-  <div class="container">
+            <span class="button-text">모임 만들기</span>
+          </router-link>
+        </div>
+      </div>
+    </div>
+
 
     <br>
     <card v-for="(resOne, i) in result" :key="i" :resOne="resOne"></card>
@@ -116,16 +131,31 @@ const req = ref({
   size:(useRoute().query.size!== undefined) ? parseInt(useRoute().query.size): 9,
   order:(useRoute().query.order!== undefined) ? useRoute().query.order: "desc",
   category: (useRoute().query.category!== undefined) ? useRoute().query.category: null,
-  criteria:(useRoute().query.criteria!== undefined) ? useRoute().query.criteria: "meetingId",
+  criteria:(useRoute().query.criteria!== undefined) ? useRoute().query.criteria: "최신순",
     offset:(useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0
 })
 let offset = (useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0
+const selectItem = ref(
+    {
+
+      items:[
+        {
+          name: '최신순',
+        },
+        {
+          name: '인기순',
+        },
+      ]
+    })
 getPage()
 watch(() => route.query.category, (newCategory,lastCategory) => {
     req.value.category = newCategory;
     getPage()
-
 })
+watch(() => req.value.criteria, () =>{
+  getPage()
+} )
+
 let routerUrl = ref("/meet?")
 let routeQuery = route.query
 
@@ -165,12 +195,23 @@ function changeOffset(offsetDelta){
 }
 //
 async function getPage() {
+  let criteria;
+  switch (req.value.criteria){
+    case "최신순":
+      criteria = "meetingId"
+      break;
+    case "인기순":
+      criteria = "views"
+      break;
+  }
+
+
    api2(
       "meeting?" +
       "page=" + (parseInt(req.value.page)) + "&" +
       "size=" + req.value.size + "&" +
       "order=" + req.value.order + "&" +  // '=' 추가
-      "criteria=" + req.value.criteria
+      "criteria=" + criteria
       + ((req.value.category) ? "&category=" + req.value.category : ""),
       "GET", null
   ).then(responseAll => {
