@@ -126,7 +126,7 @@ const updateUserStatus = (user) => {
     userStatus: user.selectedUserStatus
   };
   api2(`admin/users`, "PATCH", requestData)
-      .then(response => {
+      .then(() => {
         user.userStatus = user.selectedUserStatus;
       })
       .catch(error => {

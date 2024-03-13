@@ -22,7 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-//@EnableMethodSecurity(prePostEnabled = true)  //  메소드 기반의 보안을 활성화
+@EnableMethodSecurity(prePostEnabled = true)  //  메소드 기반의 보안을 활성화
 public class SpringSecurityConfig {
 
     private final UserRepository userRepository;
@@ -77,11 +77,11 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 화이트 리스트
 //                        .requestMatchers("/**", "/assets/**", "/", "/index.html", "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**", "/users/**", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
-                        .requestMatchers("/**", "/assets/**",  "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**","/users/apiKey","/signup", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음                        // USER
-                        // USER
-                        .requestMatchers("/users/**").hasRole("USER")
+                        .requestMatchers("/**", "/assets/**", "/meeting", "/apply/**", "/meeting/**", "/comment/meeting/**", "/users/apiKey", "/signup", "/login", "/logout", "/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
                         // ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // USER
+                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
         return httpsecurity.build();

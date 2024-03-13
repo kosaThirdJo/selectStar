@@ -5,6 +5,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Select *</title>
+      <style lang="css">
+        #app {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+
+          > header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+          }
+
+          > footer {
+            margin-top: auto;
+          }
+        }
+      </style>
   </head>
   <body>
     <div id="app"></div>

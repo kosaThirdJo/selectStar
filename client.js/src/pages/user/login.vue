@@ -12,29 +12,30 @@ const loginInfo = ref({
 })
 
 axios.defaults.withCredentials = true;
-const loginHandler  = async () => {
+const loginHandler = async () => {
   try {
     const response = await loginApi('login', 'POST', loginInfo.value);
 
     if (response.status === 200) {
       const token = response.headers['authorization'];
       const role = response.headers['role'];
-      console.log(token);
-      console.log(role);
-
       auth.login(token, role);
-
       if (role === 'USER') {
         location.replace('/');
       } else if (role === 'ADMIN') {
-        location.replace('/admin');
+        location.replace('/admin/users');
+      }
+    } else if (response.status === 403) {
+      if (response.data && response.data.message) {
+        alert(response.data.message);
       }
     } else {
-      alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
       console.error('로그인 실패:', response.status, response.data);
+      alert('아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
     }
   } catch (error) {
     console.error('로그인 오류:', error);
+    alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
   }
 };
 

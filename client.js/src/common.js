@@ -39,10 +39,10 @@ const apiToken2 = async (urn, method, data, token) => {
             }
         });
         if (accessResponse.data.valid === true) {
-            console.log('Access 토큰 유효');
+            // console.log('Access 토큰 유효');
             return await sendRequestWithToken(url, method, data, token);
         } else {
-            console.log('Access 토큰이 만료되었거나 유효하지 않음');
+            // console.log('Access 토큰이 만료되었거나 유효하지 않음');
 
             // Access Token이 만료되면 Refresh Token을 통해 새로운 Access Token을 요청
             const refreshUrl = `http://${window.location.hostname}:8081/users/validate-refresh-token`;
@@ -53,15 +53,14 @@ const apiToken2 = async (urn, method, data, token) => {
             if (refreshResponse.data.valid) {
                 const newAccessToken = "Bearer " + refreshResponse.data.newAccessToken;
                 localStorage.setItem("jwtToken", newAccessToken); // 새로운 Access Token을 로컬 스토리지에 저장
-                console.log(newAccessToken);
                 return await sendRequestWithToken(url, method, data, newAccessToken); // 새로운 Access Token으로 요청 재시도
             } else {
-                console.log('Refresh Token이 만료되었거나 유효하지 않음');
+                // console.log('Refresh Token이 만료되었거나 유효하지 않음');
                 await handleLogout();
             }
         }
     } catch (error) {
-        console.error('토큰 유효성 확인 실패', error);
+        // console.error('토큰 유효성 확인 실패', error);
         if (error.response && error.response.status === 401) {
             // 4. 로그아웃 처리
             await handleLogout();
@@ -164,13 +163,16 @@ const apiTokenMpt = async (urn, method, data, token) => {
 const loginApi = async (urn, method, data) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
     return (await axios({
-        url, method, data, headers: {
-            "X-Requested-With": "XMLHttpRequest"
+        url,
+        method: method,
+        data,
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
         }
-    }).catch(e => {
-        console.log(url);
-        console.log(e);
-        return{data: e};
+    }).catch(error => {
+        console.log('로그인 오류:', error.response.status, error.response.data);
+        return error.response;
     }))
 }
 
