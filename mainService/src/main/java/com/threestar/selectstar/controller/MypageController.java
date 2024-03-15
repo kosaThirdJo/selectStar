@@ -103,15 +103,14 @@ public class MypageController {
     }
 
     //회원 탈퇴
-    @RequestMapping(value = "/users/status", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/users/unstatus", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<?> updateUserStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
                                           @RequestBody UpdateMyInfoRequest req){
         try {
             int uId = userDetails.getUserId();
-
             String res = userService.updateUserStatus(uId);
-            log.info("update user status res");
+            //log.info("update user status res");
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
@@ -121,6 +120,7 @@ public class MypageController {
             log.error(unfe.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
+
     }
 
     //내가 작성한 글 목록 조회

@@ -156,6 +156,9 @@
   import {onMounted, reactive, ref, watch} from "vue";
   import {useRoute} from "vue-router";
   import {api2, apiToken2} from "@/common.js";
+  import router from "@/router/index.js";
+  import {useAuthStore} from "@/stores/index.js";
+  import {useCookies} from "vue3-cookies";
   const token = localStorage.getItem("jwtToken");
   const route = useRoute();//CompositionAPI 매칭된 라우트 (OptionAPI : this.$route)
   const getDataErr = reactive({});
@@ -170,6 +173,9 @@
     "interestFramework" : "",
     "interestJob" : ""
   });
+  //탈퇴 후 로그아웃
+  const {logout, getToken, getRole} = useAuthStore();
+  const {cookies} = useCookies();
 
   // message
   const msg = ref({
@@ -328,7 +334,6 @@
     validateEmail();
     await validateNickname(); //중복검사라 await
 
-    //if(myInfo.value.password === ""){
     if(check.password && check.email && check.nickname){
       if (!confirm("정말 수정하시겠습니까?")) {
         alert("취소되었습니다.");
@@ -361,16 +366,38 @@
       alert("다시 확인해주세요");
     }
   }
+  //탈퇴 후 로그아웃
+  const logoutHandler = async () => {
+      try {
+          await backendLogout();
+          logout();
+          cookies.remove('refreshToken');
+          await router.push('/');
+          location.reload();
+      } catch (error) {
+          console.error("로그아웃 오류", error);
+      }
+  };
+  const backendLogout = async () => {
+      try {
+          const response = await apiToken2("logout", "POST", null, getToken);
+          console.log(response);
+          if (response.status === 200) {
+              console.log("로그아웃 성공");
+          }
+      } catch (error) {
+          console.error("로그아웃 오류", error);
+      }
+  };
   //탈퇴
   async function submitupdateUserStatus() {
           if (!confirm("정말 탈퇴하시겠습니까?")) {
               window.location.reload();
           } else {
-              apiToken2("users/status", "PUT", null, token)
+              apiToken2("users/unstatus", "PUT", {}, token)
                   .then(response => {
                       if(response.status===205){
-                          alert("메인화면으로 이동..");
-                          window.location.reload();
+                          logoutHandler();
                       }else {
                           console.log(response);
                       }

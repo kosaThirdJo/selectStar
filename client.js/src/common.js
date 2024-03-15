@@ -101,6 +101,7 @@ const api2 = async (urn, method, data) => {
     }))
 }
 
+//프로필이미지 수정
 const apiTokenMpt = async (urn, method, data, token) => {
     const url = "http://" + window.location.hostname + ":8081/" + urn
     const refreshToken = cookies.get('refreshToken');
@@ -143,22 +144,6 @@ const apiTokenMpt = async (urn, method, data, token) => {
         }
     }
 }
-
-/*
-const apiTokenMpt = async (urn, method, data, token) => {
-    const url = "http://"+  window.location.hostname + ":8081/" +  urn
-    return (await axios({
-        url, method, data,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: token
-        }
-    }).catch(e => {
-        console.log(e);
-        return { data: e}; //error 발생 시 e 반환
-    }))
-}
-*/
 
 const loginApi = async (urn, method, data) => {
     const url = "http://"+  window.location.hostname + ":8081/" +  urn
