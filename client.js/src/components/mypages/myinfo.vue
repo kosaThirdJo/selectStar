@@ -143,8 +143,10 @@
           </div>
         </div>
         <div class="frame-bottom">
-            <div class="myinfo-updatebtn" @click="submitupdateInfo()">수정</div>
-            <div class="myinfo-resignbtn" @click="submitupdateUserStatus()">탈퇴</div>
+<!--            <div class="bottom-btn">-->
+                <div class="myinfo-updatebtn" @click="submitupdateInfo()">수정</div>
+                <div class="myinfo-resignbtn" @click="submitupdateUserStatus()">탈퇴</div>
+<!--            </div>-->
         </div>
       </div>
     </div>
