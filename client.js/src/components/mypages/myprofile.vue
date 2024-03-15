@@ -79,7 +79,6 @@ function updateData(){
       if(myInfo.value.profileFile){ //파일이 존재할 경우에만
           formData.append("profileFile", myInfo.value.profileFile);
       }
-      //console.log(formData.get("profileFile"));
       apiTokenMpt("users/profile", "PUT", formData, token)
           .then(response2 => {
               console.log(response2);
@@ -90,25 +89,12 @@ function updateData(){
                   console.log(response2);
               }
           });
-      /*apiTokenMpt("users/profile",
-          "PUT",
-          {"aboutMe": myInfo.value.aboutMe,
-              "profileContent": myInfo.value.profileContent},
-          token)
-          .then(response2 => {
-              console.log(response2);
-              if(response2.status===205){
-                  alert("수정완료되었습니다.");
-                  //window.location.reload();
-              }else{
-                  console.log(response2);
-              }
-          });*/
   }
 }
 async function getData(){
     apiToken2("users/profile", "GET", null, token)
         .then(async response => {
+            console.log(response.data);
             myInfo.value = response.data;
     });
 }

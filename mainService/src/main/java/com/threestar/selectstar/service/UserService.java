@@ -92,14 +92,20 @@ public class UserService {
         } else {
             User userE = userO.get();
             //기본 이미지
-
             String encodeImg = "";
             byte[] imgByte = userE.getProfilePhoto();
             //유저 이미지 있으면 변환
             if (imgByte != null) {
                 encodeImg = "data:image/png;base64," + Base64.getEncoder().encodeToString(imgByte);
             }
-            System.out.println("encodeImg >>" + encodeImg);
+            //해당 유저의 첨부파일
+            Optional<Portfolio> portfolio = portfolioRepository.findByUser(userE);
+            Portfolio myFile = portfolio.orElse(null);
+
+            Long myfileId = Optional.ofNullable(myFile).map(Portfolio::getFileId).orElse(null);
+            String accessUrl = Optional.ofNullable(myFile).map(Portfolio::getAccessUrl).orElse(null);
+            String originName = Optional.ofNullable(myFile).map(Portfolio::getOriginName).orElse(null);
+
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .nickname(userE.getNickname())
@@ -107,9 +113,11 @@ public class UserService {
                     .profilePhoto(encodeImg)
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
-                    .profileFile(null)
+                    //.profileFile(myFile)
+                    .fileId(myfileId)
+                    .accessUrl(accessUrl)
+                    .originName(originName)
                     .build();
-            //return new GetMyInfoResponse(userE);
         }
     }
 

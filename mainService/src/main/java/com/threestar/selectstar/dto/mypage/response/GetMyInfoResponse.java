@@ -15,7 +15,10 @@ public class GetMyInfoResponse {
     private String aboutMe;
     private String profileContent;
     //이력관리-포트폴리오파일
-    private MultipartFile profileFile;
+    //private MultipartFile profileFile;
+    private Long fileId;
+    private String accessUrl;
+    private String originName;
 
     //개인정보
     private String password;
