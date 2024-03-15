@@ -101,7 +101,38 @@ const api2 = async (urn, method, data) => {
     }))
 }
 
-//프로필이미지 수정
+const loginApi = async (urn, method, data) => {
+    const url = "http://"+  window.location.hostname + ":8081/" +  urn
+    return (await axios({
+        url,
+        method: method,
+        data,
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+        }
+    }).catch(error => {
+        console.log('로그인 오류:', error.response.status, error.response.data);
+        return error.response;
+    }))
+}
+
+const sendRequestWithToken = async (url, method, data, token) => { //원래 쓰던 api함수
+    try {
+        return await axios({ //  이력관리 수정 오류 순서 1
+            url,
+            method,
+            data,
+            headers: {
+                Authorization: token,
+            },
+        });
+    } catch (error) {
+        console.error('호출 오류', error);  //  이력관리 수정 오류 순서 2
+        throw error;
+    }
+};
+//프로필이미지 수정, 포트폴리오 파일 수정
 const apiTokenMpt = async (urn, method, data, token) => {
     const url = "http://" + window.location.hostname + ":8081/" + urn
     const refreshToken = cookies.get('refreshToken');
@@ -144,38 +175,6 @@ const apiTokenMpt = async (urn, method, data, token) => {
         }
     }
 }
-
-const loginApi = async (urn, method, data) => {
-    const url = "http://"+  window.location.hostname + ":8081/" +  urn
-    return (await axios({
-        url,
-        method: method,
-        data,
-        headers: {
-            "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-        }
-    }).catch(error => {
-        console.log('로그인 오류:', error.response.status, error.response.data);
-        return error.response;
-    }))
-}
-
-const sendRequestWithToken = async (url, method, data, token) => { //원래 쓰던 api함수
-    try {
-        return await axios({ //  이력관리 수정 오류 순서 1
-            url,
-            method,
-            data,
-            headers: {
-                Authorization: token,
-            },
-        });
-    } catch (error) {
-        console.error('호출 오류', error);  //  이력관리 수정 오류 순서 2
-        throw error;
-    }
-};
 const sendRequestWithTokenMpt = async (url, method, data, token) => {
     try {
         return await axios({ //  이력관리 수정 오류 순서 1
@@ -183,8 +182,8 @@ const sendRequestWithTokenMpt = async (url, method, data, token) => {
             method,
             data,
             headers: {
-                'Content-Type': 'multipart/form-data',
                 Authorization: token,
+                'Content-Type': 'multipart/form-data'
             },
         });
     } catch (error) {
@@ -192,6 +191,7 @@ const sendRequestWithTokenMpt = async (url, method, data, token) => {
         throw error;
     }
 };
+
 export {
     api, apiToken, loginApi, api2, apiToken2, apiTokenMpt
 };

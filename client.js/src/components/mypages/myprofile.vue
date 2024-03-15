@@ -18,7 +18,6 @@
             maxlength="30"
             placeholder="한줄로 간단하게 나를 소개해주세요" />
       </div>
-
       <div class="msgAboutme" v-if="myInfo.aboutMe&&myInfo.aboutMe.length>=30">30자 이내로 작성해주세요.</div>
       <!--이력관리-->
       <div class="frame-profilecontent">
@@ -37,7 +36,8 @@
         <div class="frame-profile-file">
             <input
                 type="file"
-                name="profileFile"/>
+                name="profileFile"
+                @change="handleFileUpload($event)"/>
         </div>
       <div class="frame-bottom">
         <input @click="updateData()" id="submitbutton" class="button-submit"  value="수정하기"/>
@@ -45,7 +45,6 @@
     </div>
   </section>
 </template>
-
 <script setup>
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
@@ -62,18 +61,36 @@ const myInfo = ref({
 });
 const token = localStorage.getItem("jwtToken");
 
+//파일 업로드 처리
+function handleFileUpload(event){
+    const myFile = event.target.files[0];
+    console.log("myFile", myFile);
+    myInfo.value.profileFile = myFile;
+}
+
 function updateData(){
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
   }else {
       let formData = new FormData();
-      //formData.append("aboutMe", myInfo.value.aboutMe);
-      //formData.append("profileContent", myInfo.value.profileContent);
-      formData.append("profileFile", myInfo.value.profileFile);
-      console.log(formData.get("profileFile"));
-      //apiTokenMpt("users/profile", "PUT", formData, token)
-      apiTokenMpt("users/profile",
+      formData.append("aboutMe", myInfo.value.aboutMe);
+      formData.append("profileContent", myInfo.value.profileContent);
+      if(myInfo.value.profileFile){ //파일이 존재할 경우에만
+          formData.append("profileFile", myInfo.value.profileFile);
+      }
+      //console.log(formData.get("profileFile"));
+      apiTokenMpt("users/profile", "PUT", formData, token)
+          .then(response2 => {
+              console.log(response2);
+              if (response2.status === 205) {
+                  alert("수정완료되었습니다.");
+                  window.location.reload();
+              } else {
+                  console.log(response2);
+              }
+          });
+      /*apiTokenMpt("users/profile",
           "PUT",
           {"aboutMe": myInfo.value.aboutMe,
               "profileContent": myInfo.value.profileContent},
@@ -86,7 +103,7 @@ function updateData(){
               }else{
                   console.log(response2);
               }
-          });
+          });*/
   }
 }
 async function getData(){

@@ -47,17 +47,22 @@ public class MypageController {
     //마이페이지-이력관리 수정
     //@PatchMapping("/users/profile") // @RequestPart(name = "profilePhoto") MultipartFile file
     //@PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PutMapping(value="/users/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @RequestPart UpdateMyInfoRequest userReq) {
-        log.info("reqDTO");
-        log.info(userReq.toString());
+                                             @ModelAttribute UpdateMyInfoRequest userReq){
+                                             //@RequestPart(required = false) MultipartFile profileFile) {
+                                            //@RequestPart UpdateMyInfoRequest userReq,
+                                             //@RequestPart(name = "profileFile", required = false) MultipartFile profileFile) {
+        log.info("이력관리 수정");
+        //log.info(userReq.toString());
+        if(!userReq.getProfileFile().isEmpty()){
+            log.info("Received file: " + userReq.getProfileFile().getOriginalFilename());
+        }
         try {
             int uId = userDetails.getUserId();
-
             String res = userService.updateMyProfileInfo(uId, userReq);
-            //log.info("update myProfileInfo res>> " + res);
+            log.info("update myProfileInfo res>> " + res);
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
