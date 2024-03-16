@@ -51,9 +51,12 @@
                   </template>
                 </apply-valid-modal>
               </Teleport>
+              <div
+                  v-text="localStorage"
+                ></div>
               <button v-if="viewBtnRemoveMeeting&&(result.status===0)" class="btn btn-primary" @click="removeMeeting()">삭제</button>
               <button v-if="viewBtnApplyCompleting&&(result.status===0)" class="btn btn-primary" @click="completeMeeting()">모집 완료</button>
-              <button class="btn btn-primary" id="apply-users" @click="applicationStatus = true" >신청한 사람</button>
+              <button v-if="viewBtnApplyCompleting" class="btn btn-primary" id="apply-users" @click="applicationStatus = true" >신청한 사람</button>
               <Teleport to="body">
                 <!-- use the modal component, pass in the prop -->
                 <apply-reason :show="applicationStatus" @close="applicationStatus = false" :meeting-id="parseInt(route.params.post_id)" >
@@ -156,6 +159,7 @@ const bookmark = ref([])
 const fixCommentMode = ref([])
 const tempFixSubmitContent = ref([])
 
+console.log(localStorage)
 if (localStorage.getItem("jwtToken")) {
   apiToken2(
       "meeting/" +
