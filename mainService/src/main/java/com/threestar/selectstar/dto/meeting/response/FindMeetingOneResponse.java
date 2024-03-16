@@ -30,12 +30,18 @@ public class FindMeetingOneResponse {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
+    private Date updateDate;
     @Setter
     private Integer loginId;
     private int countApplyUsers;
     @Setter
     private String img;
-    public static FindMeetingOneResponse fromEntity(Meeting meeting, String nickname,String userAboutMe, int countApplyUsers, String img){
+
+    public static FindMeetingOneResponse fromEntity(Meeting meeting,
+                                                    String nickname,
+                                                    String userAboutMe,
+                                                    int countApplyUsers,
+                                                    String img){
         return FindMeetingOneResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userId(meeting.getUser().getUserId())
@@ -51,6 +57,7 @@ public class FindMeetingOneResponse {
                 .applicationCount(meeting.getApplicationCount())
                 .location(meeting.getLocation())
                 .creationDate(meeting.getCreationDate())
+                .updateDate(meeting.getUpdateDate())
                 .interestLanguage(meeting.getInterestLanguage())
                 .interestFramework(meeting.getInterestFramework())
                 .interestJob(meeting.getInterestJob())

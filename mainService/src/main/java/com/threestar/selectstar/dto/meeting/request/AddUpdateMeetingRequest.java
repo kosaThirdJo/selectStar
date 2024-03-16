@@ -10,13 +10,13 @@ import java.sql.Date;
 
 
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUpdateMeetingRequest {
     private Long meetingId;
+    @Setter
     private Integer userId;
     @NotBlank(message = "title must not be blank")
     private String title;
@@ -35,8 +35,6 @@ public class AddUpdateMeetingRequest {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
-
-
     public static Meeting toEntity(AddUpdateMeetingRequest addUpdateMeetingRequest, User user) {
         return Meeting.builder()
                 .user(user) // User 엔터티로 변환
@@ -55,18 +53,6 @@ public class AddUpdateMeetingRequest {
                 .interestFramework(addUpdateMeetingRequest.getInterestFramework())
                 .interestJob(addUpdateMeetingRequest.getInterestJob())
                 .build();
-    }
-
-    public static void meetingRequestUpdate(AddUpdateMeetingRequest updateRequest, Meeting meeting) {
-        meeting.setTitle(updateRequest.getTitle());
-        meeting.setCategory(updateRequest.getCategory());
-        meeting.setApplicationDeadline(updateRequest.getApplicationDeadline());
-        meeting.setLocation(updateRequest.getLocation());
-        meeting.setRecruitmentCount(updateRequest.getRecruitmentCount());
-        meeting.setInterestLanguage(updateRequest.getInterestLanguage());
-        meeting.setInterestFramework(updateRequest.getInterestFramework());
-        meeting.setInterestJob(updateRequest.getInterestJob());
-        meeting.setDescription(updateRequest.getDescription());
     }
 }
 

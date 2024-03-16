@@ -1,7 +1,10 @@
 package com.threestar.selectstar.config.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.entity.User;
 import com.threestar.selectstar.repository.UserRepository;
@@ -9,6 +12,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,85 +22,105 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.io.IOException;
 
-
 // JWT 인가 필터
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
-	
+@Slf4j
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
 	private final UserRepository userRepository;
-	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
-		super(authenticationManager);
-		this.userRepository = userRepository;
-	}
+	private final JwtProvider jwtProvider;
 
 	@Value("${SECRET_KEY}")
 	private String SECRET_KEY;
 
-	// doFilterInternal : Spring Security에서 제공하는 OncePerRequestFilter 클래스의 메소드
-	// HTTP 요청이 들어올 때마다 한 번씩 호출되며, 필터의 실제 로직을 수행
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, JwtProvider jwtProvider) {
+		super(authenticationManager);
+		this.userRepository = userRepository;
+		this.jwtProvider = jwtProvider;
+	}
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		// HTTP 요청 헤더에서 JWT 토큰을 가져옴
 		String header = request.getHeader(JwtProperties.HEADER_STRING);
 
-		// 토큰이 없거나, JWT 형식에 맞지 않은 경우
-		if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)){
+		if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
 			chain.doFilter(request, response);
 			return;
 		}
-		System.out.println("header : "+header);
 
-		// 토큰
 		String token = header.replace(JwtProperties.TOKEN_PREFIX, "");
 
-		// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
-		// 내가 SecurityContext에 직접 접근해서 세션을 만들때, 자동으로 UserDetailsService에 있는 loadByUsername이 호출됨.
-		// JWT 토큰을 검증하고, 검증이 성공하면 토큰에서 추출한 사용자 아이디를 사용하여 데이터베이스에서 해당 사용자 정보를 가져옴
-		String username = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token).getClaim("sub").asString();
-
-		//token에서 id로 받아오기
-		Integer userId = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token).getClaim("userId").asInt();
-		System.out.println(userId);
-		if(userId != null){
-			User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-			CustomUserDetails customUserDetails = new CustomUserDetails(user);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(
-					customUserDetails,
-					null,
-					customUserDetails.getAuthorities());
-
-			System.out.println("확인");
-			System.out.println(authentication);
-			// 강제로 시큐리티의 세션에 접근하여 값 저장
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
+		if (jwtProvider.isValidToken(token)) {
+			Authentication authentication = getAuthentication(token, response);
+			if (authentication != null) {
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
 		}
-		/*
-		if(username != null){
-			User user = userRepository.findByName(username);
 
-			// 인증은 토큰 검증시 끝.
-			// 인증을 하기 위해서가 아닌 스프링 시큐리티가 수행해주는 권한 처리를 위해
-			// 아래와 같이 토큰을 만들어서 Authentication 객체를 강제로 만들고 그걸 세션에 저장
-
-			// 검증이 완료되면, 해당 사용자 정보를 기반으로 Spring Security의 Authentication 객체를 생성하고, 이를 사용하여 사용자를 인증
-			// 그리고 이 인증 정보를 SecurityContextHolder를 통해 세션에 저장
-			CustomUserDetails customUserDetails = new CustomUserDetails(user);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(
-					customUserDetails,
-					null,
-					customUserDetails.getAuthorities());
-
-			System.out.println("확인");
-			System.out.println(authentication);
-			// 강제로 시큐리티의 세션에 접근하여 값 저장
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		}
-		*/
-
-		// 필터 체인에서 정보 사용
 		chain.doFilter(request, response);
 	}
 
+	private Authentication processAccessToken(String token, HttpServletResponse response) {
+		try {
+			if (jwtProvider.isAccessToken(token)) {
+				return processToken(token, response, true);
+			}
+		} catch (TokenExpiredException e) {
+			log.error("Access Token이 만료되었습니다.", e);
+		} catch (Exception e) {
+			log.error("토큰 검증 오류", e);
+		}
+		return null;
+	}
 
+	private void processRefreshToken(String token, HttpServletResponse response) {
+		if (jwtProvider.isValidToken(token) && jwtProvider.isRefreshToken(token)) {
+			processToken(token, response, false);
+		}
+	}
+
+	private Authentication processToken(String token, HttpServletResponse response, boolean isAccessToken) {
+		try {
+			JWTVerifier verifier = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build();
+			DecodedJWT decodedJWT = verifier.verify(token);
+
+			Integer userId = decodedJWT.getClaim("userId").asInt();
+			if (userId != null) {
+				User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+				CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
+				String newToken = jwtProvider.createAccessToken(customUserDetails);
+
+				if (!isAccessToken) {
+					newToken = jwtProvider.createAccessTokenFromRefreshToken(token);
+				}
+
+				response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newToken);
+
+				return new UsernamePasswordAuthenticationToken(
+						customUserDetails,
+						null,
+						customUserDetails.getAuthorities());
+			}
+		} catch (TokenExpiredException e) {
+			log.error("Token이 만료되었습니다.", e);
+		} catch (Exception e) {
+			log.error("토큰 검증 오류", e);
+		}
+		return null;
+	}
+
+
+	private Authentication getAuthentication(String token, HttpServletResponse response) {
+		try {
+			if (jwtProvider.isAccessToken(token)) {
+				return processAccessToken(token, response);
+			} else if (jwtProvider.isRefreshToken(token)) {
+				processRefreshToken(token, response);
+				return null;
+			}
+		} catch (Exception e) {
+			log.error("토큰 검증 오류", e);
+		}
+		return null;
+	}
 }

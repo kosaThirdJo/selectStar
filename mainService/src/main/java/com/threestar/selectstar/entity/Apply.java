@@ -7,7 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,6 +21,8 @@ public class Apply {
     @CreationTimestamp
     private java.sql.Date applicationDate;
     @ColumnDefault("0")
+    @Setter
     private int applyStatus;
+    @Setter
     private String rejectReason;
 }

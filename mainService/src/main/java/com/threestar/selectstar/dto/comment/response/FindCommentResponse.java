@@ -21,6 +21,7 @@ public class FindCommentResponse {
     private String userNickName;
     private String content;
     private Date creationDate;
+    private boolean modifyAccess;
 
     public static FindCommentResponse fromEntity(Comment comment) {
         return FindCommentResponse.builder()

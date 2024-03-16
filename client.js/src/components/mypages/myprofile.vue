@@ -45,15 +45,10 @@
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
-import {api, apiToken} from "../../common.js";
+import {api, apiToken, apiToken2} from "../../common.js";
 import Sidebar from "./Sidebar.vue";
 const router = useRouter();
-function getCurrentURL() {
-  const currentURL = window.location.href;
-  router.push({ path:currentURL });
-}
 
-const getDataErr = reactive({});
 const myInfo = ref({
   "userId":"",
   "aboutMe" : "",
@@ -65,43 +60,28 @@ function updateData(){
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
-    //router.push({ path: '/' }); // 현재 경로로 리디렉션
-    //router.go(0); //404에러
-    //getCurrentURL();
-    //router.push({ path: '/users/myprofile' });
   }else {
-    apiToken(
+    apiToken2(
         "users/profile", "PATCH",
         {
           aboutMe: myInfo.value.aboutMe,
           profileContent: myInfo.value.profileContent
         }, token)
         .then(response2 => {
-          if (response2 instanceof Error) {
-          } else {
-            alert("수정완료 되었습니다.");
-            window.location.reload();
-            //router.push({ path: '/' }); // 현재 경로로 리디렉션
-            //router.go(0); //404에러
-            //getCurrentURL();
-            //router.push({ path: '/users/myprofile' });
-          }
+            if(response2.status===205){
+                alert("수정완료되었습니다.");
+                window.location.reload();
+            }else{
+                console.log(response2);
+            }
         });
   }
 }
 async function getData(){
-  try {
-    const response1 = (await axios.get("http://43.201.149.206:8081/users/profile", {
-      headers : {
-        Authorization: token
-      }
-    }));
-    myInfo.value = response1.data;
-    // console.log(myInfo.value);
-  }catch (error){
-    getDataErr.value =error;
-    //console.log(getDataErr.value);
-  }
+    apiToken2("users/profile", "GET", null, token)
+        .then(async response => {
+            myInfo.value = response.data;
+    });
 }
 onMounted(()=>{
   getData();

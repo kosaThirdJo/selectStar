@@ -1,5 +1,5 @@
 <script setup>
-import {api, apiToken} from "@/common.js";
+import {api, apiToken, apiToken2} from "@/common.js";
 import router from "../../router/index.js";
 import {ref, defineProps,defineEmits ,onMounted, watch} from "vue";
 
@@ -14,14 +14,15 @@ const validObjApply = ref({
 });
 
 function checkValidApply(){
-  apiToken(
+  apiToken2(
       "apply/check?meetingId="
       + props.meetingId,
   "GET",
       "",
       localStorage.getItem("jwtToken")
       ).then(
-          response =>{
+      (responseAll) =>{
+            const response = responseAll.data;
             console.log(response)
             validObjApply.value = response;
             if (response) {
@@ -32,6 +33,7 @@ function checkValidApply(){
   )
 }
 onMounted(() => {
+  if (localStorage.getItem("jwtToken"))
   checkValidApply();
 });
 </script>

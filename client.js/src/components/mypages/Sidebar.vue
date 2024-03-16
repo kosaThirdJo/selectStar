@@ -64,7 +64,7 @@
 import {onMounted, reactive, ref} from 'vue';
 import axios from "axios";
 import {useRoute} from "vue-router";
-import {api} from "../../common.js";
+import {api, apiToken2, apiTokenMpt} from "../../common.js";
 import defaultImg from '@/assets/image/global/userdefaultimg.png';
 
 const route = useRoute();//CompositionAPI 매칭된 라우트 (OptionAPI : this.$route)
@@ -78,8 +78,23 @@ const token = localStorage.getItem("jwtToken");
 
 //프로필 정보 받아서 파싱
 async function getData(){
-  try {
-    const response1 = (await axios.get("http://43.201.149.206:8081/users/profile", {
+    apiToken2("users/profile", "GET", null, token)
+        .then(async  response =>{
+            if(response.data instanceof Error){
+                console.log(response.value);
+                getDataErr.value = response.data;
+                console.log(getDataErr.value);
+            }else{
+                myInfo.value = response.data;
+                if(myInfo.value.profilePhoto === ""){
+                    myInfo.value.profilePhoto = defaultImg;
+                }
+                //console.log(myInfo.value);
+            }
+
+        });
+/*  try {
+    const response1 = (await axios.get("http://"+window.location.hostname+":8081/users/profile", {
       headers : {
         Authorization: token
       }
@@ -92,10 +107,9 @@ async function getData(){
   }catch (error){
     getDataErr.value =error;
     //console.log(getDataErr.value);
-  }
+  }*/
 }
 onMounted(()=>{
-  console.log("sidebar onmount");
   getData();
 });
 
@@ -106,7 +120,6 @@ const previewImg = (event) => {
 
   reader.onload = () => {
     previewPhoto.value = reader.result;
-    console.log(myInfo.previewPhoto);
     document.getElementById('updateimg').style.display='block';
   };
   reader.readAsDataURL(inputFile.files[0]);
@@ -122,7 +135,12 @@ function updateProfileImg(){
       //multipart/form-data 형식으로 전송
      let fd = new FormData();
      fd.append("profilePhoto", imgfileInput.value.files[0]);
-     axios.put("http://43.201.149.206:8081/users/setting/img", fd, {
+     /*apiTokenMpt("users/setting/img", "PUT", fd, token)
+         .then(response =>{
+             console.log(response);
+             //window.location.reload();
+         });*/
+     axios.put("http://"+window.location.hostname+":8081/users/setting/img", fd, {
        headers: {
          'Content-Type' : 'multipart/form-data',
          'Authorization' : token

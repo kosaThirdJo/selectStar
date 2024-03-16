@@ -1,11 +1,13 @@
 package com.threestar.selectstar.entity;
 
+import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+
+//TODO 댓글 수정 삭제
 @Getter
-@Setter
 @ToString
 @Entity
 @NoArgsConstructor
@@ -22,8 +24,16 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name="meetingId")
     private Meeting meeting;
+    @Setter
     private String content;
     @CreationTimestamp
     private java.sql.Date creationDate;
+    @Setter
     private int deleted; // 0:삭제X 1:삭제
+    private int depth;
+
+
+    public void updateDeleted(int deleted) {
+        this.deleted = deleted == 0 ? 1 : 0;
+    }
 }

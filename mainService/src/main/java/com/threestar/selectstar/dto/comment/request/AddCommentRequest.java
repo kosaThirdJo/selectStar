@@ -8,23 +8,26 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class AddCommentRequest {
     @NotBlank
+    @Setter
     private int userId;
     @NotBlank
+    @Setter
     private Long meetingId;
     @NotBlank
     private String content;
+    private int depth;
 
     public static Comment toEntity(AddCommentRequest addCommentRequest, User user, Meeting meeting){
         return Comment.builder()
                 .user(user)
                 .meeting(meeting)
                 .content(addCommentRequest.getContent())
+
                 .build();
     }
 

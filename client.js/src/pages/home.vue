@@ -1,7 +1,7 @@
 <script setup>
 import Card from "../components/element/card.vue";
 import {defineProps, ref} from 'vue'
-import { api } from "../common.js";
+import { api2 } from "../common.js";
 
 // 최신글 (orderby)
 const req = {
@@ -11,7 +11,7 @@ const req = {
   criteria:"creationDate"
 }
 const cardResult = ref([]);
-api(
+api2(
     "meeting?" +
     "page=" + req.page + "&" +
     "size=" + req.size + "&" +
@@ -19,17 +19,17 @@ api(
     "criteria=" + req.criteria,
     "GET", ""
 ).then(response => {
-  cardResult.value = response.content;
+  cardResult.value = response.data.content;
 });
 defineProps({})
 
 // 인기글 (rank)
 const rankResult = ref([]);
-api(
+api2(
     "rankMeeting",
     "GET", ""
 ).then(response => {
-  rankResult.value = response.content;
+  rankResult.value = response.data.content;
 });
 
 </script>

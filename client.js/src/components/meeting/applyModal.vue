@@ -1,5 +1,5 @@
 <script setup>
-import {api, apiToken} from "@/common.js";
+import {api, apiToken, apiToken2} from "@/common.js";
 import router from "../../router/index.js";
 
 
@@ -30,7 +30,7 @@ function submitApply (){
   if (!applyObj.reason){
     alert("사유를 입력 해 주세요")
   }
-  apiToken("apply",
+  apiToken2("apply",
   "POST",
       applyObj,
       localStorage.getItem("jwtToken")

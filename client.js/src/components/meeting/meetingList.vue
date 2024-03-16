@@ -105,7 +105,7 @@
 
 import { ref, watch } from 'vue'
 import Card from "../element/card.vue";
-import {api} from "@/common.js";
+import {api2} from "@/common.js";
 import {useRoute} from "vue-router";
 import router from "../../router/index.js";
 
@@ -165,7 +165,7 @@ function changeOffset(offsetDelta){
 }
 //
 async function getPage() {
-   api(
+   api2(
       "meeting?" +
       "page=" + (parseInt(req.value.page)) + "&" +
       "size=" + req.value.size + "&" +
@@ -173,7 +173,8 @@ async function getPage() {
       "criteria=" + req.value.criteria
       + ((req.value.category) ? "&category=" + req.value.category : ""),
       "GET", null
-  ).then(response => {
+  ).then(responseAll => {
+    const response = responseAll.data
      result.value = response.content
      totalPage.value = response.totalPages;
    })

@@ -20,7 +20,8 @@ public class CorsConfig {
 //        config.addAllowedOrigin("http://localhost:63342");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.addExposedHeader("Authorization");  // Authorization 헤더를 노출하도록 설정 -  브라우저에서 클라이언트로부터 받은 응답 헤더 중 "Authorization"를 읽을 수 있게 함
+        config.addExposedHeader("Authorization");  // 헤더를 노출하도록 설정
+        config.addExposedHeader("Role");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

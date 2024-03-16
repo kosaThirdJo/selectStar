@@ -27,50 +27,47 @@ public class ApplyController {
         this.applyService = applyService;
     }
     @GetMapping("/check")
-    public ResponseEntity<ApplyCheckResponse> checkByUserIdAndMeetingId(@RequestParam Long meetingId,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> checkByUserIdAndMeetingId(@RequestParam Long meetingId,@AuthenticationPrincipal CustomUserDetails userDetails){
         try {
             return ResponseEntity.ok()
                     .body(applyService.checkApply(userDetails.getUserId(),meetingId)); // 신청 없으면 에러
 
         } catch (Exception e){
-            return ResponseEntity.ok()
-                    .body(null);
+            return ResponseEntity.status(204)
+                    .build();
         }
      }
     @GetMapping("/user")
-    public ResponseEntity<List<FindApplyByUserIdResponse>> applyListByUserId(@RequestParam int userId){
+    public ResponseEntity<?> applyListByUserId(@RequestParam int userId){
         return ResponseEntity.ok()
                 .body(applyService.findApplyByUserId(userId));
     }
     @GetMapping("/meeting")
-    public ResponseEntity<List<FindApplyByMeetingIdResponse>> applyListByMeetingId(@RequestParam(name = "meetingId") Long meetingId){
+    public ResponseEntity<?> applyListByMeetingId(@RequestParam(name = "meetingId") Long meetingId){
         return ResponseEntity.ok()
                 .body(applyService.findApplyByMeetingId(meetingId));
     }
     @GetMapping("/meeting/valid")
-    public ResponseEntity<List<FindApplyByMeetingIdValidResponse>> applyListByMeetingIdValid(@RequestParam Long meetingId){
+    public ResponseEntity<?> applyListByMeetingIdValid(@RequestParam Long meetingId){
         return ResponseEntity.ok()
                 .body(applyService.findApplyByMeetingIdValid(meetingId));
     }
     @PostMapping
-    public Map<String,String> applyAdd(@RequestBody ApplyRequest applyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    public ResponseEntity<?> applyAdd(@RequestBody ApplyRequest applyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         applyRequest.setUserId(userDetails.getUserId());
-        succesMap.put("result",applyService.addApply(applyRequest));
-        return succesMap;
+        return ResponseEntity.ok()
+                .body(applyService.addApply(applyRequest));
     }
     @PatchMapping("/reject")
-    public Map<String,String> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    public ResponseEntity<?> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         rejectApplyRequest.setUserId(userDetails.getUserId());
-        succesMap.put("result",applyService.rejectApply(rejectApplyRequest));
-        return succesMap;
+        applyService.rejectApply(rejectApplyRequest);
+        return ResponseEntity.ok().build();
     }
     @PatchMapping("/recognize")
-    public Map<String,String> recognizeApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        Map<String, String> succesMap = new HashMap<>();
+    public ResponseEntity<?> recognizeApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         rejectApplyRequest.setUserId(userDetails.getUserId());
-        succesMap.put("result",applyService.recognizeApply(rejectApplyRequest));
-        return succesMap;
+        applyService.recognizeApply(rejectApplyRequest);
+        return ResponseEntity.ok().build();
     }
 }

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Base64;
+import java.util.Date;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,6 +20,10 @@ public class GetUsersListResponse {
 	private String nickname;
 	private String aboutMe;
 	private String profilePhoto;
+	private String name;
+	private String email;
+	private int userStatus;
+	private Date joinDate;
 
 	public static GetUsersListResponse fromEntity(User user){
 		String encodeImg = "";
@@ -34,6 +38,10 @@ public class GetUsersListResponse {
 				.nickname(user.getNickname())
 				.aboutMe(user.getAboutMe())
 				.profilePhoto(encodeImg)
+				.name(user.getName())
+				.email(user.getEmail())
+				.userStatus(user.getUserStatus())
+				.joinDate(user.getJoinDate())
 				.build();
 	}
 }

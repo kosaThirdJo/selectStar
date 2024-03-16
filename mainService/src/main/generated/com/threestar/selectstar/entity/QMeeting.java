@@ -50,6 +50,8 @@ public class QMeeting extends EntityPathBase<Meeting> {
 
     public final StringPath title = createString("title");
 
+    public final DatePath<java.sql.Date> updateDate = createDate("updateDate", java.sql.Date.class);
+
     public final QUser user;
 
     public final NumberPath<Integer> views = createNumber("views", Integer.class);

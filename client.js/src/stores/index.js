@@ -3,18 +3,29 @@ import { ref } from "vue";
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref('');
-    function setToken(token){
-        this.token = token;
-        localStorage.setItem('jwtToken', token);
-    }
-    function clearToken() {
-        this.token = null;
-        localStorage.removeItem('jwtToken');
-    }
-    function getToken(){
-        return localStorage.getItem('jwtToken');
-    }
+    const role = ref('');
 
-    return {token, setToken, clearToken, getToken}
+    const login = (newToken, newRole) => {
+        token.value = newToken;
+        role.value = newRole;
+        localStorage.setItem('jwtToken', newToken);
+        localStorage.setItem('role', newRole);
+    };
+    const logout = () => {
+        token.value = '';
+        role.value = '';
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('role');
+    };
+    const getToken = () => {
+        // return token.value;
+        return localStorage.getItem('jwtToken');
+    };
+
+    const getRole = () => {
+        // return role.value;
+        return localStorage.getItem('role');
+    };
+    return {login, logout, getToken, getRole, token, role}
 
 })

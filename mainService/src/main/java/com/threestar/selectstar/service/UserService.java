@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import com.threestar.selectstar.entity.RefreshToken;
 import com.threestar.selectstar.entity.User;
+import com.threestar.selectstar.exception.UserNotFoundException;
+import com.threestar.selectstar.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +31,7 @@ import com.threestar.selectstar.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     // 회원 가입
@@ -56,12 +61,11 @@ public class UserService {
 
     // 로그인
     @Transactional(readOnly = true)
-    public void loginUser(GetUserRequest request) {
-        userRepository.findByNameAndPassword(request.getName(), request.getPassword())
-                .ifPresent(user -> {
-                    throw new IllegalStateException("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.");
-                });
+    public User loginUser(GetUserRequest request) {
+        return userRepository.findByNameAndPassword(request.getName(), request.getPassword())
+                .orElseThrow(() -> new IllegalStateException("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요."));
     }
+
 
     // 회원 검색
     @Transactional(readOnly = true)
@@ -227,6 +231,21 @@ public class UserService {
                     .profileContent(userE.getProfileContent())
                     .build();
         }
+    }
+
+    @Transactional
+    public void deleteRefreshToken(CustomUserDetails userDetails) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUser_UserId(userDetails.getUserId());
+        if (refreshToken != null) {
+            refreshTokenRepository.delete(refreshToken);
+        }
+    }
+
+    // 회원 상태 조회
+    @Transactional(readOnly = true)
+    public User getUserStatus(String name) {
+        return (User) userRepository.findByName(name)
+                .orElseThrow(() -> new UserNotFoundException("사용자 없음"));
     }
 
 }

@@ -24,4 +24,5 @@ public class MeetingMark {
     @JoinColumn(name="meetingId", referencedColumnName = "meetingId")
     private Meeting meeting;
 
+
 }

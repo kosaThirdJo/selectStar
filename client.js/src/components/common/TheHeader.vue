@@ -1,27 +1,44 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
 import {useAuthStore} from '@/stores/index';
-import router from "@/router/index.js";
+import {useCookies} from 'vue3-cookies';
+import router from '@/router/index.js';
+import {ref} from "vue";
+import {apiToken2} from "@/common.js";
 
-const auth = useAuthStore();
+const {logout, getToken, getRole} = useAuthStore();
+const {cookies} = useCookies();
 
-// 토큰, 검색어
-const header = ref({
-  jwtToken: auth.getToken(),
-  searchWord: '',
-});
-// 로그아웃  시  Pinia 스토어에서 토큰 제거
-const logout = async () => {
-  auth.clearToken();
-  await router.push('/');
-  location.reload();
-}
+const logoutHandler = async () => {
+  try {
+    await backendLogout();
+    logout();
+    cookies.remove('refreshToken');
+    await router.push('/');
+    location.reload();
+  } catch (error) {
+    console.error("로그아웃 오류", error);
+  }
+};
 
-// 검색
+const backendLogout = async () => {
+  try {
+    const response = await apiToken2("logout", "POST", null, getToken);
+    console.log(response);
+    if (response.status === 200) {
+      console.log("로그아웃 성공");
+    }
+  } catch (error) {
+    console.error("로그아웃 오류", error);
+  }
+};
+
 const searchResult = () => {
-  router.replace({path: '/searching', query: {searchWord: header.value.searchWord}});
-}
+  router.replace({path: '/searching', query: {searchWord: searchWord}});
+};
 
+const jwtToken = getToken();
+const searchWord = ref('');
+const role = getRole();
 </script>
 
 <template>
@@ -63,39 +80,44 @@ const searchResult = () => {
             </router-link>
           </div>
 
-          <!-- 02-04 마이페이지(로그인한 경우) -->
-          <router-link v-if="header.jwtToken" class="main-header-nav-mypage main-header-nav-meetinglist-text"
+          <!-- 02-04 마이페이지 / 관리자 페이지 -->
+          <router-link v-if="jwtToken && role==='USER'" class="main-header-nav-mypage main-header-nav-meetinglist-text"
                        to="/users/myprofile">
             <span>마이페이지</span>
+          </router-link>
+          <router-link v-if="jwtToken && role==='ADMIN'" class="main-header-nav-mypage main-header-nav-meetinglist-text"
+                       to="/admin/users">
+            <span>관리자페이지</span>
           </router-link>
         </div>
         <div class="main-header-searchAndBtn">
           <!-- 03 검색 -->
           <form id="searchForm" action="/searching" method="get">
             <div class="main-header-search">
-              <input v-model="header.searchWord" class="main-header-search-input" name="searchWord"
+              <input v-model="searchWord" class="main-header-search-input" name="searchWord"
                      placeholder="검색해보세요!" type="text" @keyup.enter="searchResult"/>
               <button class="main-header-search-button" type="submit" @click="searchResult">
                 <div class="main-header-search-glass">
                   <img src="../../assets/image/home/search.png" style="width: 20px; height: 20px">
-
                 </div>
               </button>
             </div>
           </form><!-- 04 로그인, 회원가입, 로그아웃 -->
           <div class="main-header-button">
             <!-- 로그인하지 않았을 경우 -->
-            <router-link v-if="!header.jwtToken" to="/login">
-              <button class="main-header-button-login">
+            <router-link v-if="!jwtToken" to="/login">
+              <button class="main-header-button-login"
+                      :class="{ 'main-header-button-login-active': $route.path === '/login'}">
                 <span class="main-header-button-login-text"><span>로그인</span></span>
               </button>
             </router-link>
-            <router-link v-if="!header.jwtToken" to="/signup">
-              <button class="main-header-button-signup">
+            <router-link v-if="!jwtToken" to="/signup">
+              <button class="main-header-button-signup"
+                      :class="{ 'main-header-button-signup-active': $route.path === '/signup'}">
                 <span class="main-header-button-signup-text"><span>회원가입</span></span>
               </button>
             </router-link>
-            <button v-if="header.jwtToken" class="main-header-button-logout" @click="logout">
+            <button v-if="jwtToken" class="main-header-button-logout" @click="logoutHandler">
               <span class="main-header-button-logout-text"><span>로그아웃</span></span>
             </button>
           </div>
@@ -104,4 +126,5 @@ const searchResult = () => {
     </div>
   </header>
 </template>
+
 <style scoped src="@/assets/css/home.css"></style>

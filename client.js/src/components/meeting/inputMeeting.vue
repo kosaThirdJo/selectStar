@@ -1,6 +1,6 @@
 <script setup>
 import {defineProps, onMounted, ref} from "vue";
-import {api, apiToken} from "@/common.js";
+import {api, api2, apiToken, apiToken2} from "@/common.js";
 import {useRoute, useRouter} from "vue-router";
 import { useAuthStore } from '@/stores/index';
 const router = useRouter()
@@ -31,7 +31,7 @@ function write() {
   }
   //수정 모드
   if (p.type === "fix") {
-    apiToken(
+    apiToken2(
         "meeting",
         "PUT",
         writeVal.value,
@@ -44,7 +44,7 @@ function write() {
     )
   } else {
     //쓰기 모드
-    apiToken(
+    apiToken2(
         "meeting",
         "POST",
         writeVal.value,
@@ -116,13 +116,13 @@ const writeVal = ref({
 onMounted(() => {
   if (p.type === "fix") {
     // => 원래 데이터 받아 오기
-    api(
+    api2(
         "meeting/" + route.params.fix_id,
         "GET",
         ""
     ).then(
-        async (response) => {
-          // console.log(response)
+        async (responseAll) => {
+          const response = responseAll.data
           writeVal.value.description = await response.description
           writeVal.value.location = response.location
           writeVal.value.title = response.title
@@ -138,7 +138,8 @@ onMounted(() => {
           return response
         }
     ).then(
-        (response) =>{
+        (responseAll) =>{
+          const response = responseAll.data
           // 버튼 누르기
           let langarr = (response.interestLanguage) ? response.interestLanguage.split("_") : [];
           let langs = langarr.filter((element) => element !== "");
@@ -185,6 +186,7 @@ onMounted(() => {
 
 
 
+
 // 언어
   const interestLangButtons = document.querySelectorAll('.signup-interest-lang-btn');
   const selectedInterestsLangInput = document.getElementById('selected-interests-lang');
@@ -199,13 +201,13 @@ onMounted(() => {
   selectInterests(interestJobButtons, selectedInterestsJob, selectedInterestsJobInput, "job");
 
 
-
-
-
-  //관심 언어
-
-  // 관심 분야 선택
-  // 버튼 목록, 선택된 관심사 배열, hidden input에 저장
+  // 현재 시간 이전 클릭 안되게 막기
+  var now_utc = Date.now() // 지금 날짜를 밀리초로
+// getTimezoneOffset()은 현재 시간과의 차이를 분 단위로 반환
+  var timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+// new Date(now_utc-timeOff).toISOString()은 '2022-05-11T18:09:38.134Z'를 반환
+  var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+  document.getElementById("endDate").setAttribute("min", today);
 
 
 })

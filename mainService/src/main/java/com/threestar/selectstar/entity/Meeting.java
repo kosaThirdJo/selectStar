@@ -1,14 +1,18 @@
 package com.threestar.selectstar.entity;
 
+import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
-@Setter
 @ToString
 @Entity
 @NoArgsConstructor
@@ -33,25 +37,44 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long meetingId;
     @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
     private String title;
     private int category;
+    @Setter
     private int status;
-    private java.sql.Date applicationDeadline;
+    private Date applicationDeadline;
     @ColumnDefault("0")
+    @Setter
     private int views;
     private int recruitmentCount;
     private int applicationCount;
     private String location;
     private String description;
+    private Date updateDate = Date.valueOf(LocalDate.now());
     @CreationTimestamp
-    private java.sql.Date creationDate;
+    private Date creationDate;
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
     @ColumnDefault("0")
+    @Setter
     private int deleted; // 0:삭제X 1:삭제
 
+    public void updateMeeting(AddUpdateMeetingRequest updateRequest) {
+        this.title = updateRequest.getTitle();
+        this.category = updateRequest.getCategory();
+        this.applicationDeadline = updateRequest.getApplicationDeadline();
+        this.location = updateRequest.getLocation();
+        this.recruitmentCount = updateRequest.getRecruitmentCount();
+        this.interestLanguage = updateRequest.getInterestLanguage();
+        this.interestFramework = updateRequest.getInterestFramework();
+        this.interestJob = updateRequest.getInterestJob();
+        this.description = updateRequest.getDescription();
+        this.updateDate = Date.valueOf(LocalDate.now());
+    }
 
+    public void updateDeleted(int deleted) {
+        this.deleted = deleted == 0 ? 1 : 0;
+    }
 }
