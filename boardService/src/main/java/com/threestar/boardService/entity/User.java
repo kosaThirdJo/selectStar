@@ -1,13 +1,14 @@
 package com.threestar.boardService.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -17,27 +18,46 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users") //h2는 user가 예약어
+@Table(name = "users")
+@DynamicInsert
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String password;
+
+    @NotNull
     private String email;
+
+    @NotNull
     private String nickname;
+
+    @NotNull
     private String location1;
+
     private String location2;
+
     @CreationTimestamp
     private Date joinDate;
+
     private byte[] profilePhoto;
     private String aboutMe;
     private String profileContent;
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
-    private int deleted;
+
+    @ColumnDefault(value = "'USER'")
+    @Column(nullable = false)
     private String role;
+
+    @ColumnDefault(value = "0")
+    private int userStatus;
 
     @Override
     public boolean equals(Object o) {
@@ -71,10 +91,10 @@ public class User {
         this.interestJob = interestJob;
     }
 
-    public List<String> getRoleList(){
-        if(this.role.length() > 0){
-            return Arrays.asList(this.role.split(","));
-        }
-        return new ArrayList<>();
+    public void updatePassword(String password){
+        this.password = password;
+    }
+    public void updateUserStatus(int userStatus) {
+        this.userStatus = userStatus;
     }
 }
