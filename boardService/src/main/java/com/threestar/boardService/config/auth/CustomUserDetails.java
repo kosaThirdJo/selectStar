@@ -3,13 +3,14 @@ package com.threestar.boardService.config.auth;
 import com.threestar.boardService.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-// UserDetails 인터페이스 구현
-// Spring Security에서 사용자의 기본 정보와 권한 정보를 제공하기 위한 것
 @Getter
 public class CustomUserDetails implements UserDetails {
 
@@ -23,15 +24,15 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoleList().forEach(r-> {
-            authorities.add(()-> {return r;});
+        this.getRoleList().forEach(role-> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         });
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.user != null ? this.user.getPassword() : "";
     }
 
     @Override
@@ -59,8 +60,14 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    public long getUserId(){
+    public int getUserId(){
         return user.getUserId();
     }
 
+    public List<String> getRoleList(){
+        if(user != null && !user.getRole().isEmpty()){
+            return Arrays.asList(user.getRole().split(","));
+        }
+        return new ArrayList<>();
+    }
 }

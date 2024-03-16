@@ -1,5 +1,6 @@
 package com.threestar.boardService.controller;
 
+//import com.threestar.boardService.config.auth.CustomUserDetails;
 import com.threestar.boardService.config.auth.CustomUserDetails;
 import com.threestar.boardService.dto.ChatsDTO;
 import com.threestar.boardService.service.ChatsService;
@@ -20,12 +21,15 @@ public class ChatsBoardController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<?> createChats(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                         @RequestParam(value="chatsImg") MultipartFile imgFile,
-                                         @RequestBody ChatsDTO.RequestDTO chatsRequestDto) {
+    public ResponseEntity<?> createChats(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @RequestParam(value="chatsImg") MultipartFile imgFile
+//                                         @RequestBody ChatsDTO.RequestDTO chatsRequestDto
+    ) {
 
         try {
-            chatsService.addChats(chatsRequestDto, userDetails.getUserId(), imgFile);
+//            chatsService.addChats(chatsRequestDto, userDetails.getUserId(), imgFile);
+            chatsService.addChats(imgFile);
 
 //            return ResponseEntity.ok(userDTO);
 
