@@ -45,15 +45,24 @@ public class MypageController {
     }
 
     //마이페이지-이력관리 수정
-    @PatchMapping("/users/profile")
+    //@PatchMapping("/users/profile") // @RequestPart(name = "profilePhoto") MultipartFile file
+    //@PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value="/users/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @RequestBody UpdateMyInfoRequest userReq) {
+                                             @ModelAttribute UpdateMyInfoRequest userReq){
+                                             //@RequestPart(required = false) MultipartFile profileFile) {
+                                            //@RequestPart UpdateMyInfoRequest userReq,
+                                             //@RequestPart(name = "profileFile", required = false) MultipartFile profileFile) {
+        log.info("이력관리 수정");
+        //log.info(userReq.toString());
+        if(!userReq.getProfileFile().isEmpty()){
+            log.info("Received file: " + userReq.getProfileFile().getOriginalFilename());
+        }
         try {
             int uId = userDetails.getUserId();
-
             String res = userService.updateMyProfileInfo(uId, userReq);
-            //log.info("update myProfileInfo res>> " + res);
+            log.info("update myProfileInfo res>> " + res);
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
@@ -96,6 +105,27 @@ public class MypageController {
             log.error(unfe.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
+    }
+
+    //회원 탈퇴
+    @RequestMapping(value = "/users/unstatus", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<?> updateUserStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @RequestBody UpdateMyInfoRequest req){
+        try {
+            int uId = userDetails.getUserId();
+            String res = userService.updateUserStatus(uId);
+            //log.info("update user status res");
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        }catch (UserNotFoundException unfe){
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
+        }
+
     }
 
     //내가 작성한 글 목록 조회

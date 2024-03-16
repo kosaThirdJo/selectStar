@@ -11,9 +11,11 @@ import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
 import com.threestar.selectstar.entity.RefreshToken;
+import com.threestar.selectstar.entity.Portfolio;
 import com.threestar.selectstar.entity.User;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import com.threestar.selectstar.repository.RefreshTokenRepository;
+import com.threestar.selectstar.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,6 +35,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    //포트폴리오 파일
+    private final PortfolioRepository portfolioRepository;
+    private final PortfolioService portfolioService;
 
     // 회원 가입
     @Transactional
@@ -77,7 +83,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    //마이페이지 이력관리 조회 요청(UserService 이동 예정)
+    //마이페이지 이력관리 조회 요청
     public GetMyInfoResponse getMyProfileInfo(int id) {
         //Optional : NPE(NullPointerException) 방지 => orElseTrow 사용 개선?
         Optional<User> userO = userRepository.findById(id);
@@ -86,14 +92,20 @@ public class UserService {
         } else {
             User userE = userO.get();
             //기본 이미지
-
             String encodeImg = "";
             byte[] imgByte = userE.getProfilePhoto();
             //유저 이미지 있으면 변환
             if (imgByte != null) {
                 encodeImg = "data:image/png;base64," + Base64.getEncoder().encodeToString(imgByte);
             }
-            System.out.println("encodeImg >>" + encodeImg);
+            //해당 유저의 첨부파일
+            Optional<Portfolio> portfolio = portfolioRepository.findByUser(userE);
+            Portfolio myFile = portfolio.orElse(null);
+
+            Long myfileId = Optional.ofNullable(myFile).map(Portfolio::getFileId).orElse(null);
+            String accessUrl = Optional.ofNullable(myFile).map(Portfolio::getAccessUrl).orElse(null);
+            String originName = Optional.ofNullable(myFile).map(Portfolio::getOriginName).orElse(null);
+
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .nickname(userE.getNickname())
@@ -101,8 +113,11 @@ public class UserService {
                     .profilePhoto(encodeImg)
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
+                    //.profileFile(myFile)
+                    .fileId(myfileId)
+                    .accessUrl(accessUrl)
+                    .originName(originName)
                     .build();
-            //return new GetMyInfoResponse(userE);
         }
     }
 
@@ -114,8 +129,15 @@ public class UserService {
             return "찾는 사용자가 없습니다.";
         } else {
             User oldUserEntity = userO.get();
-            oldUserEntity.setAboutMe(reqDTO.getAboutMe());
-            oldUserEntity.setProfileContent(reqDTO.getProfileContent());
+            oldUserEntity.updateMyIProfile(reqDTO.getAboutMe(), reqDTO.getProfileContent());
+            //첨부파일
+            Optional<Portfolio> portfolioOptional = portfolioRepository.findByUser(oldUserEntity);
+            if(portfolioOptional.isEmpty()){//기존 포폴파일 없을 경우
+                //새로 추가
+                portfolioService.savePortfolioFile(oldUserEntity, reqDTO.getProfileFile());
+            }else{
+                //기존 포폴 삭제 후 저장
+            }
             try {
                 userRepository.save(oldUserEntity);
                 return "success";
@@ -126,7 +148,7 @@ public class UserService {
         }
     }
 
-    //마이페이지 개인정보 조회 요청(UserService 이동 예정)
+    //마이페이지 개인정보 조회 요청
     public GetMyInfoResponse getMyInfo(int id) {
         //Optional : NPE(NullPointerException) 방지
         Optional<User> userO = userRepository.findById(id);
@@ -159,7 +181,7 @@ public class UserService {
         }
     }
 
-	//마이페이지 개인정보 수정 요청(UserService 이동 예정)
+	//마이페이지 개인정보 수정 요청
 	@jakarta.transaction.Transactional
 	public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
 		Optional<User> userO = userRepository.findById(uId);
@@ -168,14 +190,9 @@ public class UserService {
 		}else {
 			User oldUserEntity = userO.get();
 			//oldUserEntity.setPassword(reqDTO.getPassword());
-			oldUserEntity.setPassword(passwordEncoder.encode(reqDTO.getPassword()));
-			oldUserEntity.setEmail(reqDTO.getEmail());
-			oldUserEntity.setNickname(reqDTO.getNickname());
-			oldUserEntity.setLocation1(reqDTO.getLocation1());
-			oldUserEntity.setLocation2(reqDTO.getLocation2());
-			oldUserEntity.setInterestLanguage(reqDTO.getInterestLanguage());
-			oldUserEntity.setInterestFramework(reqDTO.getInterestFramework());
-			oldUserEntity.setInterestJob(reqDTO.getInterestJob());
+            oldUserEntity.updateMyInfo(passwordEncoder.encode(reqDTO.getPassword()), reqDTO.getEmail(),
+                    reqDTO.getNickname(), reqDTO.getLocation1(), reqDTO.getLocation2(),reqDTO.getInterestLanguage(),
+                    reqDTO.getInterestFramework(), reqDTO.getInterestJob()) ;
 			try {
 				userRepository.save(oldUserEntity);
 				return "success";
@@ -185,6 +202,24 @@ public class UserService {
 			}
 		}
 	}
+    //마이페이지(개인정보수정)-회원 탈퇴
+    @jakarta.transaction.Transactional
+    public String updateUserStatus(int uId){
+        Optional<User> userO = userRepository.findById(uId);
+        if(userO.isEmpty()){
+            return "찾는 사용자가 없습니다.";
+        }else {
+            User oldUserEntity = userO.get();
+            oldUserEntity.updateUserStatus(1);
+            try {
+                userRepository.save(oldUserEntity);
+                return "success";
+            } catch (Exception e) {
+                log.info("update user status exception", e.getMessage());
+                return e.getMessage();
+            }
+        }
+    }
 
 	//프로필 이미지 수정
 	@jakarta.transaction.Transactional
@@ -197,7 +232,8 @@ public class UserService {
 			byte[] byteImg = null;
 			try {
 				byteImg = fileDTO.getProfilePhoto().getBytes();
-				oldUserE.setProfilePhoto(byteImg);
+				//oldUserE.setProfilePhoto(byteImg);
+                oldUserE.updateProfilePhoto(byteImg);
 				return "success";
 			}catch (Exception e){
 				log.info("update profile img error"+e.getMessage());

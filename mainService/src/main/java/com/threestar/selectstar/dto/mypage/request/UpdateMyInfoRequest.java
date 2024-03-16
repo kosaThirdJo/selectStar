@@ -2,6 +2,7 @@ package com.threestar.selectstar.dto.mypage.request;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @ToString
@@ -16,6 +17,8 @@ public class UpdateMyInfoRequest {
     private String name;
     private String aboutMe;
     private String profileContent;
+    //포트폴리오 파일
+    private MultipartFile profileFile;
 
     //개인정보
     private String password;
@@ -29,5 +32,6 @@ public class UpdateMyInfoRequest {
 
     private byte[] profilePhoto;
 
-
+    //탈퇴
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 }

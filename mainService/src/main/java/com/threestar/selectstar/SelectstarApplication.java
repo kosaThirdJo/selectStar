@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-
 @EnableScheduling // 스케 줄링
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.threestar.selectstar.repository"})

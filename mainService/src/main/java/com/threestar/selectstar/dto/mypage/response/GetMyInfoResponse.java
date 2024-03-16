@@ -3,6 +3,7 @@ package com.threestar.selectstar.dto.mypage.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
@@ -13,6 +14,11 @@ public class GetMyInfoResponse {
     private String name;
     private String aboutMe;
     private String profileContent;
+    //이력관리-포트폴리오파일
+    //private MultipartFile profileFile;
+    private Long fileId;
+    private String accessUrl;
+    private String originName;
 
     //개인정보
     private String password;
@@ -26,6 +32,9 @@ public class GetMyInfoResponse {
 
 
     private String profilePhoto;
+
+    //탈퇴여부
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 /*
     //생성자 사용 Entity -> DTO
     public GetMyInfoResponse(User user){

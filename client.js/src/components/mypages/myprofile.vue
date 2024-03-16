@@ -18,7 +18,6 @@
             maxlength="30"
             placeholder="한줄로 간단하게 나를 소개해주세요" />
       </div>
-
       <div class="msgAboutme" v-if="myInfo.aboutMe&&myInfo.aboutMe.length>=30">30자 이내로 작성해주세요.</div>
       <!--이력관리-->
       <div class="frame-profilecontent">
@@ -34,52 +33,68 @@
           <span class="frame-profile-textcnt-cnt">{{myInfo.profileContent? myInfo.profileContent.length : 0}}</span>
         </div>
       </div>
+        <div class="frame-profile-file">
+            <input
+                type="file"
+                name="profileFile"
+                @change="handleFileUpload($event)"/>
+        </div>
       <div class="frame-bottom">
         <input @click="updateData()" id="submitbutton" class="button-submit"  value="수정하기"/>
       </div>
     </div>
   </section>
 </template>
-
 <script setup>
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
-import {api, apiToken, apiToken2} from "../../common.js";
+import {api, apiToken, apiToken2, apiTokenMpt} from "../../common.js";
 import Sidebar from "./Sidebar.vue";
 const router = useRouter();
 
 const myInfo = ref({
-  "userId":"",
-  "aboutMe" : "",
-  "profileContent" : ""
+    "userId":"",
+    "aboutMe" : "",
+    "profileContent" : "",
+    "profileFile": null
 });
 const token = localStorage.getItem("jwtToken");
+
+//파일 업로드 처리
+function handleFileUpload(event){
+    const myFile = event.target.files[0];
+    console.log("myFile", myFile);
+    myInfo.value.profileFile = myFile;
+}
 
 function updateData(){
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
   }else {
-    apiToken2(
-        "users/profile", "PATCH",
-        {
-          aboutMe: myInfo.value.aboutMe,
-          profileContent: myInfo.value.profileContent
-        }, token)
-        .then(response2 => {
-            if(response2.status===205){
-                alert("수정완료되었습니다.");
-                window.location.reload();
-            }else{
-                console.log(response2);
-            }
-        });
+      let formData = new FormData();
+      formData.append("aboutMe", myInfo.value.aboutMe);
+      formData.append("profileContent", myInfo.value.profileContent);
+      if(myInfo.value.profileFile){ //파일이 존재할 경우에만
+          formData.append("profileFile", myInfo.value.profileFile);
+      }
+      apiTokenMpt("users/profile", "PUT", formData, token)
+          .then(response2 => {
+              console.log(response2);
+              if (response2.status === 205) {
+                  alert("수정완료되었습니다.");
+                  window.location.reload();
+              } else {
+                  console.log(response2);
+              }
+          });
   }
 }
 async function getData(){
     apiToken2("users/profile", "GET", null, token)
         .then(async response => {
+            console.log(response.data);
             myInfo.value = response.data;
     });
 }

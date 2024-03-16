@@ -57,7 +57,7 @@ public class User {
     private String role;
 
     @ColumnDefault(value = "0")
-    private int userStatus;
+    private int userStatus; //0: 활동, 1: 탈퇴, 2: 정지
 
     @Override
     public boolean equals(Object o) {
@@ -96,5 +96,25 @@ public class User {
     }
     public void updateUserStatus(int userStatus) {
         this.userStatus = userStatus;
+    }
+
+    public void updateMyIProfile(String aboutMe, String profileContent){
+        this.aboutMe = aboutMe;
+        this.profileContent = profileContent;
+    }
+    public void updateMyInfo(String password, String email,
+                             String nickname, String loc1, String loc2,
+                             String interestLang, String interestFw, String interestJob){
+        this.password = password;
+        this.email = email;
+        this.nickname = nickname;
+        this.location1 = loc1;
+        this.location2 = loc2;
+        this.interestLanguage = interestLang;
+        this.interestFramework = interestFw;
+        this.interestJob = interestJob;
+    }
+    public void updateProfilePhoto(byte[] byteImg){
+        this.profilePhoto = byteImg;
     }
 }
