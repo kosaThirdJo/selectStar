@@ -55,6 +55,7 @@ public class MeetingService {
 		// 총 페이지 랑 페이지 리스트 반환
 		Pageable pageable;
 		Page<Meeting> byDeletedIsOrderByCreationDateDesc;
+
 		// 페이징 처리
 		if (findMainPageRequest.getOrder() != null) {
 			pageable = switch (findMainPageRequest.getOrder()) {

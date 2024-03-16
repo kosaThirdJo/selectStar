@@ -22,7 +22,7 @@ public class Apply {
     private java.sql.Date applicationDate;
     @ColumnDefault("0")
     @Setter
-    private int applyStatus;
+    private Integer applyStatus;
     @Setter
     private String rejectReason;
 }

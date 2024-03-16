@@ -14,6 +14,6 @@ public interface ApplyRepository extends JpaRepository<Apply, ApplyID> {
     List<Apply> findByApplyID_User_UserIdIs(Integer user_userId);
     List<Apply> findByApplyID_Meeting_MeetingIdIsAndApplyStatusIsNot(Long applyID_meeting_meetingId,  int applyStatus);
     Optional<Apply> findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Long applyID_meeting_meetingId);
-    Apply findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(Long applyID_meeting_meetingId, Integer applyID_user_userId,  int applyStatus);
+    Optional<Apply> findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(Long applyID_meeting_meetingId, Integer applyID_user_userId,  int applyStatus);
     Integer countByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(Long applyID_meeting_meetingId, int applyStatus);
 }

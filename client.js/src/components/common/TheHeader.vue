@@ -4,6 +4,11 @@ import {useCookies} from 'vue3-cookies';
 import router from '@/router/index.js';
 import {ref} from "vue";
 import {apiToken2} from "@/common.js";
+// TODO 로그인 했을 경우 슬라이드 활성화,
+// TODO 버거 아이콘  알림 아이콘으로 바꾸기,
+// TODO 로그인 후, 버튼 클릭시 => 데이터를 가져옴,  데이터 바인딩 하기
+// TODO 헤더 패딩 조절할 것.
+
 
 const {logout, getToken, getRole} = useAuthStore();
 const {cookies} = useCookies();
@@ -39,10 +44,14 @@ const searchResult = () => {
 const jwtToken = getToken();
 const searchWord = ref('');
 const role = getRole();
+const drawer = ref(false);
+const alertItems = ref([]);
+//apiToken2();
 </script>
-
 <template>
   <header>
+    <v-layout
+    >
     <div class="main-header">
       <div class="main-header-wrap">
         <!-- 01 로고 -->
@@ -124,6 +133,16 @@ const role = getRole();
         </div>
       </div>
     </div>
+
+    <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+    ></v-app-bar-nav-icon>
+
+      <v-navigation-drawer v-model="drawer" location="right"
+                           permanent>
+        <v-list :items="alertItems"></v-list>
+      </v-navigation-drawer>
+    </v-layout>
   </header>
 </template>
 
