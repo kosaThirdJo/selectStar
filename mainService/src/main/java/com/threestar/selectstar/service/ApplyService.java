@@ -8,15 +8,20 @@ import com.threestar.selectstar.dto.apply.response.ApplyCheckResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdValidResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByUserIdResponse;
+import com.threestar.selectstar.entity.Notification;
 import com.threestar.selectstar.repository.ApplyRepository;
 import com.threestar.selectstar.repository.MeetingRepository;
+import com.threestar.selectstar.repository.NotificationRepository;
 import com.threestar.selectstar.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.threestar.selectstar.entity.QApply.apply;
 
 @Slf4j
 @Service
@@ -24,11 +29,13 @@ public class ApplyService {
     final ApplyRepository applyRepository;
     final UserRepository userRepository;
     final MeetingRepository meetingRepository;
+    final NotificationRepository notificationRepository;
 
-    public ApplyService(ApplyRepository applyRepository, UserRepository userRepository, MeetingRepository meetingRepository) {
+    public ApplyService(ApplyRepository applyRepository, UserRepository userRepository, MeetingRepository meetingRepository, NotificationRepository notificationRepository) {
         this.applyRepository = applyRepository;
         this.userRepository = userRepository;
         this.meetingRepository = meetingRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     // 지원 하기
@@ -38,6 +45,13 @@ public class ApplyService {
             applyRepository.save(ApplyRequest.toEntity(applyRequest,
                     new ApplyID(userRepository.findById(applyRequest.getUserId()).orElseThrow(IllegalArgumentException::new),
                             meetingRepository.findById(applyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new))));
+            // TODO 글신청자에게 알림 추가
+            Notification notification = Notification.builder()
+                    .notification_content("글신청자가 있습니다.")
+                    .notification_type(1)
+                    .notification_url("링크")
+                    .build();
+            notificationRepository.save(notification);
             return "success";
         } catch (Exception e) {
             return e.getMessage();
@@ -72,15 +86,25 @@ public class ApplyService {
     @Transactional
     public String rejectApply(RejectApplyRequest rejectApplyRequest){
         Apply apply = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
-                , rejectApplyRequest.getUserId(), 0);
+                , rejectApplyRequest.getUserId(), 0).orElseThrow(IllegalArgumentException::new);
         apply.setApplyStatus(1);
         apply.setRejectReason(rejectApplyRequest.getReason());
+        // TODO 모임 신청자에게 알림 추가
+        Notification notification = Notification.builder()
+                .notification_content("신청이 거절되었습니다.")
+                .notification_type(2)
+                .notification_url("링크")
+                .build();
+        notificationRepository.save(notification);
+
+
+
         return "success";
     }
     @Transactional
     public String recognizeApply(RejectApplyRequest rejectApplyRequest){
         Apply apply = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
-                , rejectApplyRequest.getUserId(), 0);
+                , rejectApplyRequest.getUserId(), 0).orElseThrow(IllegalArgumentException::new); // 해당 부분에 문제가 있음.
         apply.setApplyStatus(2);
         apply.setRejectReason("");
         return "success";
