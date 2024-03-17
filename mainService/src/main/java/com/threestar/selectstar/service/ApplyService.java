@@ -9,6 +9,7 @@ import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdValidResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByUserIdResponse;
 import com.threestar.selectstar.entity.Notification;
+import com.threestar.selectstar.entity.User;
 import com.threestar.selectstar.repository.ApplyRepository;
 import com.threestar.selectstar.repository.MeetingRepository;
 import com.threestar.selectstar.repository.NotificationRepository;
@@ -42,14 +43,20 @@ public class ApplyService {
     @Transactional
     public String addApply(ApplyRequest applyRequest) {
         try {
+            applyRequest.setApplyStatus(0);
             applyRepository.save(ApplyRequest.toEntity(applyRequest,
                     new ApplyID(userRepository.findById(applyRequest.getUserId()).orElseThrow(IllegalArgumentException::new),
                             meetingRepository.findById(applyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new))));
+
             // TODO 글신청자에게 알림 추가
             Notification notification = Notification.builder()
                     .notification_content("글신청자가 있습니다.")
                     .notification_type(1)
-                    .notification_url("링크")
+                    .user(userRepository.findByUserId(
+                            meetingRepository.findById(applyRequest.getMeetingId())
+                                    .orElseThrow(IllegalArgumentException::new)
+                                    .getUser().getUserId()))
+                    .notification_url("/meet/" + applyRequest.getMeetingId())
                     .build();
             notificationRepository.save(notification);
             return "success";
@@ -78,7 +85,7 @@ public class ApplyService {
     }
     // 거절 안 된 글에서 지원한 사람
     public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(Long meetingId) {
-        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyStatusIsNot(meetingId,1)
+        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyStatusIs(meetingId,0)
                 .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -92,8 +99,9 @@ public class ApplyService {
         // TODO 모임 신청자에게 알림 추가
         Notification notification = Notification.builder()
                 .notification_content("신청이 거절되었습니다.")
+                .user(userRepository.findByUserId(rejectApplyRequest.getUserId()))
                 .notification_type(2)
-                .notification_url("링크")
+                .notification_url("/meet/" + rejectApplyRequest.getMeetingId())
                 .build();
         notificationRepository.save(notification);
 
@@ -101,12 +109,20 @@ public class ApplyService {
 
         return "success";
     }
-    @Transactional
+    @Transactional // TODO RejectApplyRequest 고치기
     public String recognizeApply(RejectApplyRequest rejectApplyRequest){
         Apply apply = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndApplyStatusIs(rejectApplyRequest.getMeetingId()
                 , rejectApplyRequest.getUserId(), 0).orElseThrow(IllegalArgumentException::new); // 해당 부분에 문제가 있음.
         apply.setApplyStatus(2);
         apply.setRejectReason("");
+        Notification notification = Notification.builder()
+                .notification_content("신청이 수락되었습니다.")
+                .user(userRepository.findByUserId(
+                        apply.getApplyID().getUser().getUserId()))
+                .notification_type(2)
+                .notification_url("/meet/" + rejectApplyRequest.getMeetingId())
+                .build();
+        notificationRepository.save(notification);
         return "success";
     }
 

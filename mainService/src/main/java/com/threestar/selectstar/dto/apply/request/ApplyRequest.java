@@ -24,6 +24,8 @@ public class ApplyRequest {
     @NotBlank
     private String reason;
     private Date applicationDate;
+    @Setter
+    private Integer applyStatus;
 
     public static Apply toEntity(ApplyRequest request, ApplyID applyID){
         return Apply.builder()
@@ -32,6 +34,7 @@ public class ApplyRequest {
                 .snsAddress(request.snsAddress)
                 .reason(request.reason)
                 .applicationDate(request.applicationDate)
+                .applyStatus(request.applyStatus)
                 .build();
     }
 }

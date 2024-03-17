@@ -142,5 +142,17 @@ public class MeetingController {
                     .build();
         }
     }
+    @GetMapping("/notification")
+    public ResponseEntity<?> notification(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        try {
+            return  ResponseEntity.ok()
+                    .body(meetingService.notificationPage(userDetails.getUserId()));
+        } catch (Exception e){
+            return ResponseEntity.status(400)
+                    .build();
+        }
 
+    }
 }

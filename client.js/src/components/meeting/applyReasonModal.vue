@@ -8,22 +8,23 @@ const props = defineProps({
   userId: Number,
   meetingId: Number
 })
+
 let validObj = ref([]);
 let rejectObj = ref([])
 
 
-function rejectApply(idx){
+function rejectApply(idx,applyEle){
   const result = confirm("거절 하실껀가요?");
   if(result) {
   } else {
     alert("거절 취소되었습니다.");
     return;
   }
-
   apiToken2("apply/reject",
       "PATCH",
       {
-        meetingId:props.meetingId,
+        meetingId:applyEle.meetingId,
+        userId:applyEle.userId,
         reason:rejectObj.value[idx]
       },
       localStorage.getItem("jwtToken")
@@ -34,7 +35,7 @@ function rejectApply(idx){
   })
 
 }
-function recognizeApply(idx){
+function recognizeApply(idx,applyEle){
   const result = confirm("수락 하실껀가요?");
   if(result) {
   } else {
@@ -44,7 +45,8 @@ function recognizeApply(idx){
   apiToken2("apply/recognize",
       "PATCH",
       {
-        meetingId:props.meetingId,
+        meetingId:applyEle.meetingId,
+        userId: applyEle.userId,
         reason:""
       },
       localStorage.getItem("jwtToken")
@@ -93,7 +95,9 @@ GetValidApply()
                  v-text="'수락완료'"
             >
             </div>
-            <input v-if="applyEle.status===0" v-model="rejectObj[idx]" placeholder="거절 사유를 입력 해 주세요"><button v-if="applyEle.status===0" @click="recognizeApply(idx)">수락</button> <button v-if="applyEle.status===0" @click="rejectApply(idx)">거절</button>
+            <input v-if="applyEle.status===0" v-model="rejectObj[idx]" placeholder="거절 사유를 입력 해 주세요">
+            <button v-if="applyEle.status===0" @click="recognizeApply(idx,applyEle)">수락</button>
+            <button v-if="applyEle.status===0" @click="rejectApply(idx,applyEle)">거절</button>
 <!--            click 할 경우 ajax-->
             <hr>
           </slot>

@@ -60,13 +60,11 @@ public class ApplyController {
     }
     @PatchMapping("/reject")
     public ResponseEntity<?> rejectApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        rejectApplyRequest.setUserId(userDetails.getUserId());
         applyService.rejectApply(rejectApplyRequest);
         return ResponseEntity.ok().build();
     }
     @PatchMapping("/recognize")
     public ResponseEntity<?> recognizeApply(@RequestBody RejectApplyRequest rejectApplyRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
-        rejectApplyRequest.setUserId(userDetails.getUserId());
         applyService.recognizeApply(rejectApplyRequest);
         return ResponseEntity.ok().build();
     }

@@ -2,6 +2,7 @@ package com.threestar.selectstar.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.threestar.selectstar.dto.meeting.response.GetNotificationPageResponse;
 import com.threestar.selectstar.entity.Meeting;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.CompleteRequest;
@@ -11,6 +12,7 @@ import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.mypage.response.GetMyApplyingListResponse;
 import com.threestar.selectstar.dto.mypage.response.GetMyMeetingListResponse;
 import com.threestar.selectstar.entity.MeetingMark;
+import com.threestar.selectstar.entity.Notification;
 import com.threestar.selectstar.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -40,15 +42,17 @@ public class MeetingService {
 	final ApplyRepository applyRepository;
 	final JPAQueryFactory jpaQueryFactory;
 	final MeetingMarkRepository meetingMarkRepository;
+	final NotificationRepository notificationRepository;
 	public MeetingService(MeetingRepository meetingRepository, UserRepository userRepository,
-                          CommentRepository commentRepository, ApplyRepository applyRepository, JPAQueryFactory jpaQueryFactory, MeetingMarkRepository meetingMarkRepository) {
+						  CommentRepository commentRepository, ApplyRepository applyRepository, JPAQueryFactory jpaQueryFactory, MeetingMarkRepository meetingMarkRepository, NotificationRepository notificationRepository) {
 		this.meetingRepository = meetingRepository;
 		this.userRepository = userRepository;
 		this.commentRepository = commentRepository;
 		this.applyRepository = applyRepository;
 		this.jpaQueryFactory = jpaQueryFactory;
         this.meetingMarkRepository = meetingMarkRepository;
-    }
+		this.notificationRepository = notificationRepository;
+	}
 
 	// 미팅 페이지를 조회한다.
 	public Page<FindMainPageResponse> findMainPage(FindMainPageRequest findMainPageRequest) {
@@ -408,6 +412,10 @@ public class MeetingService {
 		} else {
 			return false;
 		}
+	}
+	public Page<GetNotificationPageResponse> notificationPage(Integer userId){
+		return	notificationRepository.findByUser_UserIdIs(userId,PageRequest.of(0,10))
+				.map(GetNotificationPageResponse::fromEntity);
 	}
 
 
