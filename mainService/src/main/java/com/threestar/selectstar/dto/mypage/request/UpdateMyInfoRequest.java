@@ -19,6 +19,8 @@ public class UpdateMyInfoRequest {
     private String profileContent;
     //포트폴리오 파일
     private MultipartFile profileFile;
+    private Long fileId;
+    private boolean fileYn;
 
     //개인정보
     private String password;

@@ -19,6 +19,7 @@ public class GetMyInfoResponse {
     private Long fileId;
     private String accessUrl;
     private String originName;
+    private boolean fileYn;
 
     //개인정보
     private String password;

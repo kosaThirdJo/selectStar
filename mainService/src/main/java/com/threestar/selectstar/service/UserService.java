@@ -106,6 +106,7 @@ public class UserService {
             String accessUrl = Optional.ofNullable(myFile).map(Portfolio::getAccessUrl).orElse(null);
             String originName = Optional.ofNullable(myFile).map(Portfolio::getOriginName).orElse(null);
 
+
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .nickname(userE.getNickname())
@@ -113,7 +114,6 @@ public class UserService {
                     .profilePhoto(encodeImg)
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
-                    //.profileFile(myFile)
                     .fileId(myfileId)
                     .accessUrl(accessUrl)
                     .originName(originName)
@@ -137,6 +137,8 @@ public class UserService {
                 portfolioService.savePortfolioFile(oldUserEntity, reqDTO.getProfileFile());
             }else{
                 //기존 포폴 삭제 후 저장
+                portfolioService.deletePortfolio(portfolioOptional.get().getFileId());
+                portfolioService.savePortfolioFile(oldUserEntity, reqDTO.getProfileFile());
             }
             try {
                 userRepository.save(oldUserEntity);

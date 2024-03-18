@@ -35,9 +35,14 @@
       </div>
         <div class="frame-profile-file">
             <input
+                v-if="!myInfo.fileYn"
                 type="file"
                 name="profileFile"
                 @change="handleFileUpload($event)"/>
+        </div>
+        <div v-if="myInfo.fileYn">
+            <a :href="myInfo.accessUrl" target="_blank">{{myInfo.originName}}</a>
+            <button @click="deleteFile()">삭제</button>
         </div>
       <div class="frame-bottom">
         <input @click="updateData()" id="submitbutton" class="button-submit"  value="수정하기"/>
@@ -52,33 +57,45 @@ import {useRoute, useRouter} from "vue-router";
 import {api, apiToken, apiToken2, apiTokenMpt} from "../../common.js";
 import Sidebar from "./Sidebar.vue";
 const router = useRouter();
-
 const myInfo = ref({
     "userId":"",
     "aboutMe" : "",
     "profileContent" : "",
-    "profileFile": null
+    "profileFile": null,
+    "fileId": 0,
+    "accessUrl" : "",
+    "originName" : "",
+    "fileYn" : false
 });
-const token = localStorage.getItem("jwtToken");
+let myFileId = ref(myInfo.value.fileId);
 
+const token = localStorage.getItem("jwtToken");
 //파일 업로드 처리
 function handleFileUpload(event){
     const myFile = event.target.files[0];
-    console.log("myFile", myFile);
     myInfo.value.profileFile = myFile;
 }
-
+//파일 삭제
+function deleteFile(){
+    myFileId.value = null;
+    myInfo.value.fileYn = false;
+}
 function updateData(){
   if(!confirm("정말 수정하시겠습니까?")) {
     alert("취소되었습니다.");
     window.location.reload();
   }else {
+      if(myInfo.value.fileId<0){ //파일 삭제
+          console.log("파일이 있을 때, 파일 삭제", myInfo.value.fileId);
+
+      }
       let formData = new FormData();
       formData.append("aboutMe", myInfo.value.aboutMe);
       formData.append("profileContent", myInfo.value.profileContent);
       if(myInfo.value.profileFile){ //파일이 존재할 경우에만
           formData.append("profileFile", myInfo.value.profileFile);
       }
+      //formData.append("fileId", myInfo.value.fileId);
       apiTokenMpt("users/profile", "PUT", formData, token)
           .then(response2 => {
               console.log(response2);
@@ -96,6 +113,9 @@ async function getData(){
         .then(async response => {
             console.log(response.data);
             myInfo.value = response.data;
+            myInfo.value.fileYn = response.data.fileId>0;
+
+            //myFileId.value = response.data.fileId;
     });
 }
 onMounted(()=>{

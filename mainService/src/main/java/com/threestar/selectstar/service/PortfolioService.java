@@ -92,7 +92,7 @@ public class PortfolioService {
 
     //DB(Portfolio) 에서 삭제 & S3에서 삭제
     @Transactional
-    public void deleteBoardImage(long fileId){
+    public void deletePortfolio(Long fileId){
         try{
             Portfolio portfolio = portfolioRepository.findById(fileId).get();
             String imgStoredName = portfolio.getStoredName();
