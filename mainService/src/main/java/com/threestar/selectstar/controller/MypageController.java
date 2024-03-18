@@ -56,7 +56,7 @@ public class MypageController {
                                              //@RequestPart(name = "profileFile", required = false) MultipartFile profileFile) {
         log.info("이력관리 수정");
         //log.info(userReq.toString());
-        if(!userReq.getProfileFile().isEmpty()){
+        if(userReq.getProfileFile() != null && !userReq.getProfileFile().isEmpty()){
             log.info("Received file: " + userReq.getProfileFile().getOriginalFilename());
         }
         try {
