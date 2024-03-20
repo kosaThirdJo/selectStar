@@ -12,10 +12,12 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class GetNotificationPageResponse {
+    Long NotificationId;
     String content;
     String url;
     public static GetNotificationPageResponse fromEntity(Notification notification) {
         return GetNotificationPageResponse.builder()
+                .NotificationId(notification.getNotification_id())
                 .content(notification.getNotification_content())
                 .url(notification.getNotification_url())
                 .build();
