@@ -417,6 +417,20 @@ public class MeetingService {
 		return	notificationRepository.findByUser_UserIdIs(userId,PageRequest.of(0,10))
 				.map(GetNotificationPageResponse::fromEntity);
 	}
+	@Transactional
+	public void removeNotification(long notificationId){
+		try {
+			Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
+			if (optionalNotification.isPresent()){
+				notificationRepository.delete(optionalNotification.get());
+			} else {
+				throw new IllegalArgumentException("해당 게시글이 없습니다.");
+			}
+		} catch (IllegalArgumentException e)
+		{
+
+		};
+	}
 
 
 	@Scheduled(cron = "0 0 0 * * *")
