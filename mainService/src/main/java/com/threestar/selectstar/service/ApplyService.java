@@ -47,10 +47,10 @@ public class ApplyService {
             applyRepository.save(ApplyRequest.toEntity(applyRequest,
                     new ApplyID(userRepository.findById(applyRequest.getUserId()).orElseThrow(IllegalArgumentException::new),
                             meetingRepository.findById(applyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new))));
-
+            String title = meetingRepository.findById(applyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new).getTitle();
             // TODO 글신청자에게 알림 추가
             Notification notification = Notification.builder()
-                    .notification_content("글신청자가 있습니다.")
+                    .notification_content(title + " 글에 신청자가 있습니다.")
                     .notification_type(1)
                     .user(userRepository.findByUserId(
                             meetingRepository.findById(applyRequest.getMeetingId())
@@ -96,9 +96,9 @@ public class ApplyService {
                 , rejectApplyRequest.getUserId(), 0).orElseThrow(IllegalArgumentException::new);
         apply.setApplyStatus(1);
         apply.setRejectReason(rejectApplyRequest.getReason());
-        // TODO 모임 신청자에게 알림 추가
+        String title = meetingRepository.findById(rejectApplyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new).getTitle();
         Notification notification = Notification.builder()
-                .notification_content("신청이 거절되었습니다.")
+                .notification_content(title + "글의 신청이 거절되었습니다.")
                 .user(userRepository.findByUserId(rejectApplyRequest.getUserId()))
                 .notification_type(2)
                 .notification_url("/meet/" + rejectApplyRequest.getMeetingId())
@@ -115,8 +115,10 @@ public class ApplyService {
                 , rejectApplyRequest.getUserId(), 0).orElseThrow(IllegalArgumentException::new); // 해당 부분에 문제가 있음.
         apply.setApplyStatus(2);
         apply.setRejectReason("");
+        String title = meetingRepository.findById(rejectApplyRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new).getTitle();
+
         Notification notification = Notification.builder()
-                .notification_content("신청이 수락되었습니다.")
+                .notification_content(title + "글에 신청이 수락되었습니다.")
                 .user(userRepository.findByUserId(
                         apply.getApplyID().getUser().getUserId()))
                 .notification_type(2)
