@@ -143,7 +143,7 @@ public class MeetingController {
         }
     }
     @GetMapping("/notification")
-    public ResponseEntity<?> notification(
+    public ResponseEntity<?> getNotification(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ){
         try {
@@ -153,6 +153,16 @@ public class MeetingController {
             return ResponseEntity.status(400)
                     .build();
         }
-
+    }
+    @DeleteMapping("/notification/{notificationId}")
+    public ResponseEntity<?> deleteNotification(
+            @PathVariable Long notificationId){
+        try {meetingService.removeNotification(notificationId);
+            return  ResponseEntity.ok()
+                    .body("success");
+        } catch (Exception e){
+            return ResponseEntity.status(400)
+                    .build();
+        }
     }
 }
