@@ -69,9 +69,16 @@
                   v-model="req.criteria"
                   class="v-col-2">
         </v-select>
+
         <div
             class="v-col-8"
-        ></div>
+        >
+          <v-radio-group inline v-model="radioVal"
+          >
+            <v-radio v-for="(radioItem , radioIdx) in radios"
+                :label="radioItem[0]" :value="radioItem[1]"></v-radio>
+          </v-radio-group>
+        </div>
         <div
             class="v-col-lg-2">
           <router-link :to="'/meet/write'" class="content_list_btn make-meeting"
@@ -121,11 +128,13 @@
 import { ref, watch } from 'vue'
 import Card from "../element/card.vue";
 import {api2} from "@/common.js";
+import {apiToken2} from "@/common.js";
 import {useRoute} from "vue-router";
 import router from "../../router/index.js";
 //TODO 댓글수 삭제했을경우 수정해야 함
+//TODO 1. 로그인 상태일 경우 지역 가져오기.
+//TODO 2. 버튼 클릭시 검색 다르게 변경.
 const route = useRoute();
-
 const req = ref({
   page:(useRoute().query.page!== undefined) ? parseInt(useRoute().query.page): 0,
   size:(useRoute().query.size!== undefined) ? parseInt(useRoute().query.size): 9,
@@ -134,10 +143,11 @@ const req = ref({
   criteria:(useRoute().query.criteria!== undefined) ? useRoute().query.criteria: "최신순",
     offset:(useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0
 })
+const radioVal = ref(0);
+let radios = ref([["전체",0]]);
 let offset = (useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0
 const selectItem = ref(
     {
-
       items:[
         {
           name: '최신순',
@@ -194,6 +204,27 @@ function changeOffset(offsetDelta){
   offset = offset + offsetDelta
 }
 //
+
+async function getUserLocation() {
+  apiToken2(
+      "meeting/location",
+      "GET",
+      "",
+      localStorage.getItem("jwtToken")
+  ).then().then(response => {
+    let idx = 1;
+    for (const ele of response.data) {
+      radios.value.push([ele,idx]);
+
+      idx ++;
+    }
+    console.log(radios.value);
+
+  }).catch(error => {
+    console.error(error);
+  });
+}
+
 async function getPage() {
   let criteria;
   switch (req.value.criteria){
@@ -204,8 +235,6 @@ async function getPage() {
       criteria = "views"
       break;
   }
-
-
    api2(
       "meeting?" +
       "page=" + (parseInt(req.value.page)) + "&" +
@@ -219,7 +248,9 @@ async function getPage() {
      result.value = response.content
      totalPage.value = response.totalPages;
    })
-
 }
 
+if (localStorage.getItem("jwtToken")){
+  getUserLocation();
+}
 </script>

@@ -1,5 +1,6 @@
 package com.threestar.selectstar.service;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -283,5 +284,16 @@ public class UserService {
         return (User) userRepository.findByName(name)
                 .orElseThrow(() -> new UserNotFoundException("사용자 없음"));
     }
+    public List<String> getUserLocation(Integer userId){
+        List list = new ArrayList<String>();
+        User user = userRepository.findByUserId(userId);
+        list.add(user.getLocation1());
+        if (user.getLocation2() != null){
+            list.add(user.getLocation2());
+        }
+        return list;
+
+    }
+
 
 }

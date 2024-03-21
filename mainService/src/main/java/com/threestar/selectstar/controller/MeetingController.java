@@ -89,7 +89,6 @@ public class MeetingController {
                 .body("수정 완료");
     }
     // 모집 완료
-    // TODO 상태 코드 추가
     @PatchMapping("/complete")
     public ResponseEntity<?> meetingComplete(@RequestBody CompleteRequest completeRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
         try {
@@ -164,5 +163,12 @@ public class MeetingController {
             return ResponseEntity.status(400)
                     .build();
         }
+    }
+    @GetMapping("/location")
+    public ResponseEntity<?> getUserMeetingLocation(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        return ResponseEntity.ok()
+                .body(userService.getUserLocation(userDetails.getUserId()));
     }
 }
