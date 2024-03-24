@@ -59,7 +59,7 @@ public class MeetingService {
 		// 총 페이지 랑 페이지 리스트 반환
 		Pageable pageable;
 		Page<Meeting> byDeletedIsOrderByCreationDateDesc;
-
+		System.out.println(findMainPageRequest.getLocation());
 		// 페이징 처리
 		if (findMainPageRequest.getOrder() != null) {
 			pageable = switch (findMainPageRequest.getOrder()) {
@@ -78,13 +78,24 @@ public class MeetingService {
 			pageable = PageRequest.of(findMainPageRequest.getPage(),
 				findMainPageRequest.getSize());
 		}
-		if (findMainPageRequest.getCategory() == null)
-			byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIs(0,
-				pageable);
-		else
-			byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
-				findMainPageRequest.getCategory(),
-				pageable);
+		if (findMainPageRequest.getLocation().equals("전체")) {
+			if (findMainPageRequest.getCategory() == null)
+				byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIs(0,
+						pageable);
+			else
+				byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
+						findMainPageRequest.getCategory(),
+						pageable);
+
+		} else {
+			if (findMainPageRequest.getCategory() == null)
+				byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndLocationContaining(0,
+						findMainPageRequest.getLocation(),pageable);
+			else
+				byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIsAndLocationContaining(0,
+						findMainPageRequest.getCategory(),findMainPageRequest.getLocation(),
+						pageable);
+		}
 		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(
 				entity,
 			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),

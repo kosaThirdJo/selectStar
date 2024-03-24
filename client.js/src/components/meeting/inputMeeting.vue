@@ -2,30 +2,33 @@
 import {defineProps, onMounted, ref} from "vue";
 import {api, api2, apiToken, apiToken2} from "@/common.js";
 import {useRoute, useRouter} from "vue-router";
-import { useAuthStore } from '@/stores/index';
+import {useAuthStore} from '@/stores/index';
+import {el} from "vuetify/locale";
+
 const router = useRouter()
 const route = useRoute()
 let p = defineProps({
   type: String
 });
-if (!localStorage.getItem("jwtToken")){
+if (!localStorage.getItem("jwtToken")) {
   alert("로그인을 해 주세요!")
   router.replace("/login")
 }
+
 function write() {
-  if (!writeVal.value.title){
+  if (!writeVal.value.title) {
     alert("제목을 입력해 주세요")
     return;
   }
-  if (!writeVal.value.applicationDeadline){
+  if (!writeVal.value.applicationDeadline) {
     alert("모집기간을 적어주세요")
     return;
   }
-  if (!writeVal.value.recruitmentCount){
+  if (!writeVal.value.recruitmentCount) {
     alert("모집 인원을 입력을 확인 해 주세요")
     return;
   }
-  if (!writeVal.value.description){
+  if (!writeVal.value.description) {
     alert("내용을 확인 해 주세요")
     return;
   }
@@ -37,8 +40,8 @@ function write() {
         writeVal.value,
         localStorage.getItem("jwtToken")
     ).then(
-        () =>
-        { alert("수정 되었습니다.")
+        () => {
+          alert("수정 되었습니다.")
           router.go(-1);
         }
     )
@@ -56,8 +59,6 @@ function write() {
     )
   }
 }
-
-
 
 
 function selectInterests(buttons, selectedInterests, selectedInterestsInput, type) {
@@ -87,6 +88,7 @@ function selectInterests(buttons, selectedInterests, selectedInterestsInput, typ
     })
   })
 }
+
 let selectedInterestsLang = []
 let selectedInterestsFw = []
 let selectedInterestsJob = []
@@ -111,8 +113,6 @@ const writeVal = ref({
 });
 
 
-
-
 onMounted(() => {
   if (p.type === "fix") {
     // => 원래 데이터 받아 오기
@@ -123,6 +123,8 @@ onMounted(() => {
     ).then(
         async (responseAll) => {
           const response = responseAll.data
+
+          console.log(response)
           writeVal.value.description = await response.description
           writeVal.value.location = response.location
           writeVal.value.title = response.title
@@ -138,7 +140,7 @@ onMounted(() => {
           return response
         }
     ).then(
-        (responseAll) =>{
+        (responseAll) => {
           const response = responseAll.data
           // 버튼 누르기
           let langarr = (response.interestLanguage) ? response.interestLanguage.split("_") : [];
@@ -180,11 +182,24 @@ onMounted(() => {
             }
           }
         }
-
     )
+  } else{
+    apiToken2(
+        "meeting/location",
+        "GET",
+        "",
+        localStorage.getItem("jwtToken")
+    ).then(response => {
+      let idx = 1;
+      writeVal.value.location = response.data[0];
+      // for (const ele of response.data) {
+      //   radios.value.push([ele,idx]);
+      //   idx ++;
+      // }
+    }).catch(error => {
+      console.error(error);
+    });
   }
-
-
 
 
 // 언어
@@ -204,9 +219,9 @@ onMounted(() => {
   // 현재 시간 이전 클릭 안되게 막기
   var now_utc = Date.now() // 지금 날짜를 밀리초로
 // getTimezoneOffset()은 현재 시간과의 차이를 분 단위로 반환
-  var timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+  var timeOff = new Date().getTimezoneOffset() * 60000; // 분단위를 밀리초로 변환
 // new Date(now_utc-timeOff).toISOString()은 '2022-05-11T18:09:38.134Z'를 반환
-  var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+  var today = new Date(now_utc - timeOff).toISOString().split("T")[0];
   document.getElementById("endDate").setAttribute("min", today);
 
 
@@ -216,7 +231,7 @@ onMounted(() => {
 <template>
   <article>
     <h2><input class="title-input" name="title" placeholder="제목을 입력해 주세요" maxlength=50 minlength="2"
-               v-model="writeVal.title" required ></h2>
+               v-model="writeVal.title" required></h2>
     <section>
       <div id="content_type">
         <table>
@@ -224,8 +239,10 @@ onMounted(() => {
             <th>카테고리</th>
             <td>
               <input id="radio1" type="radio" name="category" value=1 @click="()=> writeVal.category = 1" checked> 프로젝트
-              <input id="radio0" type="radio" name="category" value=0 @click="()=> writeVal.category = 0" class="category-radio"> 스터디
-              <input id="radio2" type="radio" name="category" value=2 @click="()=> writeVal.category = 2" class="category-radio"> 기타
+              <input id="radio0" type="radio" name="category" value=0 @click="()=> writeVal.category = 0"
+                     class="category-radio"> 스터디
+              <input id="radio2" type="radio" name="category" value=2 @click="()=> writeVal.category = 2"
+                     class="category-radio"> 기타
             </td>
           </tr>
           <tr>
@@ -339,30 +356,39 @@ onMounted(() => {
 
 
 <style scoped>
-section{
+section {
   width: 100%;
 }
-.title-input{
+
+.title-input {
   width: 100%;
   padding: 10px;
   padding-left: 15px;
 }
-#text-length-check{
+
+#text-length-check {
   font-size: 16px;
   margin-top: 5px;
   color: grey;
 }
-#text-length-check-count{
+
+#text-length-check-count {
   color: coral;
 }
-.category-radio{
+
+.category-radio {
   margin-left: 15px;
 }
-.submit-btn-container{
+
+.submit-btn-container {
   text-align: right;
 }
-.submit-btn{
-  background-color: #FF9F29; color: white; margin-top: 40px; border: 1px solid white;
+
+.submit-btn {
+  background-color: #FF9F29;
+  color: white;
+  margin-top: 40px;
+  border: 1px solid white;
   width: 100px;
   height: 40px;
   border-radius: 10px;

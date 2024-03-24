@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -19,12 +20,13 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long>, Queryds
 
 	// 삭제 안 된 전체 게시물 리스트 조회
 	Page<Meeting> findByDeletedIs(int isDelete, Pageable pageable);
-
+	Page<Meeting> findByDeletedIsAndCategoryIs(int deleted, int category, Pageable pageable);
+	Page<Meeting> findByDeletedIsAndCategoryIsAndLocationContaining(int deleted, int category, String location, Pageable pageable);
+	Page<Meeting> findByDeletedIsAndLocationContaining(int deleted, String location, Pageable pageable);
 	//삭제 안 된 전체 게시물 수 조회
 	Integer countByDeleted(int isDelete);
 
 	// 카테고리가 지정된 삭제 안 된 게시글
-	Page<Meeting> findByDeletedIsAndCategoryIs(int deleted, int category, Pageable pageable);
 
 	// 카테고리가 지정된 삭제 안 된 게시글 수
 	Integer countByDeletedAndCategoryIsOrderByViewsDesc(int deleted, int category);

@@ -76,7 +76,7 @@
           <v-radio-group inline v-model="radioVal"
           >
             <v-radio v-for="(radioItem , radioIdx) in radios"
-                :label="radioItem[0]" :value="radioItem[1]"></v-radio>
+                :label="radioItem[0]" :value="radioItem[1]" @click="changeLocation(radioIdx)"></v-radio>
           </v-radio-group>
         </div>
         <div
@@ -141,7 +141,8 @@ const req = ref({
   order:(useRoute().query.order!== undefined) ? useRoute().query.order: "desc",
   category: (useRoute().query.category!== undefined) ? useRoute().query.category: null,
   criteria:(useRoute().query.criteria!== undefined) ? useRoute().query.criteria: "최신순",
-    offset:(useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0
+    offset:(useRoute().query.offset!== undefined) ? parseInt(useRoute().query.offset): 0,
+  location: "전체"
 })
 const radioVal = ref(0);
 let radios = ref([["전체",0]]);
@@ -211,15 +212,12 @@ async function getUserLocation() {
       "GET",
       "",
       localStorage.getItem("jwtToken")
-  ).then().then(response => {
+  ).then(response => {
     let idx = 1;
     for (const ele of response.data) {
       radios.value.push([ele,idx]);
-
       idx ++;
     }
-    console.log(radios.value);
-
   }).catch(error => {
     console.error(error);
   });
@@ -240,8 +238,9 @@ async function getPage() {
       "page=" + (parseInt(req.value.page)) + "&" +
       "size=" + req.value.size + "&" +
       "order=" + req.value.order + "&" +  // '=' 추가
-      "criteria=" + criteria
-      + ((req.value.category) ? "&category=" + req.value.category : ""),
+      "criteria=" + criteria + "&" +
+       "location=" + req.value.location +
+      ((req.value.category) ? "&category=" + req.value.category : ""),
       "GET", null
   ).then(responseAll => {
     const response = responseAll.data
@@ -252,5 +251,10 @@ async function getPage() {
 
 if (localStorage.getItem("jwtToken")){
   getUserLocation();
+
+}
+function changeLocation(idx){
+  req.value.location = radios.value[idx][0];
+  getPage();
 }
 </script>

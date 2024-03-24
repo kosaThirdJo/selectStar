@@ -12,5 +12,6 @@ public class FindMainPageRequest {
     private Integer size;
     private String order;
     private Integer category;
+    private String location;
     private String criteria;
 }
