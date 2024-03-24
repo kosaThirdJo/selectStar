@@ -3,14 +3,15 @@
     <div class="flex-form">
       <div class="frame-writer">
         <div id="profile" class="frame-writer-profile">
-          <a class="click-profile" >
+          <a class="click-profile">
             <div class="meeting-articles-profile">
               <router-link :to="'/profiles/info/'+result.userId">
                 <img v-if="result.img"
                      class="meeting-articles-profile-photo"
                      :src="result.img"
                      alt="Image"/><br/>
-                <img v-if="!result.img" class="meeting-articles-profile-photo" src="@/assets/image/global/userdefaultimg.png" alt="Image">
+                <img v-if="!result.img" class="meeting-articles-profile-photo"
+                     src="@/assets/image/global/userdefaultimg.png" alt="Image">
                 <h3 style="color: black" v-text="result.userNickname"></h3>
                 <div style="color: black" v-text="result.userAboutMe"></div>
               </router-link>
@@ -18,20 +19,26 @@
             </div>
           </a>
         </div>
-        <div  id="apply" class="frame-showapplicant">
-          <span>현재 이 프로젝트에서 <span style="color: #FF9F29; font-weight: 800;" v-text="result.countApplyUsers"></span></span><span>명이 참여중입니다.</span>
+        <div id="apply" class="frame-showapplicant">
+          <span>현재 이 프로젝트에서 <span style="color: #FF9F29; font-weight: 800;"
+                                  v-text="result.countApplyUsers"></span></span><span>명이 참여중입니다.</span>
         </div>
       </div>
       <div id="content" class="border border-dark">
 
         <section id="content_box">
-          <span class="btn" :class="{'btn-green': bookmark.bookmark== false }" v-text="'즐겨찾기'" @click="addBookmark()"></span>
+          <span class="btn" :class="{'btn-green': bookmark.bookmark== false }" v-text="'즐겨찾기'"
+                @click="addBookmark()"></span>
           <div class="title-box">
-            <span class="btn" :class="{'btn-silver': result.status}" v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
-            <h2 v-text="result.title" id="content_title" style="display: inline"> </h2>
+            <span class="btn" :class="{'btn-silver': result.status}"
+                  v-text="(result.status===0) ? '모집 중': '모집 종료'"></span>
+            <h2 v-text="result.title" id="content_title" style="display: inline"></h2>
             <div class="float-right">
-              <button v-if="viewBtnApply&&(result.status===0)" class="btn btn-primary" id="apply-modal" @click="showModal = true">신청 하기</button>
-              <router-link v-if="viewBtnFix&&(result.status===0)" :to="'/meet/fix/'+route.params.post_id" class="btn btn-primary" ><span>수정 하기
+              <button v-if="viewBtnApply&&(result.status===0)" class="btn btn-primary" id="apply-modal"
+                      @click="showModal = true">신청 하기
+              </button>
+              <router-link v-if="viewBtnFix&&(result.status===0)" :to="'/meet/fix/'+route.params.post_id"
+                           class="btn btn-primary"><span>수정 하기
       </span></router-link>
               <Teleport to="body">
                 <!-- use the modal component, pass in the prop -->
@@ -42,10 +49,13 @@
                 </modal>
               </Teleport>
 
-              <button v-if="viewBtnNowApplyInfo&&(result.status===0)" class="btn btn-primary" id="my-apply-modal" @click="showValidModal = true">나의 신청 현황</button>
+              <button v-if="viewBtnNowApplyInfo&&(result.status===0)" class="btn btn-primary" id="my-apply-modal"
+                      @click="showValidModal = true">나의 신청 현황
+              </button>
               <Teleport to="body">
                 <!-- use the modal component, pass in the prop -->
-                <apply-valid-modal :show="showValidModal" @close="showValidModal = false" :meeting-id="parseInt(route.params.post_id)" >
+                <apply-valid-modal :show="showValidModal" @close="showValidModal = false"
+                                   :meeting-id="parseInt(route.params.post_id)">
                   <template #header>
                     <h3>나의 신청 현황</h3>
                   </template>
@@ -53,13 +63,20 @@
               </Teleport>
               <div
                   v-text="localStorage"
-                ></div>
-              <button v-if="viewBtnRemoveMeeting&&(result.status===0)" class="btn btn-primary" @click="removeMeeting()">삭제</button>
-              <button v-if="viewBtnApplyCompleting&&(result.status===0)" class="btn btn-primary" @click="completeMeeting()">모집 완료</button>
-              <button v-if="viewBtnApplyCompleting" class="btn btn-primary" id="apply-users" @click="applicationStatus = true" >신청한 사람</button>
+              ></div>
+              <button v-if="viewBtnRemoveMeeting&&(result.status===0)" class="btn btn-primary" @click="removeMeeting()">
+                삭제
+              </button>
+              <button v-if="viewBtnApplyCompleting&&(result.status===0)" class="btn btn-primary"
+                      @click="completeMeeting()">모집 완료
+              </button>
+              <button v-if="viewBtnApplyCompleting" class="btn btn-primary" id="apply-users"
+                      @click="applicationStatus = true">신청한 사람
+              </button>
               <Teleport to="body">
                 <!-- use the modal component, pass in the prop -->
-                <apply-reason :show="applicationStatus" @close="applicationStatus = false" :meeting-id="parseInt(route.params.post_id)" >
+                <apply-reason :show="applicationStatus" @close="applicationStatus = false"
+                              :meeting-id="parseInt(route.params.post_id)">
                   <template #header>
                     <h3>신청한 사람</h3>
                   </template>
@@ -93,33 +110,46 @@
           </div>
         </section>
         <section id="comment_box">
-          <div><span style="font-weight: bold">댓글 </span><span v-text="commentResult.totalElements" style="color: #1A4D2E"></span>
+          <div><span style="font-weight: bold">댓글 </span><span v-text="commentResult.totalElements"
+                                                               style="color: #1A4D2E"></span>
           </div>
           <div id="comment_input_line">
             <input id="comment_input" v-model="commentInput"
                    style="background: white; border-radius: 5%"
                    @keyup.enter="writeComment()" class="mt-2 mb-2"
                    type="text" name="commentContent" placeholder=" 댓글을 작성해 보세요">
-            <span id="comment_button" class="btn btn-primary mr-3" style="width: 55px;" @click="writeComment()">등록</span>
+            <span id="comment_button" class="btn btn-primary mr-3" style="width: 55px;"
+                  @click="writeComment()">등록</span>
           </div>
           <div class="main-content-container">
             <div class="comment_list" v-for="(commentEle,commentIdx) in commentResult.content">
               <div style="background: white; border-radius: 5%">
-              <div style="display: flex">
+                <div style="display: flex">
 
-              <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
-              <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%" @click="fixCommentEnableInput(commentEle.commentId,commentEle.content)">수정</span></div>
-              <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green" style="border-radius: 10%"  @click="removeComment(commentEle.commentId)">삭제</span></div>
-              </div>
-                <div v-if="!fixCommentMode[commentEle.commentId]" v-html="commentEle.content.replaceAll('\n','<br>')"></div>
-                <input v-if="fixCommentMode[commentEle.commentId]" style="width: 80%" v-model="tempFixSubmitContent[commentEle.commentId]">
+                  <div style="width: 80%" id="comment_title" v-text="commentEle.userNickName"></div>
+                  <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green"
+                                                                                            style="border-radius: 10%"
+                                                                                            @click="fixCommentEnableInput(commentEle.commentId,commentEle.content)">수정</span>
+                  </div>
+                  <div v-if="result.loginId === commentEle.userId" style="width: 10%"><span class="btn-green"
+                                                                                            style="border-radius: 10%"
+                                                                                            @click="removeComment(commentEle.commentId)">삭제</span>
+                  </div>
+                </div>
+                <div v-if="!fixCommentMode[commentEle.commentId]"
+                     v-html="commentEle.content.replaceAll('\n','<br>')"></div>
+                <input v-if="fixCommentMode[commentEle.commentId]" style="width: 80%"
+                       v-model="tempFixSubmitContent[commentEle.commentId]">
 
-                <span v-if="fixCommentMode[commentEle.commentId]" @click="fixComment(commentEle.commentId,commentIdx)" class="btn">제출</span>
-                <span v-if="fixCommentMode[commentEle.commentId]" @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
+                <span v-if="fixCommentMode[commentEle.commentId]" @click="fixComment(commentEle.commentId,commentIdx)"
+                      class="btn">제출</span>
+                <span v-if="fixCommentMode[commentEle.commentId]"
+                      @click="() => fixCommentMode[commentEle.commentId] = false" class="btn">취소</span>
                 <div v-text="commentEle.creationDate"></div>
               </div>
             </div>
           </div>
+          <v-pagination :length="commentResult.totalPages" v-model="commentPage"></v-pagination>
         </section>
       </div>
     </div>
@@ -132,7 +162,7 @@
 </template>
 <script setup>
 
-import { ref, watch } from 'vue'
+import {ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {api2, apiToken2} from "@/common.js";
 import Modal from '../../components/meeting/applyModal.vue'
@@ -158,8 +188,7 @@ const commentResult = ref([])
 const bookmark = ref([])
 const fixCommentMode = ref([])
 const tempFixSubmitContent = ref([])
-
-console.log(localStorage)
+const commentPage = ref(1);
 if (localStorage.getItem("jwtToken")) {
   apiToken2(
       "meeting/" +
@@ -241,22 +270,25 @@ if (localStorage.getItem("jwtToken")) {
   });
 }
 
-function getComment(){
+function getComment() {
   api2(
       "comment/meeting/" +
-      route.params.post_id,
+      route.params.post_id +
+      "?" + "page=" + (commentPage.value-1),
       "GET", ""
   ).then((response) => {
     console.log(response)
     commentResult.value = response.data
   });
 }
+
 getComment();
 
 const commentInput = ref("")
-function completeMeeting(){
+
+function completeMeeting() {
   const result = confirm("모집 완료 하실껀가요?");
-  if(result) {
+  if (result) {
   } else {
     alert("모집 완료 취소되었습니다.");
     return;
@@ -264,7 +296,8 @@ function completeMeeting(){
   apiToken2(
       "meeting/complete",
       "PATCH", {
-        "meetingId":route.params.post_id},
+        "meetingId": route.params.post_id
+      },
       localStorage.getItem("jwtToken")
   ).catch(() => {
         alert("모집 완료 실패")
@@ -276,9 +309,10 @@ function completeMeeting(){
       }
   )
 }
+
 function removeMeeting() {
   const result = confirm("삭제 하실껀가요?");
-  if(result) {
+  if (result) {
   } else {
     alert("삭제 취소되었습니다.");
     return;
@@ -288,11 +322,11 @@ function removeMeeting() {
       "DELETE",
       "",
       localStorage.getItem("jwtToken")
-  ).catch( () => {
+  ).catch(() => {
         alert("삭제 실패")
-    return
+        return
       }
-  ).then( () => {
+  ).then(() => {
         alert("삭제 되었습니다.")
         router.go(-1)
       }
@@ -300,13 +334,13 @@ function removeMeeting() {
 }
 
 let flagWrite = true // 엔터키 2번 입력되는 버그 수정
-function writeComment(){
-  if (!localStorage.getItem("jwtToken")){
+function writeComment() {
+  if (!localStorage.getItem("jwtToken")) {
     alert("로그인을 해 주세요")
     router.replace("/login")
-    return ;
+    return;
   }
-  if (!commentInput.value){
+  if (!commentInput.value) {
     alert("내용을 입력 해 주세요")
     router.go(0)
     return;
@@ -328,57 +362,60 @@ function writeComment(){
     )
   }
 }
-function getBookmark(){
+
+function getBookmark() {
   apiToken2("meeting/bookmarking/" + route.params.post_id,
       "GET",
-      {
-      },
+      {},
       localStorage.getItem("jwtToken")
   ).then(
       (response) => {
         bookmark.value.bookmark = response.data
       })
 }
-function addBookmark(){
-  if (!localStorage.getItem("jwtToken")){
+
+function addBookmark() {
+  if (!localStorage.getItem("jwtToken")) {
     alert("로그인을 해 주세요")
     router.replace("/login")
-    return ;
+    return;
   }
   apiToken2("meeting/bookmaking/" + route.params.post_id,
       "PATCH",
-      {
-      },
+      {},
       localStorage.getItem("jwtToken")
   )
-  bookmark.value.bookmark = bookmark.value.bookmark ?false: true;
+  bookmark.value.bookmark = bookmark.value.bookmark ? false : true;
 }
-function removeComment(commentid){
+
+function removeComment(commentid) {
   const result = confirm("삭제 하실껀가요?");
-    if(result) {
-      apiToken2("comment/meeting/" + commentid,
+  if (result) {
+    apiToken2("comment/meeting/" + commentid,
         "DELETE",
-        {
-        },
+        {},
         localStorage.getItem("jwtToken")
     ).then(
         () => {
           getComment()
-    })
+        })
   }
 }
-if (localStorage.getItem("jwtToken")){
+
+if (localStorage.getItem("jwtToken")) {
   getBookmark()
 }
-function fixCommentEnableInput(commentId,content){
+
+function fixCommentEnableInput(commentId, content) {
   tempFixSubmitContent.value[commentId] = content
   fixCommentMode.value[commentId] = true
 }
-function fixComment(commentId,commentIdx){
+
+function fixComment(commentId, commentIdx) {
   apiToken2("comment/meeting/" + commentId,
       "PATCH",
       {
-        content:tempFixSubmitContent.value[commentId]
+        content: tempFixSubmitContent.value[commentId]
       },
       localStorage.getItem("jwtToken")
   ).then(
@@ -389,200 +426,228 @@ function fixComment(commentId,commentIdx){
         fixCommentMode.value[commentId] = false
       })
 }
+watch(commentPage,()=> {
+      getComment()
+    }
+)
 </script>
 
 
-
 <style scoped>
-  section{
-    text-align: left;
-    margin: 10px;
-  }
+section {
+  text-align: left;
+  margin: 10px;
+}
 
-  #comment_button{
-    float: right;
-  }
-  #comment_input{
-    width: 90%;
-  }
-  .comment_list{
-    background-color: antiquewhite;
-    margin-bottom: 10px;
-  }
-.meeting-detail-container{
+#comment_button {
+  float: right;
+}
+
+#comment_input {
+  width: 90%;
+}
+
+.comment_list {
+  background-color: antiquewhite;
+  margin-bottom: 10px;
+}
+
+.meeting-detail-container {
   min-height: 1300px;
 }
-  .flex-form{
-    margin-top: 20px;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    gap: 50px;
-  }
-  .meeting-articles-profile-photo{
-    width:5rem; height:5rem; border-radius:9999px;
-  }
-  .frame-writer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-left: 30px;
-  }
-  .meeting-articles-profile{
 
-    padding-top: 20px;
-    text-align: center;
-    gap: 5px;
-  }
-  .meeting-articles-profile-photo{
-    width:5rem;
-    height:5rem;
-    border-radius:9999px;
-    text-align: center;
-    margin: auto;
-  }
+.flex-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 50px;
+}
 
-  #content_description{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    min-height: 500px;
-  }
+.meeting-articles-profile-photo {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+}
 
-  .sub-info{
-    margin: 20px 0 20px;
-  }
-  .frame-writer-profile {
-    float: right;
-    background-color: #FAF3E3;
-    width: 330px;
-    height: 350px;
-    display: flex;
-    flex-direction: column;
-    margin-right: 50px;
-    margin-top: 50px;
-    border: none;
-    border-radius: 20%;
-  }
-  .frame-showapplicant{
-    float: right;
-    background-color: white;
-    width: 300px;
-    text-align: center;
-    margin-top: 20px;
-  }
+.frame-writer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 30px;
+}
 
-  #content_box {
-    width: 800px;
-    padding: 5px 5px 5px 5px;
-  }
+.meeting-articles-profile {
 
-  #content_title {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+  padding-top: 20px;
+  text-align: center;
+  gap: 5px;
+}
 
-  #comment_box {
-    background-color: #FAF3E3;
-    width: 800px;
-    padding: 20px 20px 20px 20px;
-  }
+.meeting-articles-profile-photo {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  text-align: center;
+  margin: auto;
+}
 
-  .comment{
-    padding-bottom: 5px;
-  }
-  .comment-content{
-    padding-bottom: 10px;
-  }
+#content_description {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  min-height: 500px;
+}
 
-  #comment_input_line {
-    margin: 5px 5px 50px;
-    display: flex;
-    gap: 0px 18px;
-  }
-  #modal-button{
-    float: right;
-  }
+.sub-info {
+  margin: 20px 0 20px;
+}
 
-  #comment-input {
-    display: flex;
-    outline: none;
-    border-radius: 10px;
-    border: none;
-    margin: 20px 0 20px 0;
-  }
-  .modal-input{
-    border-radius: 5px;
-    border: #888888;
-    margin: 5px 0 10px 0;
-  }
-  .input-border-radius{
-    outline: none;
-    border-radius: 10px;
-    border: none;
-  }
+.frame-writer-profile {
+  float: right;
+  background-color: #FAF3E3;
+  width: 330px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 50px;
+  margin-top: 50px;
+  border: none;
+  border-radius: 20%;
+}
 
-  #comment_list {
-    padding-top: 10px;
-    padding-left: 10px;
-    background-color: white;
-    margin-bottom: 5px;
-    margin-top: 10px;
-  }
-  .title-box{
-    margin-bottom: 15px;
-  }
+.frame-showapplicant {
+  float: right;
+  background-color: white;
+  width: 300px;
+  text-align: center;
+  margin-top: 20px;
+}
 
-  #comment_title {
-    margin-top: 5px;
-    margin-left: 5px;
-  }
+#content_box {
+  width: 800px;
+  padding: 5px 5px 5px 5px;
+}
 
-  article {
-    margin-left: 200px;
-    margin-top:100px;
-    min-height: 1000px;
-  }
-  .click-profile{
-    text-decoration: none;
-    color: black;
-    margin: 10px 0px;
-  }
-  .meeting-articles-profile {
-    display: flex;
-    text-align: center;
-    gap: 10px;
-    flex-direction: column;
-  }
-  .meeting-articles-profile-photo {
-    width: 10rem;
-    height: 10rem;
-    border-radius: 9999px;
-    text-align: center;
-    margin: auto;
-  }
-  .writer-nickname-text{
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .btn{
-    background-color: #FF9F29;
-    border: white;
-    color: white;
-    margin-right: 10px;
-  }
-  .btn:hover{
-    cursor: default; /* 기본 커서로 변경 */
-  }
-  .btn-silver{
-    background-color: grey;
-    color: white
+#content_title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 
-  }
-  .btn-green{
-    background-color: green;
-    color: white;
+#comment_box {
+  background-color: #FAF3E3;
+  width: 800px;
+  padding: 20px 20px 20px 20px;
+}
 
-  }
+.comment {
+  padding-bottom: 5px;
+}
+
+.comment-content {
+  padding-bottom: 10px;
+}
+
+#comment_input_line {
+  margin: 5px 5px 50px;
+  display: flex;
+  gap: 0px 18px;
+}
+
+#modal-button {
+  float: right;
+}
+
+#comment-input {
+  display: flex;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+  margin: 20px 0 20px 0;
+}
+
+.modal-input {
+  border-radius: 5px;
+  border: #888888;
+  margin: 5px 0 10px 0;
+}
+
+.input-border-radius {
+  outline: none;
+  border-radius: 10px;
+  border: none;
+}
+
+#comment_list {
+  padding-top: 10px;
+  padding-left: 10px;
+  background-color: white;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.title-box {
+  margin-bottom: 15px;
+}
+
+#comment_title {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+article {
+  margin-left: 200px;
+  margin-top: 100px;
+  min-height: 1000px;
+}
+
+.click-profile {
+  text-decoration: none;
+  color: black;
+  margin: 10px 0px;
+}
+
+.meeting-articles-profile {
+  display: flex;
+  text-align: center;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.meeting-articles-profile-photo {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 9999px;
+  text-align: center;
+  margin: auto;
+}
+
+.writer-nickname-text {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.btn {
+  background-color: #FF9F29;
+  border: white;
+  color: white;
+  margin-right: 10px;
+}
+
+.btn:hover {
+  cursor: default; /* 기본 커서로 변경 */
+}
+
+.btn-silver {
+  background-color: grey;
+  color: white
+
+}
+
+.btn-green {
+  background-color: green;
+  color: white;
+
+}
 </style>
 <!--
 <style src="../css/meeting/meeting_home.css" scoped>
