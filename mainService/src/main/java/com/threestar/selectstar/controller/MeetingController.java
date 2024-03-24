@@ -42,7 +42,6 @@ public class MeetingController {
         return ResponseEntity.ok()
                 .body(meetingService.findMainPage(findMainPageRequest));
     }
-    // 단건 조회
     // TODO 만약 비어 있을경우 상태 처리
     @GetMapping("/{id}")
     public ResponseEntity<?> meetingDetail(@PathVariable("id") Long id,@AuthenticationPrincipal CustomUserDetails userDetails){

@@ -98,7 +98,7 @@ public class MeetingService {
 		}
 		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(
 				entity,
-			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),
+			commentRepository.countByMeeting_MeetingIdIsAndDeletedIs(entity.getMeetingId(),0),
 				applyRepository));
 	}
 	@Transactional
@@ -236,7 +236,7 @@ public class MeetingService {
 		Page<Meeting> topMeetings = meetingRepository.findByDeletedIsAndCreationDateIsGreaterThanEqual(0, Date.valueOf(weekAgo), pageable);
 
 		return topMeetings.map(entity -> FindMainPageResponse.fromEntity(entity,
-				commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),
+				commentRepository.countByMeeting_MeetingIdIsAndDeletedIs(entity.getMeetingId(),0),
 				applyRepository));
 	}
 
@@ -246,7 +246,7 @@ public class MeetingService {
 		List<Meeting> searchMeeting = meetingRepository.findByTitleLikeAndDeletedIsOrderByCreationDateDesc("%" + searchWord + "%", 0);
 
 		return searchMeeting.stream()
-			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId()),applyRepository))
+			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIsAndDeletedIs(meeting.getMeetingId(),0),applyRepository))
 			.collect(Collectors.toList());
 	}
 
@@ -283,7 +283,7 @@ public class MeetingService {
 				.fetch();  // fetch()를 통해 검색 결과를 가져옴
 
 		return searchMeeting.stream()
-				.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId()),applyRepository))
+				.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIsAndDeletedIs(meeting.getMeetingId(),0),applyRepository))
 				.collect(Collectors.toList());
 	}
 	// BooleanExpression : QueryDsl에서 제공하는 논리적인 조건을 표현하는 타입
